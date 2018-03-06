@@ -34,7 +34,7 @@ begin
   DataController.Filter.Options := [ fcoCaseInsensitive ];
 
   FilterRow.ApplyChanges := fracImmediately;
-  FilterRow.InfoText := 'СТРОКА ДЛЯ УКАЗАНИЯ ФИЛЬТРОВ';
+  FilterRow.InfoText := 'РЎРўР РћРљРђ Р”Р›РЇ РЈРљРђР—РђРќРРЇ Р¤РР›Р¬РўР РћР’';
 
   OptionsBehavior.NavigatorHints := True;
   OptionsBehavior.CellHints := True;
@@ -52,14 +52,14 @@ begin
 //  OptionsView.CellEndEllipsis := False;
   OptionsView.Indicator := True;
   OptionsView.IndicatorWidth := 12;
-  OptionsView.NoDataToDisplayInfoText := 'НЕТ ДАННЫХ ДЛЯ ОТОБРАЖЕНИЯ';
+  OptionsView.NoDataToDisplayInfoText := 'РќР•Рў Р”РђРќРќР«РҐ Р”Р›РЇ РћРўРћР‘Р РђР–Р•РќРРЇ';
   OptionsView.GridLineColor := RGB( 190, 190, 190 );
 
   with NavigatorButtons do begin
-    Insert.Hint := 'Вставить новую запись';
-    Delete.Hint := 'Удалить запись';
-    Post.Hint := 'Сохранить изменения записи';
-    Cancel.Hint := 'Отменить изменения записи';
+    Insert.Hint := 'Р’СЃС‚Р°РІРёС‚СЊ РЅРѕРІСѓСЋ Р·Р°РїРёСЃСЊ';
+    Delete.Hint := 'РЈРґР°Р»РёС‚СЊ Р·Р°РїРёСЃСЊ';
+    Post.Hint := 'РЎРѕС…СЂР°РЅРёС‚СЊ РёР·РјРµРЅРµРЅРёСЏ Р·Р°РїРёСЃРё';
+    Cancel.Hint := 'РћС‚РјРµРЅРёС‚СЊ РёР·РјРµРЅРµРЅРёСЏ Р·Р°РїРёСЃРё';
 
     Insert.ImageIndex := 0;
     Delete.ImageIndex := 1;

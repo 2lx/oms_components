@@ -22,9 +22,7 @@ end;
 
 function ShowQuestionYesNo( const str : String ) : Boolean;
 begin
-  Result := mrYes = MessageDlg( 'Ошибка при сохранении записи. Возможно, одно из полей имеет некорректное значение.'
-          + ' Возможно, запись была изменена другим пользователем.'
-          + ' Вы хотите обновить данные?', mtConfirmation, mbYesNo, 0 );
+  Result := mrYes = MessageDlg( str, mtConfirmation, mbYesNo, 0 );
 end;
 
 end.

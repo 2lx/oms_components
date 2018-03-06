@@ -32,11 +32,11 @@ implementation
 uses uOMSDialogs, Controls, ShellAPI, SysUtils, Windows, UnitFileRoutines, DB, UnitDifFuncs,
   uOMSStyle;
 
-// Порядок создания\инициализации:
-// 1. создается экземпляр класса TComponent (Enabled = True)
-// 2. создается экземпляр TProperties (ReadOnly = False)
-// 3. инициализируются значения TComponent значениями не по-умолчанию из дизайнера (Enabled)
-// 4. инициализируются значения TProperties значениями не по-умолчанию из дизайнера (ReadOnly)
+// РџРѕСЂСЏРґРѕРє СЃРѕР·РґР°РЅРёСЏ\РёРЅРёС†РёР°Р»РёР·Р°С†РёРё:
+// 1. СЃРѕР·РґР°РµС‚СЃСЏ СЌРєР·РµРјРїР»СЏСЂ РєР»Р°СЃСЃР° TComponent (Enabled = True)
+// 2. СЃРѕР·РґР°РµС‚СЃСЏ СЌРєР·РµРјРїР»СЏСЂ TProperties (ReadOnly = False)
+// 3. РёРЅРёС†РёР°Р»РёР·РёСЂСѓСЋС‚СЃСЏ Р·РЅР°С‡РµРЅРёСЏ TComponent Р·РЅР°С‡РµРЅРёСЏРјРё РЅРµ РїРѕ-СѓРјРѕР»С‡Р°РЅРёСЋ РёР· РґРёР·Р°Р№РЅРµСЂР° (Enabled)
+// 4. РёРЅРёС†РёР°Р»РёР·РёСЂСѓСЋС‚СЃСЏ Р·РЅР°С‡РµРЅРёСЏ TProperties Р·РЅР°С‡РµРЅРёСЏРјРё РЅРµ РїРѕ-СѓРјРѕР»С‡Р°РЅРёСЋ РёР· РґРёР·Р°Р№РЅРµСЂР° (ReadOnly)
 
 constructor TOMScxDBImage.Create(AOwner: TComponent);
 begin
@@ -92,7 +92,7 @@ begin
   strFileExt := UpperCase(ExtractFileExt(strFileName));
   if (strFileExt <> '.JPEG') AND (strFileExt <> '.JPG') then
   begin
-    ShowError( 'Ошибка. Файл должен быть в формате JPG/JPEG' );
+    ShowError( 'РћС€РёР±РєР°. Р¤Р°Р№Р» РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РІ С„РѕСЂРјР°С‚Рµ JPG/JPEG' );
     Exit;
   end;
 
@@ -106,7 +106,7 @@ begin
 
     Self.PostEditValue;
   except
-    on EInvalidGraphic do ShowError('Ошибка при загрузке изображения, проверьте формат файла') ;
+    on EInvalidGraphic do ShowError('РћС€РёР±РєР° РїСЂРё Р·Р°РіСЂСѓР·РєРµ РёР·РѕР±СЂР°Р¶РµРЅРёСЏ, РїСЂРѕРІРµСЂСЊС‚Рµ С„РѕСЂРјР°С‚ С„Р°Р№Р»Р°') ;
   end
 end;
 
