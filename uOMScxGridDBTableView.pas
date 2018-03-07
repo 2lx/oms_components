@@ -5,16 +5,23 @@ interface
 uses Classes, cxGridDBTableView, cxGridCustomTableView, cxEdit, cxStyles;
 
 type
-  GridSelectionType = (
+  TGridSelectionType = (
+      gstNone,
       gstOneCellOneRow,
       gstAllCellOneRow,
       gstMultiCellOneRow,
-      gstMultiCellMultiRow,
-      gstAllCellMultiRow
+      gstMultiCellMultiRow
   );
 
+  TPProcGUID = reference to procedure( const guid: Variant );
+  TProcNavigatorOnButtonClick = procedure( Sender: TObject; AButtonIndex: Integer; var ADone: Boolean ) of object;
+
+type
   TOMScxGridDBTableView = class(TcxGridDBTableView)
   private
+    FCurrentSelectionType : TGridSelectionType;
+    FDefNavButtonHandler: TProcNavigatorOnButtonClick;
+
     procedure InitEditHandler( Sender: TcxCustomGridTableView; AItem: TcxCustomGridTableItem;
       AEdit: TcxCustomEdit );
 
@@ -28,45 +35,24 @@ type
 
   published
   public
+    property CurrentSelectionType : TGridSelectionType read FCurrentSelectionType default gstNone;
+
     constructor Create(AOwner: TComponent); override;
 
-    procedure setSelectionType( const gst : GridSelectionType );
+    procedure setSelectionType( const gst : TGridSelectionType );
+    procedure processSelectedRecords( proc: TPProcGUID; const colGuidIndex: Integer );
   end;
 
 implementation
 
-uses uOMSStyle, Windows, cxGraphics, cxDBExtLookupComboBox, cxDBLookupComboBox, cxSpinEdit, cxFilter,
-  cxGridTableView, uDMComponents, cxNavigator, uDataExport, cxGrid;
+uses uOMSStyle, Windows, Graphics, cxGraphics, cxDBExtLookupComboBox, cxDBLookupComboBox, cxSpinEdit, cxFilter,
+  cxGridTableView, uDMComponents, cxNavigator, uDataExport, cxGrid, uOMSDialogs, SysUtils;
 
 constructor TOMScxGridDBTableView.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
 
-  DataController.Filter.PercentWildcard := '*';
-  DataController.Filter.Options := [ fcoCaseInsensitive ];
-
-  FilterRow.ApplyChanges := fracImmediately;
-  FilterRow.InfoText := 'СТРОКА ДЛЯ УКАЗАНИЯ ФИЛЬТРОВ';
-
-  OptionsBehavior.NavigatorHints := True;
-  OptionsBehavior.CellHints := True;
-  OptionsBehavior.CopyCaptionsToClipboard := False;
-  OptionsBehavior.IncSearch := False;
-  OptionsBehavior.EditAutoHeight := eahEditor;
-//OptionsBehavior.CopyRecordsToClipboard := False;
-
-  OptionsSelection.InvertSelect := True;
-  OptionsSelection.CellSelect := True;
-  OptionsSelection.CellMultiSelect := False;
-  OptionsSelection.MultiSelect := False;
-
-  OptionsView.GridLines := glBoth;
-//  OptionsView.CellEndEllipsis := False;
-  OptionsView.Indicator := True;
-  OptionsView.IndicatorWidth := 12;
-  OptionsView.NoDataToDisplayInfoText := 'НЕТ ДАННЫХ ДЛЯ ОТОБРАЖЕНИЯ';
-  OptionsView.GridLineColor := RGB( 190, 190, 190 );
-
+  //overrided settings
   Styles.ContentEven := cxStyleContentDefault;
   Styles.ContentOdd := cxStyleContentOdd;
   Styles.Selection := cxStylePink;
@@ -82,16 +68,44 @@ var
 begin
   inherited;
 
-  setSelectionType(gstAllCellOneRow);
+  //final settings
+  DataController.Filter.PercentWildcard := '*';
+  DataController.Filter.Options := [ fcoCaseInsensitive ];
+
+  FilterRow.ApplyChanges := fracImmediately;
+  FilterRow.InfoText := 'СТРОКА ДЛЯ УКАЗАНИЯ ФИЛЬТРОВ';
+
+  OptionsBehavior.NavigatorHints := True;
+  OptionsBehavior.CellHints := True;
+  OptionsBehavior.CopyCaptionsToClipboard := False;
+  OptionsBehavior.IncSearch := False;
+  OptionsBehavior.EditAutoHeight := eahEditor;
+//OptionsBehavior.CopyRecordsToClipboard := False;
+
+  OptionsData.DeletingConfirmation := True;
+
+  OptionsView.GridLines := glBoth;
+//  OptionsView.CellEndEllipsis := False;
+  OptionsView.Indicator := True;
+  OptionsView.IndicatorWidth := 12;
+  OptionsView.NoDataToDisplayInfoText := 'НЕТ ДАННЫХ ДЛЯ ОТОБРАЖЕНИЯ';
+  OptionsView.GridLineColor := RGB( 190, 190, 190 );
+
+  if CurrentSelectionType = gstNone
+    then setSelectionType( gstAllCellOneRow );
+
   Navigator.InfoPanel.DisplayMask := 'Запись: [RecordIndex]/[RecordCount]';
 
   with NavigatorButtons do
   begin
-    if (CustomButtons.Count = 0) AND (not Assigned(OnButtonClick)) then
+    if Assigned(OnButtonClick)
+      then FDefNavButtonHandler := OnButtonClick;
+
+    if (not Assigned(OnButtonClick)) then
     begin
       Images := DMOMSComponents.ImageListNavigator;
 
-      // Tcollection
+      // TODO: Tcollection ??
       Insert.ImageIndex := 0;
       Insert.Hint := 'Вставить новую запись';
       Delete.ImageIndex := 1;
@@ -100,6 +114,8 @@ begin
       Post.Hint := 'Сохранить изменения записи';
       Cancel.ImageIndex := 3;
       Cancel.Hint := 'Отменить изменения записи';
+
+      CustomButtons.Clear;
 
       nbtn := CustomButtons.Add;
       nbtn.ImageIndex := 4;
@@ -112,25 +128,32 @@ end;
 
 procedure TOMScxGridDBTableView.NavigatorOnButtonClickHandler( Sender: TObject; AButtonIndex: Integer; var ADone: Boolean );
 begin
-  if AButtonIndex >= NBDI_FILTER then
+  if (AButtonIndex <= NBDI_FILTER) AND Assigned(FDefNavButtonHandler)
+    then FDefNavButtonHandler(Sender, AButtonIndex, ADone )
+  else if AButtonIndex > NBDI_FILTER then
   begin
     ADone := True;
 
-    if Navigator.Buttons[ AButtonIndex ].ImageIndex = 4 then  // выгрузка в Excel
-    begin
-      if (Site <> nil) AND (Site.Parent is TcxGrid )
-        then cxGridToExcelWithImages( 'Экранная форма', (Site.Parent as TcxGrid), False );
+    case Navigator.Buttons[ AButtonIndex ].ImageIndex of
+      4 : begin // выгрузка в Excel
+        if (Site <> nil) AND (Site.Parent is TcxGrid)
+          then cxGridToExcelWithImages( 'Экранная форма', (Site.Parent as TcxGrid), False );
+      end;
+      else ADone := False;
     end;
   end
   else ADone := False;
 end;
 
-procedure TOMScxGridDBTableView.setSelectionType( const gst : GridSelectionType );
+procedure TOMScxGridDBTableView.setSelectionType( const gst : TGridSelectionType );
 begin
+  OptionsSelection.CellMultiSelect := gst in [gstMultiCellOneRow, gstMultiCellMultiRow];
+  OptionsSelection.CellSelect := gst in [ gstAllCellOneRow, gstOneCellOneRow, gstMultiCellMultiRow ];
+
   OptionsSelection.InvertSelect := gst in [ gstAllCellOneRow ];
-  OptionsSelection.CellSelect := gst in [ gstAllCellOneRow ];
-  OptionsSelection.CellMultiSelect := False;
-  OptionsSelection.MultiSelect := False;
+  OptionsSelection.MultiSelect := gst in [gstMultiCellMultiRow];
+
+  FCurrentSelectionType := gst;
 end;
 
 procedure TOMScxGridDBTableView.InitEditHandler( Sender: TcxCustomGridTableView; AItem: TcxCustomGridTableItem;
@@ -152,6 +175,23 @@ begin
 
 //  setupStyleGridDefault(Sender, ARecord, AItem, AStyle);
   setupStyleGridEditable(Sender, ARecord, AItem, AStyle);
+end;
+
+procedure TOMScxGridDBTableView.processSelectedRecords( proc: TPProcGUID; const colGuidIndex: Integer );
+var
+  i : Integer;
+  guid : Variant;
+begin
+  if Controller.SelectedRecordCount > 0 then
+  begin
+    for i := 0 to Controller.SelectedRecordCount - 1 do
+    begin
+      proc( Controller.SelectedRecords[ i ].Values[ colGuidIndex ] );
+    end;
+
+    ShowInformation( 'Успешно обновлено записей: ' + IntToStr( Controller.SelectedRecordCount ));
+  end
+  else ShowWarning( 'Ни одной записи не выделено.' );
 end;
 
 end.

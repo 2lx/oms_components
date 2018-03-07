@@ -1,4 +1,4 @@
-unit uOMScxDBImage;
+﻿unit uOMScxDBImage;
 
 interface
 
@@ -29,7 +29,7 @@ type
 
 implementation
 
-uses uOMSDialogs, Controls, ShellAPI, SysUtils, Windows, UnitFileRoutines, DB, UnitDifFuncs,
+uses uOMSDialogs, Controls, ShellAPI, SysUtils, Windows, uFileSystem, DB, UnitDifFuncs,
   uOMSStyle;
 
 // Порядок создания\инициализации:

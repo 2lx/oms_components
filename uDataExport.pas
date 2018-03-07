@@ -4,30 +4,30 @@ interface
 
 uses cxGrid;
 
-  procedure cxGridToExcelWithImages( const strDocument: string; cxGrid: TcxGrid; AExpand: boolean );
+  procedure cxGridToExcelWithImages( const strDocument: String; cxGrid: TcxGrid; AExpand: Boolean );
 
 implementation
 
-uses cxGridExportLink, ComObj, UnitFileRoutines, Windows, uOMSDialogs;
+uses cxGridExportLink, ComObj, uFileSystem, Windows, uOMSDialogs;
 
-procedure cxGridToExcelWithImages( const strDocument: string; cxGrid: TcxGrid; AExpand: boolean );
+procedure cxGridToExcelWithImages( const strDocument: String; cxGrid: TcxGrid; AExpand: Boolean );
 var
   ExcelApp, Workbook: Variant;
-  FileName: String;
+  fileName: String;
 //  FileTemplate: String;
 begin
   ExcelApp := CreateOleObject('Excel.Application');
 
-  FileName := GetTempDirectory + strDocument + '.xlsx';
-  DeleteFile(PWideChar(WideString(FileName)));
+  fileName := GetTempDirectory + strDocument + '.xlsx';
+  DeleteFile(PWideChar(WideString( fileName )));
 //  FileTemplate := GetTempDirectory + strDocument + '.xltx';
 //  DeleteFile(PWideChar(WideString(FileTemplate)));
 
   ExcelApp.Application.EnableEvents := False;
 
   try
-    ExportGridToXLSX(FileName, cxGrid, AExpand, True, False, 'xlsx');
-    Workbook := ExcelApp.WorkBooks.Add( FileName );
+    ExportGridToXLSX(fileName, cxGrid, AExpand, True, False, 'xlsx');
+    Workbook := ExcelApp.WorkBooks.Add( fileName );
   except
     ShowError('Произошла ошибка при выгрузке в формат XLSX. Обратитесь к программисту.');
   end;
