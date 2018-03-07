@@ -2,46 +2,43 @@
 
 interface
 
-uses cxGrid, cxGridExportLink, ComObj, Excel2000, Windows,
-   Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-   Dialogs, ShellAPI, JPEG, cxExportPivotGridLink, cxCustomPivotGrid, cxPivotGrid,
-  cxPivotGridOLAPDataSource, UnitFileRoutines;
+uses cxGrid;
 
   procedure cxGridToExcelWithImages( const strDocument: string; cxGrid: TcxGrid; AExpand: boolean );
 
 implementation
 
-uses DataModule, UnitExcelHandle;
+uses cxGridExportLink, ComObj, UnitFileRoutines, Windows, uOMSDialogs;
 
 procedure cxGridToExcelWithImages( const strDocument: string; cxGrid: TcxGrid; AExpand: boolean );
 var
   ExcelApp, Workbook: Variant;
-  FileName: string;
-  FileTemplate: string;
-  SettingsFile: string;
+  FileName: String;
+//  FileTemplate: String;
 begin
-  SettingsFile := GetAppSpecialFolder + 'TempFiles\';
-
   ExcelApp := CreateOleObject('Excel.Application');
 
-  FileName := SettingsFile + strDocument + '.xlsx';
-  FileTemplate := SettingsFile + strDocument + '.xltx';
-  DeleteFile(FileName);
-  DeleteFile(FileTemplate);
-  FileName := SettingsFile + strDocument + '.xlsx';
+  FileName := GetTempDirectory + strDocument + '.xlsx';
+  DeleteFile(PWideChar(WideString(FileName)));
+//  FileTemplate := GetTempDirectory + strDocument + '.xltx';
+//  DeleteFile(PWideChar(WideString(FileTemplate)));
+
+  ExcelApp.Application.EnableEvents := False;
+
   try
     ExportGridToXLSX(FileName, cxGrid, AExpand, True, False, 'xlsx');
+    Workbook := ExcelApp.WorkBooks.Add( FileName );
   except
+    ShowError('Произошла ошибка при выгрузке в формат XLSX. Обратитесь к программисту.');
   end;
-  ExcelApp.Application.EnableEvents := false;
 
-  Workbook := ExcelApp.WorkBooks.Add(FileName);
+{
   Workbook.SaveAs(FileTemplate, 54);
   Workbook.Close(0);
-  Workbook := ExcelApp.WorkBooks.Add(FileTemplate);
+  Workbook := ExcelApp.WorkBooks.Add( FileTemplate );
+}
   ExcelApp.Application.EnableEvents := True;
-
-  ExcelApp.Visible := true;
+  ExcelApp.Visible := True;
 end;
 
 end.
