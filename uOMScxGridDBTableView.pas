@@ -8,19 +8,20 @@ type
   TGridSelectionType = (
       gstNone,
       gstOneCellOneRow,
-      gstAllCellOneRow,
-      gstMultiCellOneRow,
       gstMultiCellMultiRow
   );
 
   TPProcGUID = reference to procedure( const guid: Variant );
   TProcNavigatorOnButtonClick = procedure( Sender: TObject; AButtonIndex: Integer; var ADone: Boolean ) of object;
+  TProcContentStyle = procedure( Sender: TcxCustomGridTableView; ARecord: TcxCustomGridRecord;
+      AItem: TcxCustomGridTableItem; var AStyle: TcxStyle ) of object;
 
 type
   TOMScxGridDBTableView = class(TcxGridDBTableView)
   private
     FCurrentSelectionType : TGridSelectionType;
-    FDefNavButtonHandler: TProcNavigatorOnButtonClick;
+    FUserNavigatorOnButtonHandler: TProcNavigatorOnButtonClick;
+    FUserContentStyleHandler: TProcContentStyle;
 
     procedure InitEditHandler( Sender: TcxCustomGridTableView; AItem: TcxCustomGridTableItem;
       AEdit: TcxCustomEdit );
@@ -45,7 +46,7 @@ type
 
 implementation
 
-uses uOMSStyle, Windows, Graphics, cxGraphics, cxDBExtLookupComboBox, cxDBLookupComboBox, cxSpinEdit, cxFilter,
+uses uOMSStyle, uOMSStyleGridDefault, Windows, Graphics, cxGraphics, cxDBExtLookupComboBox, cxDBLookupComboBox, cxSpinEdit, cxFilter,
   cxGridTableView, uDMComponents, cxNavigator, uDataExport, cxGrid, uOMSDialogs, SysUtils;
 
 constructor TOMScxGridDBTableView.Create(AOwner: TComponent);
@@ -53,12 +54,11 @@ begin
   inherited Create(AOwner);
 
   //overrided settings
-  Styles.ContentEven := cxStyleContentDefault;
+{  Styles.ContentEven := cxStyleContentDefault;
   Styles.ContentOdd := cxStyleContentOdd;
   Styles.Selection := cxStylePink;
-  Styles.FilterRowInfoText := cxStyleContentDefaultBold;
+}  Styles.FilterRowInfoText := cxStyleContentDefaultBold;
 
-  Styles.OnGetContentStyle := DefaultContentStyle;
   OnInitEdit := InitEditHandler;
 end;
 
@@ -92,14 +92,18 @@ begin
   OptionsView.GridLineColor := RGB( 190, 190, 190 );
 
   if CurrentSelectionType = gstNone
-    then setSelectionType( gstAllCellOneRow );
+    then setSelectionType( gstOneCellOneRow );
+
+  if Assigned(Styles.OnGetContentStyle)
+    then FUserContentStyleHandler := Styles.OnGetContentStyle;
+  Styles.OnGetContentStyle := DefaultContentStyle;
 
   Navigator.InfoPanel.DisplayMask := 'Запись: [RecordIndex]/[RecordCount]';
 
   with NavigatorButtons do
   begin
     if Assigned(OnButtonClick)
-      then FDefNavButtonHandler := OnButtonClick;
+      then FUserNavigatorOnButtonHandler := OnButtonClick;
 
     if (not Assigned(OnButtonClick)) then
     begin
@@ -128,8 +132,8 @@ end;
 
 procedure TOMScxGridDBTableView.NavigatorOnButtonClickHandler( Sender: TObject; AButtonIndex: Integer; var ADone: Boolean );
 begin
-  if (AButtonIndex <= NBDI_FILTER) AND Assigned(FDefNavButtonHandler)
-    then FDefNavButtonHandler(Sender, AButtonIndex, ADone )
+  if (AButtonIndex <= NBDI_FILTER) AND Assigned(FUserNavigatorOnButtonHandler)
+    then FUserNavigatorOnButtonHandler(Sender, AButtonIndex, ADone )
   else if AButtonIndex > NBDI_FILTER then
   begin
     ADone := True;
@@ -147,10 +151,10 @@ end;
 
 procedure TOMScxGridDBTableView.setSelectionType( const gst : TGridSelectionType );
 begin
-  OptionsSelection.CellMultiSelect := gst in [gstMultiCellOneRow, gstMultiCellMultiRow];
-  OptionsSelection.CellSelect := gst in [ gstAllCellOneRow, gstOneCellOneRow, gstMultiCellMultiRow ];
+  OptionsSelection.CellMultiSelect := gst in [ gstMultiCellMultiRow];
+  OptionsSelection.CellSelect := gst in [ gstOneCellOneRow, gstMultiCellMultiRow ];
 
-  OptionsSelection.InvertSelect := gst in [ gstAllCellOneRow ];
+  OptionsSelection.InvertSelect := gst in [ ];
   OptionsSelection.MultiSelect := gst in [gstMultiCellMultiRow];
 
   FCurrentSelectionType := gst;
@@ -173,7 +177,11 @@ begin
   inherited;
   if checkInvalidStyle(ARecord, AItem) then Exit;
 
-//  setupStyleGridDefault(Sender, ARecord, AItem, AStyle);
+  setupStyleGridDefault(Sender, ARecord, AItem, AStyle);
+
+  if Assigned(FUserContentStyleHandler)
+    then FUserContentStyleHandler(Sender, ARecord, AItem, AStyle);
+
   setupStyleGridEditable(Sender, ARecord, AItem, AStyle);
 end;
 

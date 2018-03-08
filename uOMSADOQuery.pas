@@ -36,7 +36,8 @@ begin
 
   strError := 'Ошибка удаления записи. ';
   if Pos( 'denied',  E.ToString ) > 0
-    then strError := strError + 'В базе данных запрещено удалять эту запись';
+    then strError := strError + 'Запрещено удалять эту запись'
+    else strError := strError + E.ToString;
 
   ShowError( strError );
   logQueryError( Name, SQL.Text, 'DeleteError', E.ToString );
@@ -50,6 +51,7 @@ begin
 //  DataSet.Cancel;
 
   strError := 'Ошибка редактирования записи. ';
+  strError := strError + E.ToString;
 
   logQueryError( Name, SQL.Text, 'EditError', E.ToString );
   ShowError( strError );
@@ -65,9 +67,10 @@ begin
   if ( Pos( 'allow nulls',  E.ToString ) > 0 )
     then strError := strError + 'Заполнены не все обязательные поля.'
   else if ( Pos( 'unique',  E.ToString ) > 0 )
-    then strError := strError + 'Запись с такими данными уже существует (не уникальна).'
+    then strError := strError + 'Запись с такими данными уже существует.'
   else if ( Pos( 'denied',  E.ToString ) > 0 )
-    then strError := strError + 'Изменение этих данных запрещено.';
+    then strError := strError + 'Изменение этих данных запрещено.'
+    else strError := strError + E.ToString;
 
   logQueryError( Name, SQL.Text, 'PostError', E.ToString );
   ShowError(strError);

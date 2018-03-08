@@ -5,72 +5,6 @@ interface
 uses VCL.Graphics, System.SysUtils, cxStyles, cxGrid, cxGridCustomTableView;
 
 const
-// http://www.html-color-names.com/blue.php    5th column
-//  clOMSWhite          = TColor( $ffffff );
-//  clOMSBlack          = TColor( $000000 );
-// rainbow colors
-{  clOMSRed            = TColor( $5c5cff );
-  clOMSOrange         = TColor( $5cc5ff );
-  clOMSYellow         = TColor( $5cffff );
-  clOMSGreen          = TColor( $5cae5c );
-  clOMSSkyBlue        = TColor( $f2dfb2 );
-  clOMSBlue           = TColor( $ff5c5c );
-  clOMSPurple         = TColor( $ae5cae );
-// other base colors
-  clOMSPink           = TColor( $ddd6ff );
-  clOMSGray           = TColor( $aeaeae );
-  clOMSBrown          = TColor( $c57777 );
-
-// other colors
-  clOMSCrimson        = TColor( $8269e8 );  // Red
-  clOMSSalmon         = TColor( $a5aefb );  // Red
-  clOMSCoral          = TColor( $8fadff );  // Orange
-  clOMSLavender       = TColor( $fbefef );  // Blue
-  clOMSStateBlue      = TColor( $df96a0 );  // Blue
-  clOMSStateGray      = TColor( $b8aea4 );  // Gray
-  clOMSDStateGray     = TColor( $8f8f7a );  // Gray, DarkState
-  clOMSSeaGreen       = TColor( $94b57a );  // Green
-  clOMSMAquaMarine    = TColor( $c8df9d );  // Green, MediumAquaMarine
-  clOMSBurlyWood      = TColor( $b2d1ea );  // Brown
-  clOMSViolet         = TColor( $f4aff4 );  // Purple
-
-// Light colors // 11th column
-  clOMSLightRed       = TColor( $e7e7ff );
-  clOMSLightOrange    = TColor( $e7f6ff );
-  clOMSLightYellow    = TColor( $e7ffff );
-  clOMSLightGreen     = TColor( $e7f3e7 );
-  clOMSLightSkyBlue   = TColor( $fdfaf4 );
-  clOMSLightBlue      = TColor( $ffe7e7 );
-  clOMSLightPurple    = TColor( $f3e7f3 );
-
-  clOMSLightPink      = TColor( $faf9ff );
-  clOMSLightGray      = TColor( $f3f3f3 );
-  clOMSLightBrown     = TColor( $ebebf6 );
-
-  clOMSLightCrimson   = TColor( $ede9fb );
-  clOMSLightSalmon    = TColor( $f2f3fe );
-  clOMSLightCoral     = TColor( $eff3ff );
-  clOMSLightLavender  = TColor( $fefcfc );
-  clOMSLightStateBlue = TColor( $faf0f1 );
-  clOMSLightStateGray = TColor( $f4f3f2 );
-  clOMSLightDStateGray= TColor( $efefec );
-  clOMSLightSeaGreen  = TColor( $eff4ec );
-  clOMSLightMAquaMarine = TColor( $f7faf1 );
-  clOMSLightBurlyWood = TColor( $f4f8fc );
-  clOMSLightViolet    = TColor( $fdf3fd );   }
-
-// special colors
-{ clOMSSpecialLightBlue   = TColor( $FFF0E1 );
-  clOMSSpecialLightGreen  = TColor( $99FFCC );
-
-  clOMSSpecialRed         = TColor( $7F7FFF );
-  clOMSSpecialOrange      = TColor( $13AAFA );
-  clOMSSpecialYellow      = TColor( $99FFFF );
-  clOMSSpecialGreen       = TColor( $CCFF99 );
-  clOMSSpecialSkyBlue     = TColor( $FFFF99 );
-  clOMSSpecialBlue        = TColor( $FFB164 );
-  clOMSSpecialPurple      = TColor( $F3B0F3 );
-}
   // Base: https://flatuicolors.com/palette/de
   // Base: R: #fc5c65 O: #fd9644 Y: #fed330 G: #26de81 GB: #2bcbba
   // Base: SB:#45aaf2 B: #4b7bec P: #a55eea W: #d1d8e0 Gr: #778ca3
@@ -147,7 +81,6 @@ var
 
   procedure InitializeStyles;
   procedure FreeAndNilStyles;
-  function checkInvalidStyle(var ARecord: TcxCustomGridRecord; var AItem: TcxCustomGridTableItem) : Boolean;
 
 type OMSColorName = (
     colnDefault = 1,
@@ -173,10 +106,6 @@ type OMSColorType = (
   function getColorNameForDBArticleType( const ArtTypeID : Integer ): OMSColorName;
   function getColorForColorName( const coln: OMSColorName; const colt: OMSColorType = coltNormal): TColor;
 
-//  procedure setupStyleGridDefault( var Sender: TcxCustomGridTableView; var ARecord: TcxCustomGridRecord;
-//      var AItem: TcxCustomGridTableItem; var AStyle: TcxStyle; isHLCursor : Boolean = True );
-  procedure setupStyleGridEditable( var Sender: TcxCustomGridTableView; var ARecord: TcxCustomGridRecord;
-      var AItem: TcxCustomGridTableItem; var AStyle: TcxStyle );
   procedure setupGridStyleDefaultBold(var Sender: TcxCustomGridTableView; var ARecord: TcxCustomGridRecord;
       var AItem: TcxCustomGridTableItem; var AStyle : TcxStyle; const isBold : Boolean );
   procedure setupGridStyleDefaultColorBold(var Sender: TcxCustomGridTableView; var ARecord: TcxCustomGridRecord;
@@ -185,11 +114,6 @@ type OMSColorType = (
   procedure setupStyleColorBold(var AStyle : TcxStyle; const coln: OMSColorName; const isBold : Boolean = False);
 
 implementation
-
-function checkInvalidStyle(var ARecord: TcxCustomGridRecord; var AItem: TcxCustomGridTableItem) : Boolean;
-begin
-  Result := (ARecord = Nil) OR ( AItem = Nil ) OR (ARecord.Index = -1);
-end;
 
 procedure InitializeStyles;
   procedure InitOneStyle( var style: TcxStyle; bgcol : TColor; fs : TFontStyles = []; tcol : TColor = clBlack );
@@ -321,24 +245,7 @@ begin
     end
   else Result := clWhite;
 end;
-{
-procedure setupStyleGridDefault( var Sender: TcxCustomGridTableView; var ARecord: TcxCustomGridRecord;
-      var AItem: TcxCustomGridTableItem; var AStyle: TcxStyle; isHLCursor : Boolean );
-begin
-//  if ( ARecord = Nil ) OR ( AItem = Nil ) then Exit;
- if ( isHLCursor ) AND ( Sender.DataController.FocusedRowIndex = ARecord.Index )
-   then AStyle := cxStyleContentCursor
-   else if Odd( ARecord.Index )
-      then AStyle := cxStyleContentDefault
-      else AStyle := cxStyleContentOdd;
-end;
- }
-procedure setupStyleGridEditable( var Sender: TcxCustomGridTableView; var ARecord: TcxCustomGridRecord;
-      var AItem: TcxCustomGridTableItem; var AStyle: TcxStyle );
-begin
-  if ( AItem <> Nil ) AND ( AItem.Options.Editing ) AND ( Sender.OptionsData.Editing )
-    then AStyle := cxStyleContentEditable;
-end;
+
 
 procedure setupGridStyleDefaultBold(var Sender: TcxCustomGridTableView; var ARecord: TcxCustomGridRecord;
       var AItem: TcxCustomGridTableItem; var AStyle : TcxStyle; const isBold : Boolean );

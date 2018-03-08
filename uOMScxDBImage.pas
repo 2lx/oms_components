@@ -81,7 +81,7 @@ var
   strFileName: String;
   strFileExt: String;
 
-  ADisplayValue: variant;
+  ADisplayValue: Variant;
   AErrorText: TCaption;
   AError: Boolean;
 begin
@@ -104,7 +104,9 @@ begin
     ADisplayValue := Self.EditValue;
     Self.Properties.ValidateDisplayValue(ADisplayValue, AErrorText, AError, Self);
 
-    Self.PostEditValue;
+    if AError
+      then ShowError(AErrorText)
+      else Self.PostEditValue;
   except
     on EInvalidGraphic do ShowError('Ошибка при загрузке изображения, проверьте формат файла') ;
   end
