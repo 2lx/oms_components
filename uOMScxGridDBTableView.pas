@@ -188,16 +188,22 @@ var
 begin
   succCount := 0;
 
-  if Controller.SelectedRecordCount > 0 then
-  begin
-    for i := 0 to Controller.SelectedRecordCount - 1 do
-      if func( Controller.SelectedRecords[ i ].Values[ colGuidIndex ] )
-        then Inc(succCount);
+  try
+    DataController.DataSet.DisableControls;
 
-    ShowInformation( 'Успешно обновлено записей: ' + IntToStr( succCount ) + ' из '
-        + IntToStr( Controller.SelectedRecordCount ));
-  end
-  else ShowWarning( 'Ни одной записи не выделено.' );
+    if Controller.SelectedRecordCount > 0 then
+    begin
+      for i := 0 to Controller.SelectedRecordCount - 1 do
+        if func( Controller.SelectedRecords[ i ].Values[ colGuidIndex ] )
+          then Inc(succCount);
+
+      ShowInformation( 'Успешно обновлено записей: ' + IntToStr( succCount ) + ' из '
+          + IntToStr( Controller.SelectedRecordCount ));
+    end
+    else ShowWarning( 'Ни одной записи не выделено.' );
+  finally
+    DataController.DataSet.EnableControls;
+  end;
 end;
 
 end.
