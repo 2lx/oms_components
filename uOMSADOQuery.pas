@@ -1,4 +1,4 @@
-unit uOMSADOQuery;
+﻿unit uOMSADOQuery;
 
 interface
 
@@ -17,7 +17,7 @@ type
 
 implementation
 
-uses uOMSDialogs;
+uses uOMSDialogs, uLogging;
 
 constructor TOMSADOQuery.Create(AOwner: TComponent);
 begin
@@ -29,60 +29,48 @@ begin
 end;
 
 procedure TOMSADOQuery.DeleteErrorHandler(DataSet: TDataSet; E: EDatabaseError; var Action: TDataAction);
+var
+  strError : String;
 begin
-  if Pos( 'denied',  E.ToString ) > 0
-    then ShowError( 'Ошибка удаления записи. В целях безопасности БД НЕВОЗМОЖНО удалить запись из этой таблицы' );
-
   Action := daAbort;
+
+  strError := 'Ошибка удаления записи. ';
+  if Pos( 'denied',  E.ToString ) > 0
+    then strError := strError + 'В базе данных запрещено удалять эту запись';
+
+  ShowError( strError );
+  logQueryError( Name, SQL.Text, 'DeleteError', E.ToString );
 end;
 
 procedure TOMSADOQuery.EditErrorHandler(DataSet: TDataSet; E: EDatabaseError; var Action: TDataAction);
+var
+  strError : String;
 begin
-  ShowError( 'Ошибка редактирования записи. Одно из полей имеет некорректное значение' );
-
   Action := daAbort;
-  DataSet.Cancel;
+//  DataSet.Cancel;
+
+  strError := 'Ошибка редактирования записи. ';
+
+  logQueryError( Name, SQL.Text, 'EditError', E.ToString );
+  ShowError( strError );
 end;
 
 procedure TOMSADOQuery.PostErrorHandler(DataSet: TDataSet; E: EDatabaseError; var Action: TDataAction);
+var
+  strError : String;
 begin
-  if ( Pos( 'Access denied',  E.ToString ) > -1 )
-    then
-    begin
-      Action := daAbort;
-      ShowError( E.ToString );
+  Action := daAbort;
 
-      if DataSet.State in [ dsEdit ]
-        then DataSet.Cancel;
-    end
-  else if ( Pos( 'column does not allow nulls',  E.ToString ) > -1 )
-    then
-    begin
-      Action := daAbort;
+  strError := 'Данные введены неверно. ';
+  if ( Pos( 'allow nulls',  E.ToString ) > 0 )
+    then strError := strError + 'Заполнены не все обязательные поля.'
+  else if ( Pos( 'unique',  E.ToString ) > 0 )
+    then strError := strError + 'Запись с такими данными уже существует (не уникальна).'
+  else if ( Pos( 'denied',  E.ToString ) > 0 )
+    then strError := strError + 'Изменение этих данных запрещено.';
 
-      ShowError( 'Ошибка при сохранении записи. Заполнены НЕ ВСЕ ОБЯЗАТЕЛЬНЫЕ ПОЛЯ' );
-    end
-  else if ( Pos( 'unique',  E.ToString ) > -1 )
-    then
-    begin
-      Action := daAbort;
-
-      ShowError( 'Ошибка при сохранении записи. Записи в таблице должны быть УНИКАЛЬНЫМИ' );
-
-      if DataSet.State in [ dsEdit ]
-        then DataSet.Cancel;
-    end
-    else
-    begin
-      Action := daAbort;
-
-      if ShowQuestionYesNo( 'Ошибка при сохранении записи. Возможно, одно из полей имеет некорректное значение.'
-          + ' Возможно, запись была изменена другим пользователем. Вы хотите обновить данные?' )
-        then begin
-          DataSet.Close;
-          DataSet.Open;
-        end;
-    end;
+  logQueryError( Name, SQL.Text, 'PostError', E.ToString );
+  ShowError(strError);
 end;
 
 end.
