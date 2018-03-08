@@ -11,7 +11,8 @@ type
       gstMultiCellMultiRow
   );
 
-  TPProcGUID = reference to procedure( const guid: Variant );
+  TPFuncGUIDBoolean = reference to function( const guid: Variant ) : Boolean;
+
   TProcNavigatorOnButtonClick = procedure( Sender: TObject; AButtonIndex: Integer; var ADone: Boolean ) of object;
   TProcContentStyle = procedure( Sender: TcxCustomGridTableView; ARecord: TcxCustomGridRecord;
       AItem: TcxCustomGridTableItem; var AStyle: TcxStyle ) of object;
@@ -25,10 +26,8 @@ type
 
     procedure InitEditHandler( Sender: TcxCustomGridTableView; AItem: TcxCustomGridTableItem;
       AEdit: TcxCustomEdit );
-
-    procedure DefaultContentStyle( Sender: TcxCustomGridTableView; ARecord: TcxCustomGridRecord;
+    procedure GetContentStyleHandler( Sender: TcxCustomGridTableView; ARecord: TcxCustomGridRecord;
       AItem: TcxCustomGridTableItem; var AStyle: TcxStyle );
-
     procedure NavigatorOnButtonClickHandler( Sender: TObject; AButtonIndex: Integer; var ADone: Boolean );
 
   protected
@@ -41,7 +40,7 @@ type
     constructor Create(AOwner: TComponent); override;
 
     procedure setSelectionType( const gst : TGridSelectionType );
-    procedure processSelectedRecords( proc: TPProcGUID; const colGuidIndex: Integer );
+    procedure processSelectedRecords( func: TPFuncGUIDBoolean; const colGuidIndex: Integer );
   end;
 
 implementation
@@ -54,10 +53,8 @@ begin
   inherited Create(AOwner);
 
   //overrided settings
-{  Styles.ContentEven := cxStyleContentDefault;
-  Styles.ContentOdd := cxStyleContentOdd;
-  Styles.Selection := cxStylePink;
-}  Styles.FilterRowInfoText := cxStyleContentDefaultBold;
+//  Styles.Selection := cxStyleBlue;
+  Styles.FilterRowInfoText := cxStyleContentDefaultBold;
 
   OnInitEdit := InitEditHandler;
 end;
@@ -96,7 +93,7 @@ begin
 
   if Assigned(Styles.OnGetContentStyle)
     then FUserContentStyleHandler := Styles.OnGetContentStyle;
-  Styles.OnGetContentStyle := DefaultContentStyle;
+  Styles.OnGetContentStyle := GetContentStyleHandler;
 
   Navigator.InfoPanel.DisplayMask := 'Запись: [RecordIndex]/[RecordCount]';
 
@@ -153,7 +150,6 @@ procedure TOMScxGridDBTableView.setSelectionType( const gst : TGridSelectionType
 begin
   OptionsSelection.CellMultiSelect := gst in [ gstMultiCellMultiRow];
   OptionsSelection.CellSelect := gst in [ gstOneCellOneRow, gstMultiCellMultiRow ];
-
   OptionsSelection.InvertSelect := gst in [ ];
   OptionsSelection.MultiSelect := gst in [gstMultiCellMultiRow];
 
@@ -171,33 +167,35 @@ begin
     then TcxExtLookupComboBox(AEdit).Properties.UseMouseWheel := False;
 end;
 
-procedure TOMScxGridDBTableView.DefaultContentStyle( Sender: TcxCustomGridTableView;
+procedure TOMScxGridDBTableView.GetContentStyleHandler( Sender: TcxCustomGridTableView;
       ARecord: TcxCustomGridRecord; AItem: TcxCustomGridTableItem; var AStyle: TcxStyle);
 begin
   inherited;
   if checkInvalidStyle(ARecord, AItem) then Exit;
 
-  setupStyleGridDefault(Sender, ARecord, AItem, AStyle);
+  setupStyleGridBefore(Sender, ARecord, AItem, AStyle);
 
   if Assigned(FUserContentStyleHandler)
     then FUserContentStyleHandler(Sender, ARecord, AItem, AStyle);
 
-  setupStyleGridEditable(Sender, ARecord, AItem, AStyle);
+  setupStyleGridAfter(Sender, ARecord, AItem, AStyle);
 end;
 
-procedure TOMScxGridDBTableView.processSelectedRecords( proc: TPProcGUID; const colGuidIndex: Integer );
+procedure TOMScxGridDBTableView.processSelectedRecords( func: TPFuncGUIDBoolean; const colGuidIndex: Integer );
 var
-  i : Integer;
+  i, succCount : Integer;
   guid : Variant;
 begin
+  succCount := 0;
+
   if Controller.SelectedRecordCount > 0 then
   begin
     for i := 0 to Controller.SelectedRecordCount - 1 do
-    begin
-      proc( Controller.SelectedRecords[ i ].Values[ colGuidIndex ] );
-    end;
+      if func( Controller.SelectedRecords[ i ].Values[ colGuidIndex ] )
+        then Inc(succCount);
 
-    ShowInformation( 'Успешно обновлено записей: ' + IntToStr( Controller.SelectedRecordCount ));
+    ShowInformation( 'Успешно обновлено записей: ' + IntToStr( succCount ) + ' из '
+        + IntToStr( Controller.SelectedRecordCount ));
   end
   else ShowWarning( 'Ни одной записи не выделено.' );
 end;
