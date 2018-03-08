@@ -9,7 +9,7 @@ function ShowQuestionYesNo( const str : String ) : Boolean;
 
 implementation
 
-uses Dialogs, Controls;
+uses Dialogs, Controls, ClipBrd;
 
 procedure ShowInformation(const str : String );
 begin
@@ -23,6 +23,7 @@ end;
 
 procedure ShowError(const str : String );
 begin
+  Clipboard.AsText := str;
   MessageDlg( str, mtError, [ mbOK ], 0, mbOk );
 end;
 
