@@ -13,22 +13,22 @@ uses Dialogs, Controls;
 
 procedure ShowInformation(const str : String );
 begin
-  MessageDlg( str, mtInformation, [ mbOK ], 0 );
+  MessageDlg( str, mtInformation, [ mbOK ], 0, mbOk );
 end;
 
 procedure ShowWarning(const str : String );
 begin
-  MessageDlg( str, mtWarning, [ mbOK ], 0 );
+  MessageDlg( str, mtWarning, [ mbOK ], 0, mbOk );
 end;
 
 procedure ShowError(const str : String );
 begin
-  MessageDlg( str, mtError, [ mbOK ], 0 );
+  MessageDlg( str, mtError, [ mbOK ], 0, mbOk );
 end;
 
 function ShowQuestionYesNo( const str : String ) : Boolean;
 begin
-  Result := mrYes = MessageDlg( str, mtConfirmation, mbYesNoCancel, 0 );
+  Result := mrYes = MessageDlg( str, mtConfirmation, [ mbYes, mbNo ], 0 );
 end;
 
 end.
