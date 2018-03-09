@@ -6,12 +6,12 @@ procedure logQueryError(const AQName, AQSQLText, QEType, QError : String);
 
 implementation
 
-uses DataModule;
+uses uDataBase;
 
 procedure logQueryError(const AQName, AQSQLText, QEType, QError : String);
 begin
   try
-    DataForm.OMSQueryOrdersProc( 'OMS_PROGRAMERRORLOG_Insert', [ AQName, AQSQLText, QEType, QError ] )
+    DBProcedure( 'OMS_PROGRAMERRORLOG_Insert', [ AQName, AQSQLText, QEType, QError ] )
   except
   end;
 end;
