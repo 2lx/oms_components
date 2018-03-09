@@ -54,6 +54,8 @@ begin
 
   //overrided settings
 //  Styles.Selection := cxStyleBlue;
+  Styles.ContentEven := cxStyleContentDefault;
+  Styles.ContentOdd := cxStyleContentOdd;
   Styles.FilterRowInfoText := cxStyleContentDefaultBold;
 
   OnInitEdit := InitEditHandler;
