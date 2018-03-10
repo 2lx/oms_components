@@ -1,11 +1,11 @@
-unit uOMScxDBLookupComboBox;
+unit uOMScxLookupComboBox;
 
 interface
 
 uses Classes, cxDBLookupComboBox, Windows;
 
 type
-  TOMScxDBLookupComboBox = class(TcxDBLookupComboBox)
+  TOMScxLookupComboBox = class(TcxLookupComboBox)
   private
     procedure PropertiesChangeHandler(Sender: TObject);
     procedure DropDownDisableHandler(Sender: TObject);
@@ -25,14 +25,14 @@ implementation
 
 uses uOMSStyle, Graphics, cxDropDownEdit;
 
-constructor TOMScxDBLookupComboBox.Create(AOwner: TComponent);
+constructor TOMScxLookupComboBox.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
 
   Style.Color := clOMSEditableHighlight;
 end;
 
-procedure TOMScxDBLookupComboBox.Loaded;
+procedure TOMScxLookupComboBox.Loaded;
 begin
   inherited;
 
@@ -47,25 +47,25 @@ begin
   Properties.OnPropertiesChanged := PropertiesChangeHandler;
 end;
 
-procedure TOMScxDBLookupComboBox.MouseWheelHandler(Sender: TObject; Shift: TShiftState;
+procedure TOMScxLookupComboBox.MouseWheelHandler(Sender: TObject; Shift: TShiftState;
   WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
 begin
   Handled := True;
 end;
 
-procedure TOMScxDBLookupComboBox.DropDownDisableHandler(Sender: TObject);
+procedure TOMScxLookupComboBox.DropDownDisableHandler(Sender: TObject);
 begin
   (Sender as TcxCustomDropDownEdit).DroppedDown := False;
 end;
 
-procedure TOMScxDBLookupComboBox.SetEnabled(Value: Boolean);
+procedure TOMScxLookupComboBox.SetEnabled(Value: Boolean);
 begin
   inherited SetEnabled(True);
 
   Properties.ReadOnly := not Value;   // call PropertiesChanged
 end;
 
-procedure TOMScxDBLookupComboBox.PropertiesChangeHandler(Sender: TObject);
+procedure TOMScxLookupComboBox.PropertiesChangeHandler(Sender: TObject);
 begin
   if Properties.ReadOnly
     then begin
