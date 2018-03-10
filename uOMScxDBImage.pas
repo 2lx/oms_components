@@ -1,4 +1,4 @@
-﻿unit uOMScxDBImage;
+unit uOMScxDBImage;
 
 interface
 
@@ -11,8 +11,9 @@ type
 
     procedure DblClickHandled(Sender: TObject);
     procedure PropertiesAssignPictureHandler(Sender: TObject; const Picture: TPicture);
-    procedure PropertiesChangedHandled(Sender: TObject);
+    procedure PropertiesChangeHandler(Sender: TObject);
   protected
+    procedure Loaded; override;
     procedure WMDropFiles(var Msg: TMessage); message wm_DropFiles;
 
     procedure CreateWnd; override;
@@ -32,21 +33,21 @@ implementation
 uses uOMSDialogs, Controls, ShellAPI, SysUtils, Windows, uFileSystem, DB, UnitDifFuncs,
   uOMSStyle;
 
-// Порядок создания\инициализации:
-// 1. создается экземпляр класса TComponent (Enabled = True)
-// 2. создается экземпляр TProperties (ReadOnly = False)
-// 3. инициализируются значения TComponent значениями не по-умолчанию из дизайнера (Enabled)
-// 4. инициализируются значения TProperties значениями не по-умолчанию из дизайнера (ReadOnly)
-
 constructor TOMScxDBImage.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
 
+  Style.Color := clOMSEditableHighlight;
+
+  Properties.OnChange := PropertiesChangeHandler;
+end;
+
+procedure TOMScxDBImage.Loaded;
+begin
+  inherited;
+
   OnDblClick := DblClickHandled;
   Properties.OnAssignPicture := PropertiesAssignPictureHandler;
-  Properties.OnChange := PropertiesChangedHandled;
-
-  Style.Color := clOMSEditableHighlight;
 end;
 
 procedure TOMScxDBImage.CreateWnd;
@@ -66,9 +67,10 @@ begin
   inherited SetEnabled(True);
 
   Properties.ReadOnly := not Value;  // call PropertiesChanged
+  PropertiesChangeHandler(Self);      // ��� DevExpress, �� ������ ���������� ������� PropertiesOnChange
 end;
 
-procedure TOMScxDBImage.PropertiesChangedHandled(Sender: TObject);
+procedure TOMScxDBImage.PropertiesChangeHandler(Sender: TObject);
 begin
   if Properties.ReadOnly
     then Style.Color := clWindow
@@ -92,7 +94,7 @@ begin
   strFileExt := UpperCase(ExtractFileExt(strFileName));
   if (strFileExt <> '.JPEG') AND (strFileExt <> '.JPG') then
   begin
-    ShowError( 'Ошибка. Файл должен быть в формате JPG/JPEG' );
+    ShowError( '������. ���� ������ ���� � ������� JPG/JPEG' );
     Exit;
   end;
 
@@ -108,7 +110,7 @@ begin
       then ShowError(AErrorText)
       else Self.PostEditValue;
   except
-    on EInvalidGraphic do ShowError('Ошибка при загрузке изображения, проверьте формат файла') ;
+    on EInvalidGraphic do ShowError('������ ��� �������� �����������, ��������� ������ �����') ;
   end
 end;
 

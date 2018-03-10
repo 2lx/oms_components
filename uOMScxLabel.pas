@@ -31,7 +31,7 @@ begin
 
   if Assigned(OnDblClick) then
   begin
-    Style.TextColor := clOMSSpecialBlue;
+    Style.TextColor := clOMSSpecialDarkBlueGreen;
     Style.TextStyle := [ fsUnderline ];
     Cursor := crHandPoint;
   end;

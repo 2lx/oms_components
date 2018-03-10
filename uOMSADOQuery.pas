@@ -1,4 +1,4 @@
-п»їunit uOMSADOQuery;
+unit uOMSADOQuery;
 
 interface
 
@@ -77,7 +77,7 @@ begin
     on E: Exception do begin
       Result := False;
       
-      ShowError('РћС€РёР±РєР° РѕС‚РєСЂС‹С‚РёСЏ Р·Р°РїСЂРѕСЃР°. ' + E.ToString );
+      ShowError('Ошибка открытия запроса. ' + E.ToString );
       logQueryError( Name, SQL.Text, 'OpenError', E.ToString );
     end;
   end;
@@ -106,9 +106,9 @@ var
 begin
   Action := daAbort;
 
-  strError := 'РћС€РёР±РєР° СѓРґР°Р»РµРЅРёСЏ Р·Р°РїРёСЃРё. ';
+  strError := 'Ошибка удаления записи. ';
   if Pos( 'denied',  E.ToString ) > 0
-    then strError := strError + 'Р—Р°РїСЂРµС‰РµРЅРѕ СѓРґР°Р»СЏС‚СЊ СЌС‚Сѓ Р·Р°РїРёСЃСЊ'
+    then strError := strError + 'Запрещено удалять эту запись'
     else strError := strError + E.ToString;
 
   ShowError( strError );
@@ -121,7 +121,7 @@ var
 begin
   Action := daAbort;
 
-  strError := 'РћС€РёР±РєР° СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ Р·Р°РїРёСЃРё. ';
+  strError := 'Ошибка редактирования записи. ';
   strError := strError + E.ToString;
 
   logQueryError( Name, SQL.Text, 'EditError', E.ToString );
@@ -134,13 +134,13 @@ var
 begin
   Action := daAbort;
 
-  strError := 'Р”Р°РЅРЅС‹Рµ РІРІРµРґРµРЅС‹ РЅРµРІРµСЂРЅРѕ. ';
+  strError := 'Данные введены неверно. ';
   if ( Pos( 'allow nulls',  E.ToString ) > 0 )
-    then strError := strError + 'Р—Р°РїРѕР»РЅРµРЅС‹ РЅРµ РІСЃРµ РѕР±СЏР·Р°С‚РµР»СЊРЅС‹Рµ РїРѕР»СЏ.'
+    then strError := strError + 'Заполнены не все обязательные поля.'
   else if ( Pos( 'unique',  E.ToString ) > 0 )
-    then strError := strError + 'Р—Р°РїРёСЃСЊ СЃ С‚Р°РєРёРјРё РґР°РЅРЅС‹РјРё СѓР¶Рµ СЃСѓС‰РµСЃС‚РІСѓРµС‚.'
+    then strError := strError + 'Запись с такими данными уже существует.'
   else if ( Pos( 'denied',  E.ToString ) > 0 )
-    then strError := strError + 'РР·РјРµРЅРµРЅРёРµ СЌС‚РёС… РґР°РЅРЅС‹С… Р·Р°РїСЂРµС‰РµРЅРѕ.'
+    then strError := strError + 'Изменение этих данных запрещено.'
     else strError := strError + E.ToString;
 
   logQueryError( Name, SQL.Text, 'PostError', E.ToString );

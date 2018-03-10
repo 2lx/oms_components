@@ -1,4 +1,4 @@
-п»їunit uOMScxGridDBTableView;
+unit uOMScxGridDBTableView;
 
 interface
 
@@ -72,7 +72,7 @@ begin
   DataController.Filter.Options := [ fcoCaseInsensitive ];
 
   FilterRow.ApplyChanges := fracImmediately;
-  FilterRow.InfoText := 'РЎРўР РћРљРђ Р”Р›РЇ РЈРљРђР—РђРќРРЇ Р¤РР›Р¬РўР РћР’';
+  FilterRow.InfoText := 'СТРОКА ДЛЯ УКАЗАНИЯ ФИЛЬТРОВ';
 
   OptionsBehavior.NavigatorHints := True;
   OptionsBehavior.CellHints := True;
@@ -87,7 +87,7 @@ begin
 //  OptionsView.CellEndEllipsis := False;
   OptionsView.Indicator := True;
   OptionsView.IndicatorWidth := 12;
-  OptionsView.NoDataToDisplayInfoText := 'РќР•Рў Р”РђРќРќР«РҐ Р”Р›РЇ РћРўРћР‘Р РђР–Р•РќРРЇ';
+  OptionsView.NoDataToDisplayInfoText := 'НЕТ ДАННЫХ ДЛЯ ОТОБРАЖЕНИЯ';
   OptionsView.GridLineColor := RGB( 190, 190, 190 );
 
   if CurrentSelectionType = gstNone
@@ -97,7 +97,7 @@ begin
     then FUserContentStyleHandler := Styles.OnGetContentStyle;
   Styles.OnGetContentStyle := GetContentStyleHandler;
 
-  Navigator.InfoPanel.DisplayMask := 'Р—Р°РїРёСЃСЊ: [RecordIndex]/[RecordCount]';
+  Navigator.InfoPanel.DisplayMask := 'Запись: [RecordIndex]/[RecordCount]';
 
   with NavigatorButtons do
   begin
@@ -110,19 +110,19 @@ begin
 
       // TODO: Tcollection ??
       Insert.ImageIndex := 0;
-      Insert.Hint := 'Р’СЃС‚Р°РІРёС‚СЊ РЅРѕРІСѓСЋ Р·Р°РїРёСЃСЊ';
+      Insert.Hint := 'Вставить новую запись';
       Delete.ImageIndex := 1;
-      Delete.Hint := 'РЈРґР°Р»РёС‚СЊ Р·Р°РїРёСЃСЊ';
+      Delete.Hint := 'Удалить запись';
       Post.ImageIndex := 2;
-      Post.Hint := 'РЎРѕС…СЂР°РЅРёС‚СЊ РёР·РјРµРЅРµРЅРёСЏ Р·Р°РїРёСЃРё';
+      Post.Hint := 'Сохранить изменения записи';
       Cancel.ImageIndex := 3;
-      Cancel.Hint := 'РћС‚РјРµРЅРёС‚СЊ РёР·РјРµРЅРµРЅРёСЏ Р·Р°РїРёСЃРё';
+      Cancel.Hint := 'Отменить изменения записи';
 
       CustomButtons.Clear;
 
       nbtn := CustomButtons.Add;
       nbtn.ImageIndex := 4;
-      nbtn.Hint := 'Р’С‹РіСЂСѓР·РёС‚СЊ РІ Excel';
+      nbtn.Hint := 'Выгрузить в Excel';
 
       OnButtonClick := NavigatorOnButtonClickHandler;
     end;
@@ -138,9 +138,9 @@ begin
     ADone := True;
 
     case Navigator.Buttons[ AButtonIndex ].ImageIndex of
-      4 : begin // РІС‹РіСЂСѓР·РєР° РІ Excel
+      4 : begin // выгрузка в Excel
         if (Site <> nil) AND (Site.Parent is TcxGrid)
-          then cxGridToExcelWithImages( 'Р­РєСЂР°РЅРЅР°СЏ С„РѕСЂРјР°', (Site.Parent as TcxGrid), False );
+          then cxGridToExcelWithImages( 'Экранная форма', (Site.Parent as TcxGrid), False );
       end;
       else ADone := False;
     end;
@@ -199,10 +199,10 @@ begin
         if func( Controller.SelectedRecords[ i ].Values[ colGuidIndex ] )
           then Inc(succCount);
 
-      ShowInformation( 'РЈСЃРїРµС€РЅРѕ РѕР±РЅРѕРІР»РµРЅРѕ Р·Р°РїРёСЃРµР№: ' + IntToStr( succCount ) + ' РёР· '
+      ShowInformation( 'Успешно обновлено записей: ' + IntToStr( succCount ) + ' из '
           + IntToStr( Controller.SelectedRecordCount ));
     end
-    else ShowWarning( 'РќРё РѕРґРЅРѕР№ Р·Р°РїРёСЃРё РЅРµ РІС‹РґРµР»РµРЅРѕ.' );
+    else ShowWarning( 'Ни одной записи не выделено.' );
   finally
     DataController.DataSet.EnableControls;
   end;

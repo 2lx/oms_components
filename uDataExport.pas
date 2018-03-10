@@ -1,4 +1,4 @@
-п»їunit uDataExport;
+unit uDataExport;
 
 interface
 
@@ -29,7 +29,7 @@ begin
     ExportGridToXLSX(fileName, cxGrid, AExpand, True, False, 'xlsx');
     Workbook := ExcelApp.WorkBooks.Add( fileName );
   except
-    ShowError('РџСЂРѕРёР·РѕС€Р»Р° РѕС€РёР±РєР° РїСЂРё РІС‹РіСЂСѓР·РєРµ РІ С„РѕСЂРјР°С‚ XLSX. РћР±СЂР°С‚РёС‚РµСЃСЊ Рє РїСЂРѕРіСЂР°РјРјРёСЃС‚Сѓ.');
+    ShowError('Произошла ошибка при выгрузке в формат XLSX. Обратитесь к программисту.');
   end;
 
 {

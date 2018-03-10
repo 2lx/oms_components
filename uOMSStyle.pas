@@ -48,7 +48,7 @@ const
 
 	clOMSSpecialLightGray        = TColor( $DFDFDF );
 
-  clOMSEditableHighlight  = clOMSSpecialLightBlue;
+  clOMSEditableHighlight  =  TColor( $FFF0E1 );   // clOMSSpecialLightBlue;
 var
   cxStyleContentError : TcxStyle;
   cxStyleContentDefault : TcxStyle;
