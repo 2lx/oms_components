@@ -18,7 +18,7 @@ end;
 
 procedure ShowWarning(const str : String );
 begin
-  Windows.MessageBox( Application.Handle, PChar(str), PChar('Внимание'), MB_OK or MB_ICONWARNING  );
+  Windows.MessageBox( Application.Handle, PChar(str), PChar('Предупреждение'), MB_OK or MB_ICONWARNING  );
 end;
 
 procedure ShowError(const str : String );
@@ -29,7 +29,7 @@ end;
 
 function ShowQuestionYesNo( const str : String ) : Boolean;
 begin
-  Result := idYes = Windows.MessageBox( Application.Handle, PChar(str), PChar('Вопрос'), MB_YESNO or MB_ICONQUESTION  );
+  Result := idYes = Windows.MessageBox( Application.Handle, PChar(str), PChar('Подтверждение'), MB_YESNO or MB_ICONQUESTION  );
 end;
 
 end.

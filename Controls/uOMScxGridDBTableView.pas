@@ -2,7 +2,7 @@ unit uOMScxGridDBTableView;
 
 interface
 
-uses Classes, cxGridDBTableView, cxGridCustomTableView, cxEdit, cxStyles;
+uses Classes, cxGridDBTableView, cxGridCustomTableView, cxEdit, cxStyles, cxFilter;
 
 type
   TGridSelectionType = (
@@ -41,12 +41,16 @@ type
 
     procedure setSelectionType( const gst : TGridSelectionType );
     procedure processSelectedRecords( func: TPFuncGUIDBoolean; const colGuidIndex: Integer );
+
+    procedure setFilter( AValue: Variant; const opKind: TcxFilterOperatorKind;
+        const indexes: array of Integer; const rootOpKind: tcxFilterBoolOperatorKind = fboOR );
   end;
 
 implementation
 
-uses uOMSStyle, uOMSStyleGridDefault, Windows, Graphics, cxGraphics, cxDBExtLookupComboBox, cxDBLookupComboBox, cxSpinEdit, cxFilter,
-  cxGridTableView, uDMComponents, cxNavigator, uDataExport, cxGrid, uOMSDialogs, SysUtils;
+uses uOMSStyle, uOMSStyleGridDefault, Windows, Graphics, cxGraphics, cxDBExtLookupComboBox,
+  cxDBLookupComboBox, cxSpinEdit, cxGridTableView, uDMComponents, cxNavigator, uDataExport, cxGrid,
+  uOMSDialogs, SysUtils;
 
 constructor TOMScxGridDBTableView.Create(AOwner: TComponent);
 begin
@@ -104,7 +108,7 @@ begin
     if Assigned(OnButtonClick)
       then FUserNavigatorOnButtonHandler := OnButtonClick;
 
-    if (not Assigned(OnButtonClick)) then
+    if (not Assigned(OnButtonClick)) OR (CustomButtons.Count = 0) then
     begin
       Images := DMOMSComponents.ImageListNavigator;
 
@@ -148,16 +152,6 @@ begin
   else ADone := False;
 end;
 
-procedure TOMScxGridDBTableView.setSelectionType( const gst : TGridSelectionType );
-begin
-  OptionsSelection.CellMultiSelect := gst in [ gstMultiCellMultiRow];
-  OptionsSelection.CellSelect := gst in [ gstOneCellOneRow, gstMultiCellMultiRow ];
-  OptionsSelection.InvertSelect := gst in [ ];
-  OptionsSelection.MultiSelect := gst in [gstMultiCellMultiRow];
-
-  FCurrentSelectionType := gst;
-end;
-
 procedure TOMScxGridDBTableView.InitEditHandler( Sender: TcxCustomGridTableView; AItem: TcxCustomGridTableItem;
       AEdit: TcxCustomEdit );
 begin
@@ -183,6 +177,16 @@ begin
   setupStyleGridAfter(Sender, ARecord, AItem, AStyle);
 end;
 
+procedure TOMScxGridDBTableView.setSelectionType( const gst : TGridSelectionType );
+begin
+  OptionsSelection.CellMultiSelect := gst in [ gstMultiCellMultiRow];
+  OptionsSelection.CellSelect := gst in [ gstOneCellOneRow, gstMultiCellMultiRow ];
+  OptionsSelection.InvertSelect := gst in [ ];
+  OptionsSelection.MultiSelect := gst in [gstMultiCellMultiRow];
+
+  FCurrentSelectionType := gst;
+end;
+
 procedure TOMScxGridDBTableView.processSelectedRecords( func: TPFuncGUIDBoolean; const colGuidIndex: Integer );
 var
   i, succCount : Integer;
@@ -205,6 +209,28 @@ begin
     else ShowWarning( 'Ни одной записи не выделено.' );
   finally
     DataController.DataSet.EnableControls;
+  end;
+end;
+
+procedure TOMScxGridDBTableView.setFilter( AValue: Variant; const opKind: TcxFilterOperatorKind;
+    const indexes: array of Integer; const rootOpKind: tcxFilterBoolOperatorKind );
+var
+  ind : Integer;
+  DValue : String;
+begin
+  with DataController.Filter do
+  begin
+    Root.Clear;
+    Root.BoolOperatorKind := rootOpKind;
+
+    if opKind = foLike
+      then AValue := '*' + String( AValue ) + '*';
+    DValue := String( AValue );
+
+    for ind in indexes do
+      Root.AddItem( Columns[ ind ], opKind, AValue, DValue );
+
+    Active := True;
   end;
 end;
 
