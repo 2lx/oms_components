@@ -38,8 +38,6 @@ begin
   inherited Create(AOwner);
 
   Style.Color := clOMSEditableHighlight;
-
-  Properties.OnChange := PropertiesChangeHandler;
 end;
 
 procedure TOMScxDBImage.Loaded;
@@ -48,6 +46,7 @@ begin
 
   OnDblClick := DblClickHandled;
   Properties.OnAssignPicture := PropertiesAssignPictureHandler;
+  Properties.OnPropertiesChanged := PropertiesChangeHandler;
 end;
 
 procedure TOMScxDBImage.CreateWnd;
@@ -67,7 +66,6 @@ begin
   inherited SetEnabled(True);
 
   Properties.ReadOnly := not Value;  // call PropertiesChanged
-  PropertiesChangeHandler(Self);      // баг DevExpress, не всегда вызывается событие PropertiesOnChange
 end;
 
 procedure TOMScxDBImage.PropertiesChangeHandler(Sender: TObject);

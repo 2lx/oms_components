@@ -12,7 +12,6 @@ type
     procedure MouseWheelHandler(Sender: TObject; Shift: TShiftState; WheelDelta: Integer;
           MousePos: TPoint; var Handled: Boolean);
 
-
   protected
     procedure Loaded; override;
     procedure SetEnabled(Value : Boolean); override;
@@ -24,7 +23,7 @@ type
 
 implementation
 
-uses uOMSStyle, Graphics, cxDropDownEdit;
+uses uOMSStyle, Graphics, cxDropDownEdit, uOMSDialogs;
 
 constructor TOMScxDBLookupComboBox.Create(AOwner: TComponent);
 begin
@@ -32,7 +31,6 @@ begin
 
   Style.Color := clOMSEditableHighlight;
 
-  Properties.OnChange := PropertiesChangeHandler;
   OnMouseWheel := MouseWheelHandler;
 end;
 
@@ -46,6 +44,8 @@ begin
     then Properties.DropDownRows := 20;
   if Properties.DropDownWidth < 600
     then Properties.DropDownWidth := 600;
+
+  Properties.OnPropertiesChanged := PropertiesChangeHandler;
 end;
 
 procedure TOMScxDBLookupComboBox.MouseWheelHandler(Sender: TObject; Shift: TShiftState;
@@ -54,17 +54,16 @@ begin
   Handled := True;
 end;
 
+procedure TOMScxDBLookupComboBox.DropDownDisableHandler(Sender: TObject);
+begin
+  (Sender as TcxCustomDropDownEdit).DroppedDown := False;
+end;
+
 procedure TOMScxDBLookupComboBox.SetEnabled(Value: Boolean);
 begin
   inherited SetEnabled(True);
 
   Properties.ReadOnly := not Value;   // call PropertiesChanged
-  PropertiesChangeHandler(Self);      // баг DevExpress, не всегда вызывается событие PropertiesOnChange
-end;
-
-procedure TOMScxDBLookupComboBox.DropDownDisableHandler(Sender: TObject);
-begin
-  (Sender as TcxCustomDropDownEdit).DroppedDown := False;
 end;
 
 procedure TOMScxDBLookupComboBox.PropertiesChangeHandler(Sender: TObject);
