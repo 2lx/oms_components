@@ -9,27 +9,27 @@ function ShowQuestionYesNo( const str : String ) : Boolean;
 
 implementation
 
-uses Dialogs, Controls, ClipBrd;
+uses ClipBrd, Windows, Forms;
 
 procedure ShowInformation(const str : String );
 begin
-  MessageDlg( str, mtInformation, [ mbOK ], 0, mbOk );
+  Windows.MessageBox( Application.Handle, PChar(str), PChar('Информация'), MB_OK or MB_ICONINFORMATION  );
 end;
 
 procedure ShowWarning(const str : String );
 begin
-  MessageDlg( str, mtWarning, [ mbOK ], 0, mbOk );
+  Windows.MessageBox( Application.Handle, PChar(str), PChar('Внимание'), MB_OK or MB_ICONWARNING  );
 end;
 
 procedure ShowError(const str : String );
 begin
   Clipboard.AsText := str;
-  MessageDlg( str, mtError, [ mbOK ], 0, mbOk );
+  Windows.MessageBox( Application.Handle, PChar(str), PChar('Ошибка'), MB_OK or MB_ICONERROR  );
 end;
 
 function ShowQuestionYesNo( const str : String ) : Boolean;
 begin
-  Result := mrYes = MessageDlg( str, mtConfirmation, [ mbYes, mbNo ], 0 );
+  Result := idYes = Windows.MessageBox( Application.Handle, PChar(str), PChar('Вопрос'), MB_YESNO or MB_ICONQUESTION  );
 end;
 
 end.
