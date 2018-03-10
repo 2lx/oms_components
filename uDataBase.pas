@@ -19,6 +19,9 @@ function DBProcedureResult( procName: String; const params: array of Variant; ou
 function DBFunction( funcName: String; const params: array of Variant;
     const dbCatalog : TDBCatalog = dbOrders; const dbScheme: String = 'dbo' ) : Variant;
 
+function DBUserSettingsSet(const SName : String; const SValue : Variant) : Boolean;
+function DBUserSettingsGet(const SName : String ) : Variant;
+
 implementation
 
 uses ADODB, DataModule, SysUtils, uOMSADOQuery, uOMSDialogs, uLogging, Variants;
@@ -72,6 +75,12 @@ var
 begin
   Result := True;
   RValue := Null;
+
+  if not DataForm.adoconnOrdersForSch.Connected then
+  begin
+    ShowError( 'Ошибка. Вы не подключены к БД.' );
+    Exit;
+  end;
 
   try
     adoq := TOMSADOQuery.Create(Nil);
@@ -129,13 +138,46 @@ begin
     strSQL := strSQL + ' ) AS Result';
     adoq.SQL.Text := strSQL;
 
-    if ( not adoq.SafeOpen ) OR ( adoq.Eof ) then
-    begin
-      Result := Null;
-      adoq.Free;
-      Exit;
+    if ( not adoq.SafeOpen ) OR ( adoq.Eof )
+      then Result := Null
+      else Result := adoq.FieldByName( 'Result' ).Value;
+  finally
+    adoq.Free;
+  end;
+end;
+
+function DBUserSettingsSet(const SName : String; const SValue : Variant) : Boolean;
+var
+  baseType : Integer;
+begin
+  baseType := VarType( SValue ) and VarTypeMask;
+
+  case baseType of
+    varDate :     Result := DBProcedure( 'OMS_USERSETTINGS_SetDateTime', [ SName, TDateTime( SValue ) ] );
+    varBoolean :  Result := DBProcedure( 'OMS_USERSETTINGS_SetBoolean', [ SName, Boolean( SValue ) ] );
+    varInteger :  Result := DBProcedure( 'OMS_USERSETTINGS_SetInteger', [ SName, Integer( SValue ) ] );
+    varString  :  begin
+      if (String( SValue )[1] = '{') AND (Length(String( SValue) ) = 38)
+        then Result := DBProcedure( 'OMS_USERSETTINGS_SetGUID', [ SName, SValue ] )
+        else Result := DBProcedure( 'OMS_USERSETTINGS_SetString', [ SName, String( SValue ) ] );
     end
-    else Result := adoq.FieldByName( 'Result' ).Value;
+  end;
+end;
+
+function DBUserSettingsGet(const SName : String ) : Variant;
+var
+  adoq : TOMSADOQuery;
+begin
+  try
+    adoq := TOMSADOQuery.Create(Nil);
+    adoq.Connection := DataForm.adoconnOrdersForSch;
+    adoq.LockType := ltReadOnly;
+
+    adoq.SQL.Text := 'EXEC [ORDERS].dbo.[OMS_USERSETTINGS_GET]';
+
+    if ( not adoq.SafeOpen ) OR ( adoq.Eof )
+      then Result := Null
+      else Result := adoq.FieldByName( SName ).Value;
   finally
     adoq.Free;
   end;

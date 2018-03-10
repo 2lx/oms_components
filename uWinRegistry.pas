@@ -4,6 +4,7 @@ interface
 
 function WinRegistryGet( const RKey, FieldName: String; const DefValue: Variant ) : Variant;
 procedure WinRegistrySet( const RKey, FieldName: String; AValue: Variant );
+procedure WinRegistryDelete( const RKey, FieldName: String );
 
 implementation
 
@@ -19,6 +20,7 @@ begin
   try
     Registry:= TRegistry.Create;
     Registry.RootKey := HKEY_CURRENT_USER;
+    Registry.LazyWrite := False;
 
     if Registry.OpenKey( RKey, True ) AND Registry.ValueExists( FieldName ) then
     begin
@@ -28,6 +30,8 @@ begin
         rdString : Result := Registry.ReadString( FieldName );
         rdInteger : Result := Registry.ReadInteger( FieldName );
       end;
+
+      Registry.CloseKey;
     end;
 
   finally
@@ -43,6 +47,7 @@ begin
   try
     Registry:= TRegistry.Create;
     Registry.RootKey := HKEY_CURRENT_USER;
+    Registry.LazyWrite := False;
 
     if Registry.OpenKey( RKey, True ) then
     begin
@@ -54,6 +59,28 @@ begin
         varString  : Registry.WriteString( FieldName, String( AValue ) );
         varDouble  : Registry.WriteFloat( FieldName, Real( AValue ) );
       end;
+
+      Registry.CloseKey;
+    end;
+
+   finally
+     Registry.Free;
+   end;
+end;
+
+procedure WinRegistryDelete( const RKey, FieldName: String );
+var
+  Registry : TRegistry;
+begin
+  try
+    Registry:= TRegistry.Create;
+    Registry.RootKey := HKEY_CURRENT_USER;
+    Registry.LazyWrite := False;
+
+    if Registry.OpenKey( RKey, False ) then
+    begin
+      Registry.DeleteValue( RKey );
+      Registry.CloseKey;
     end;
 
    finally
