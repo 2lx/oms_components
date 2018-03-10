@@ -19,9 +19,11 @@ type
     function isEdited : Boolean;
     procedure SafePost( const isReopen: Boolean = True );
     procedure SafeCancel;
-    function SafeOpen : Boolean;
-    procedure CloseWithBookmark;
-    procedure OpenWithBookmark;    
+
+    procedure CloseWithBookmark( const doPost: Boolean = True );
+    procedure OpenWithBookmark;
+
+    function  SafeOpen : Boolean;
     procedure SafeResync;
   end;
 
@@ -53,14 +55,26 @@ begin
   if isEdited then Cancel;
 end;
 
-procedure TOMSADOQuery.CloseWithBookmark;
+procedure TOMSADOQuery.OpenWithBookmark;
+begin
+  try
+    if SafeOpen AND ( FBookmark <> Nil ) AND BookmarkValid( FBookmark )
+      then GotoBookmark( FBookmark );
+  finally
+    EnableControls;
+  end;
+end;
+
+procedure TOMSADOQuery.CloseWithBookmark( const doPost: Boolean );
 begin
   DisableControls;
-  
+
+  if doPost then SafePost;
+
   FBookmark := Nil;
-  if Active AND (not Eof) 
+  if Active AND (not Eof)
     then FBookmark := GetBookmark;
-    
+
   if Active then Close;
 end;
 
@@ -83,21 +97,10 @@ begin
   end;
 end;
 
-procedure TOMSADOQuery.OpenWithBookmark;
-begin
-  try
-    if SafeOpen AND ( FBookmark <> Nil ) AND BookmarkValid( FBookmark )
-      then GotoBookmark( FBookmark );
-  finally
-    EnableControls;
-  end;
-end;
-
 procedure TOMSADOQuery.SafeResync;
 begin
-  SafePost;
-  CloseWithBookmark;
-  OpenWithBookmark;   
+  CloseWithBookmark( True );
+  OpenWithBookmark;
 end;
 
 procedure TOMSADOQuery.DeleteErrorHandler(DataSet: TDataSet; E: EDatabaseError; var Action: TDataAction);
