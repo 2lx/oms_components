@@ -16,8 +16,8 @@ function DBProcedure( procName: String; const params: array of Variant;
 function DBProcedureResult( procName: String; const params: array of Variant; out RValue: Variant;
     const dbCatalog : TDBCatalog = dbOrders; const dbScheme: String = 'dbo') : Boolean;
 
-function DBFunction( funcName: String; const params: array of Variant;
-    const dbCatalog : TDBCatalog = dbOrders; const dbScheme: String = 'dbo' ) : Variant;
+function DBFunction( funcName: String; const params: array of Variant; out RValue: Variant;
+    const dbCatalog : TDBCatalog = dbOrders; const dbScheme: String = 'dbo' ) : Boolean;
 
 function DBUserSettingsSet(const SName : String; const SValue : Variant) : Boolean;
 function DBUserSettingsGet(const SName : String ) : Variant;
@@ -73,15 +73,15 @@ var
   adoq : TOMSADOQuery;
   strSQL : String;
 begin
-  Result := True;
+  Result := False;
   RValue := Null;
 
-  if not DataForm.adoconnOrdersForSch.Connected then
+{  if not DataForm.adoconnOrdersForSch.Connected then
   begin
     ShowError( 'Ошибка. Вы не подключены к БД.' );
     Exit;
   end;
-
+}
   try
     adoq := TOMSADOQuery.Create(Nil);
     adoq.Connection := DataForm.adoconnOrdersForSch;
@@ -93,7 +93,6 @@ begin
 
     if ( not adoq.SafeOpen ) OR ( adoq.FindField('Result') = Nil ) then
     begin
-      Result := False;
       adoq.Free;
       Exit;
     end;
@@ -119,14 +118,14 @@ begin
   end;
 end;
 
-function DBFunction( funcName: String; const params: array of Variant;
-    const dbCatalog : TDBCatalog = dbOrders; const dbScheme: String = 'dbo' ) : Variant;
+function DBFunction( funcName: String; const params: array of Variant; out RValue: Variant;
+    const dbCatalog : TDBCatalog = dbOrders; const dbScheme: String = 'dbo' ) : Boolean;
 var
   strResult: String;
   adoq : TOMSADOQuery;
   strSQL : String;
 begin
-  Result := True;
+  Result := False;
 
   try
     adoq := TOMSADOQuery.Create(Nil);
@@ -138,9 +137,11 @@ begin
     strSQL := strSQL + ' ) AS Result';
     adoq.SQL.Text := strSQL;
 
-    if ( not adoq.SafeOpen ) OR ( adoq.Eof )
-      then Result := Null
-      else Result := adoq.FieldByName( 'Result' ).Value;
+    if (adoq.SafeOpen ) AND ( not adoq.Eof ) then
+    begin
+      RValue := adoq.FieldByName( 'Result' ).Value;
+      Result := True;
+    end;
   finally
     adoq.Free;
   end;
