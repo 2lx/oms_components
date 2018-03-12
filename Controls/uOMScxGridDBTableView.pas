@@ -50,7 +50,7 @@ implementation
 
 uses uOMSStyle, uOMSStyleGridDefault, Windows, Graphics, cxGraphics, cxDBExtLookupComboBox,
   cxDBLookupComboBox, cxSpinEdit, cxGridTableView, uDMComponents, cxNavigator, uDataExport, cxGrid,
-  uOMSDialogs, SysUtils;
+  uOMSDialogs, Controls, SysUtils;
 
 constructor TOMScxGridDBTableView.Create(AOwner: TComponent);
 begin
@@ -94,6 +94,8 @@ begin
   OptionsView.NoDataToDisplayInfoText := 'НЕТ ДАННЫХ ДЛЯ ОТОБРАЖЕНИЯ';
   OptionsView.GridLineColor := RGB( 190, 190, 190 );
 
+  OptionsView.NewItemRowInfoText := 'СТРОКА ДЛЯ ДОБАВЛЕНИЯ ЗАПИСИ';
+
   if CurrentSelectionType = gstNone
     then setSelectionType( gstOneCellOneRow );
 
@@ -125,6 +127,10 @@ begin
       CustomButtons.Clear;
 
       nbtn := CustomButtons.Add;
+      nbtn.ImageIndex := 5;
+      nbtn.Hint := 'Настройка таблицы';
+
+      nbtn := CustomButtons.Add;
       nbtn.ImageIndex := 4;
       nbtn.Hint := 'Выгрузить в Excel';
 
@@ -146,10 +152,15 @@ begin
         if (Site <> nil) AND (Site.Parent is TcxGrid)
           then cxGridToExcelWithImages( 'Экранная форма', (Site.Parent as TcxGrid), False );
       end;
-      else ADone := False;
+      5 : begin // настройки таблицы
+        DMOMSComponents.pmiSelectionType1Cell.Checked := FCurrentSelectionType = gstOneCellOneRow;
+        DMOMSComponents.pmiSelectionTypeMultiCell.Checked := FCurrentSelectionType = gstMultiCellMultiRow;
+
+        DMOMSComponents.PopupMenuGridViewSettings.PopupComponent := Self;
+        DMOMSComponents.PopupMenuGridViewSettings.Popup(Mouse.CursorPos.X, Mouse.CursorPos.Y);
+      end;
     end;
-  end
-  else ADone := False;
+  end;
 end;
 
 procedure TOMScxGridDBTableView.InitEditHandler( Sender: TcxCustomGridTableView; AItem: TcxCustomGridTableItem;

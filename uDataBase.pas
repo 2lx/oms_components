@@ -13,10 +13,10 @@ type
 function DBProcedure( procName: String; const params: array of Variant;
     const dbCatalog : TDBCatalog = dbOrders; const dbScheme: String = 'dbo') : Boolean;
 
-function DBProcedureResult( procName: String; const params: array of Variant; out RValue: Variant;
+function DBProcedureResult( procName: String; const params: array of Variant; var RValue: Variant;
     const dbCatalog : TDBCatalog = dbOrders; const dbScheme: String = 'dbo') : Boolean;
 
-function DBFunction( funcName: String; const params: array of Variant; out RValue: Variant;
+function DBFunction( funcName: String; const params: array of Variant; var RValue: Variant;
     const dbCatalog : TDBCatalog = dbOrders; const dbScheme: String = 'dbo' ) : Boolean;
 
 function DBUserSettingsSet(const SName : String; const SValue : Variant) : Boolean;
@@ -66,7 +66,7 @@ begin
   Result := DBProcedureResult( procName, params, RValue, dbCatalog, dbScheme );
 end;
 
-function DBProcedureResult( procName: String; const params: array of Variant; out RValue: Variant;
+function DBProcedureResult( procName: String; const params: array of Variant; var RValue: Variant;
     const dbCatalog : TDBCatalog; const dbScheme: String ) : Boolean;
 var
   strResult: String;
@@ -118,7 +118,7 @@ begin
   end;
 end;
 
-function DBFunction( funcName: String; const params: array of Variant; out RValue: Variant;
+function DBFunction( funcName: String; const params: array of Variant; var RValue: Variant;
     const dbCatalog : TDBCatalog = dbOrders; const dbScheme: String = 'dbo' ) : Boolean;
 var
   strResult: String;
