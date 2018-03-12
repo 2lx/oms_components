@@ -34,7 +34,7 @@ procedure setupStyleGridAfter( var Sender: TcxCustomGridTableView; var ARecord: 
 implementation
 
 uses uOMSStyle, cxGridDBTableView, cxButtonEdit, cxDBExtLookupComboBox, cxDBLookupComboBox,
-    cxSpinEdit;
+    cxSpinEdit, cxGridTableView;
 
 class procedure TOMScxGridViewCommon.GridViewInitEditHandler( Sender: TcxCustomGridTableView; AItem: TcxCustomGridTableItem;
       AEdit: TcxCustomEdit );
@@ -65,9 +65,9 @@ end;
 procedure setupStyleGridAfter( var Sender: TcxCustomGridTableView; var ARecord: TcxCustomGridRecord;
       var AItem: TcxCustomGridTableItem; var AStyle: TcxStyle );
 var
-  AColumn: TcxGridDBColumn;
+  AColumn: TcxCustomGridColumn;
 begin
-  AColumn := Sender.DataController.GetItem(AItem.Index) as TcxGridDBColumn;
+  AColumn := Sender.DataController.GetItem(AItem.Index) as TcxCustomGridColumn;
 
   if ( AItem <> Nil ) AND ( AItem.Options.Editing ) AND ( Sender.OptionsData.Editing )
       AND not (AColumn.Properties is TcxButtonEditProperties)

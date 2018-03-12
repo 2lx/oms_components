@@ -38,6 +38,7 @@ begin
   inherited Create(AOwner);
 
   Style.Color := clOMSEditableHighlight;
+  Properties.OnPropertiesChanged := PropertiesChangeHandler;
 end;
 
 procedure TOMScxDBImage.Loaded;
@@ -46,7 +47,6 @@ begin
 
   OnDblClick := DblClickHandled;
   Properties.OnAssignPicture := PropertiesAssignPictureHandler;
-  Properties.OnPropertiesChanged := PropertiesChangeHandler;
 end;
 
 procedure TOMScxDBImage.CreateWnd;
