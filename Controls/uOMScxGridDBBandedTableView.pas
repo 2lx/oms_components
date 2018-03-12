@@ -1,11 +1,11 @@
-unit uOMScxGridDBTableView;
+unit uOMScxGridDBBandedTableView;
 
 interface
 
-uses Classes, cxGridDBTableView, cxGridCustomTableView, cxEdit, cxStyles, cxFilter, uOMScxGridViewCommon;
+uses Classes, cxGridDBBandedTableView, cxGridCustomTableView, cxEdit, cxStyles, cxFilter, uOMScxGridViewCommon;
 
 type
-  TOMScxGridDBTableView = class(TcxGridDBTableView)
+  TOMScxGridDBBandedTableView = class(TcxGridDBBandedTableView)
   private
     FCurrentSelectionType : TGridSelectionType;
     FUserNavigatorOnButtonHandler: TProcNavigatorOnButtonClick;
@@ -37,7 +37,7 @@ uses uOMSStyle, Windows, Graphics, cxGraphics, cxDBExtLookupComboBox,
   cxDBLookupComboBox, cxSpinEdit, cxGridTableView, uDMComponents, cxNavigator, uDataExport, cxGrid,
   uOMSDialogs, Controls, SysUtils;
 
-constructor TOMScxGridDBTableView.Create(AOwner: TComponent);
+constructor TOMScxGridDBBandedTableView.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
 
@@ -49,7 +49,7 @@ begin
   OnInitEdit := TOMScxGridViewCommon.GridViewInitEditHandler;
 end;
 
-procedure TOMScxGridDBTableView.Loaded;
+procedure TOMScxGridDBBandedTableView.Loaded;
 var
   nbtn : TcxNavigatorCustomButton;
 begin
@@ -124,7 +124,7 @@ begin
   end;
 end;
 
-procedure TOMScxGridDBTableView.NavigatorOnButtonClickHandler( Sender: TObject; AButtonIndex: Integer; var ADone: Boolean );
+procedure TOMScxGridDBBandedTableView.NavigatorOnButtonClickHandler( Sender: TObject; AButtonIndex: Integer; var ADone: Boolean );
 var
   pmHeight : Integer;
 begin
@@ -151,7 +151,7 @@ begin
   end;
 end;
 
-procedure TOMScxGridDBTableView.GetContentStyleHandler( Sender: TcxCustomGridTableView;
+procedure TOMScxGridDBBandedTableView.GetContentStyleHandler( Sender: TcxCustomGridTableView;
       ARecord: TcxCustomGridRecord; AItem: TcxCustomGridTableItem; var AStyle: TcxStyle);
 begin
   inherited;
@@ -165,7 +165,7 @@ begin
   setupStyleGridAfter(Sender, ARecord, AItem, AStyle);
 end;
 
-procedure TOMScxGridDBTableView.setSelectionType( const gst : TGridSelectionType );
+procedure TOMScxGridDBBandedTableView.setSelectionType( const gst : TGridSelectionType );
 begin
   OptionsSelection.CellMultiSelect := gst in [ gstMultiCellMultiRow];
   OptionsSelection.CellSelect := gst in [ gstOneCellOneRow, gstMultiCellMultiRow ];
@@ -175,7 +175,7 @@ begin
   FCurrentSelectionType := gst;
 end;
 
-procedure TOMScxGridDBTableView.processSelectedRecords( func: TPFuncGUIDBoolean; const colGuidIndex: Integer );
+procedure TOMScxGridDBBandedTableView.processSelectedRecords( func: TPFuncGUIDBoolean; const colGuidIndex: Integer );
 var
   i, succCount : Integer;
   guid : Variant;
@@ -200,7 +200,7 @@ begin
   end;
 end;
 
-procedure TOMScxGridDBTableView.setFilter( AValue: Variant; const opKind: TcxFilterOperatorKind;
+procedure TOMScxGridDBBandedTableView.setFilter( AValue: Variant; const opKind: TcxFilterOperatorKind;
     const indexes: array of Integer; const rootOpKind: tcxFilterBoolOperatorKind );
 var
   ind : Integer;

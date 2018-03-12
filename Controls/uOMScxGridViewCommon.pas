@@ -1,8 +1,28 @@
-unit uOMSStyleGridDefault;
+unit uOMScxGridViewCommon;
 
 interface
 
-uses cxStyles, cxGridCustomTableView;
+uses cxStyles, cxGridCustomTableView, cxEdit, cxGridCustomView;
+
+type
+  TGridSelectionType = (
+      gstNone,
+      gstOneCellOneRow,
+      gstMultiCellMultiRow
+  );
+
+  TPFuncGUIDBoolean = reference to function( const guid: Variant ) : Boolean;
+
+  TProcNavigatorOnButtonClick = procedure( Sender: TObject; AButtonIndex: Integer; var ADone: Boolean ) of object;
+  TProcContentStyle = procedure( Sender: TcxCustomGridTableView; ARecord: TcxCustomGridRecord;
+      AItem: TcxCustomGridTableItem; var AStyle: TcxStyle ) of object;
+
+type
+  TOMScxGridViewCommon = class (TcxCustomGridView)
+  public
+    class procedure GridViewInitEditHandler(Sender: TcxCustomGridTableView; AItem: TcxCustomGridTableItem;
+      AEdit: TcxCustomEdit);
+  end;
 
 function checkInvalidStyle(var ARecord: TcxCustomGridRecord; var AItem: TcxCustomGridTableItem) : Boolean;
 
@@ -13,7 +33,19 @@ procedure setupStyleGridAfter( var Sender: TcxCustomGridTableView; var ARecord: 
 
 implementation
 
-uses uOMSStyle, cxGridDBTableView, cxButtonEdit;
+uses uOMSStyle, cxGridDBTableView, cxButtonEdit, cxDBExtLookupComboBox, cxDBLookupComboBox,
+    cxSpinEdit;
+
+class procedure TOMScxGridViewCommon.GridViewInitEditHandler( Sender: TcxCustomGridTableView; AItem: TcxCustomGridTableItem;
+      AEdit: TcxCustomEdit );
+begin
+  if AEdit is TcxLookupComboBox
+    then TcxLookupComboBox(AEdit).Properties.UseMouseWheel := False
+  else if AEdit is TcxSpinEdit
+    then TcxSpinEdit(AEdit).Properties.UseMouseWheel := False
+  else if AEdit is TcxExtLookupComboBox
+    then TcxExtLookupComboBox(AEdit).Properties.UseMouseWheel := False;
+end;
 
 function checkInvalidStyle(var ARecord: TcxCustomGridRecord; var AItem: TcxCustomGridTableItem) : Boolean;
 begin

@@ -21,6 +21,8 @@ type
     { Public declarations }
   end;
 
+function PopupMenuHeight(Popup: TPopupMenu): integer;
+
 var
   DMOMSComponents: TDMOMSComponents;
 
@@ -30,7 +32,31 @@ implementation
 
 {$R *.dfm}
 
-uses cxGrid, uOMScxGridDBTableView;
+uses cxGrid, uOMScxGridViewCommon, uOMScxGridDBTableView, uOMScxGridDBBandedTableView, Windows;
+
+function PopupMenuHeight(Popup: TPopupMenu): integer;
+var
+  info : tagMENUINFO;
+  i, y : Integer;
+begin
+  FillChar( info, SizeOf( info ), 0);
+  info.cbSize := SizeOf( info );
+  info.fMask := MIM_MAXHEIGHT;
+
+  if GetMenuInfo( Popup.Handle, info ) and ( info.cyMax > 0 )
+    then Result := info.cyMax
+    else
+    begin
+      y := Round(GetSystemMetrics(SM_CYMENUCHECK) *1.4);
+      Result := 0;
+      if Popup.Items.Count > 0 then
+      begin
+        for i := 0 to Popup.Items.Count -1 do
+          if Popup.Items[i].Visible
+            then Inc(Result, y);
+      end;
+    end;
+end;
 
 procedure TDMOMSComponents.pmiSelectionType1CellClick(Sender: TObject);
 begin
