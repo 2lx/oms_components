@@ -34,6 +34,7 @@ procedure TOMScxTextEdit.Loaded;
 begin
   inherited;
 
+  Properties.OnPropertiesChanged := PropertiesChangeHandler;
 end;
 
 procedure TOMScxTextEdit.SetEnabled(Value: Boolean);

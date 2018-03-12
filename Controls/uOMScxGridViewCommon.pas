@@ -49,7 +49,7 @@ end;
 
 function checkInvalidStyle(var ARecord: TcxCustomGridRecord; var AItem: TcxCustomGridTableItem) : Boolean;
 begin
-  Result := (ARecord = Nil) OR ( AItem = Nil ) OR (ARecord.Index = -1);
+  Result := (ARecord = Nil) OR ( AItem = Nil ) OR (ARecord.Index = -1) OR (not ARecord.IsData);
 end;
 
 procedure setupStyleGridBefore( var Sender: TcxCustomGridTableView; var ARecord: TcxCustomGridRecord;

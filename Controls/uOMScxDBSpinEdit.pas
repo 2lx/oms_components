@@ -38,6 +38,7 @@ begin
   inherited;
 
   OnMouseWheel := MouseWheelHandler;
+  Properties.OnPropertiesChanged := PropertiesChangeHandler;
 end;
 
 procedure TOMScxDBSpinEdit.MouseWheelHandler(Sender: TObject; Shift: TShiftState;

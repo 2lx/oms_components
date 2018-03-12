@@ -34,6 +34,7 @@ procedure TOMScxDBMemo.Loaded;
 begin
   inherited;
 
+  Properties.OnPropertiesChanged := PropertiesChangeHandler;
 end;
 
 procedure TOMScxDBMemo.SetEnabled(Value: Boolean);
@@ -41,6 +42,7 @@ begin
   inherited SetEnabled(True);
 
   Properties.ReadOnly := not Value;   // call PropertiesChanged
+  Properties.OnPropertiesChanged := PropertiesChangeHandler;
 end;
 
 procedure TOMScxDBMemo.PropertiesChangeHandler(Sender: TObject);

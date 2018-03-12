@@ -45,6 +45,7 @@ begin
     then Properties.DropDownWidth := 600;
 
   OnMouseWheel := MouseWheelHandler;
+  Properties.OnPropertiesChanged := PropertiesChangeHandler;
 end;
 
 procedure TOMScxComboBox.MouseWheelHandler(Sender: TObject; Shift: TShiftState;

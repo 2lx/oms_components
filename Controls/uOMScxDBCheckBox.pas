@@ -26,12 +26,15 @@ constructor TOMScxDBCheckBox.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
 
+  Properties.OnPropertiesChanged := PropertiesChangeHandler;
 end;
 
 procedure TOMScxDBCheckBox.Loaded;
 begin
   inherited;
 
+  AutoSize := True;
+  Properties.OnPropertiesChanged := PropertiesChangeHandler;
 end;
 
 procedure TOMScxDBCheckBox.SetEnabled(Value: Boolean);

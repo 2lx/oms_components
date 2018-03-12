@@ -8,6 +8,7 @@ type
   TOMScxDBDateEdit = class(TcxDBDateEdit)
   private
     procedure PropertiesChangeHandler(Sender: TObject);
+    procedure DropDownDisableHandler(Sender: TObject);
 
   protected
     procedure Loaded; override;
@@ -34,6 +35,17 @@ procedure TOMScxDBDateEdit.Loaded;
 begin
   inherited;
 
+  Properties.DisplayFormat := 'dd.mm.yyyy';
+  Properties.EditFormat := 'dd.mm.yyyy';
+  Properties.SaveTime := False;
+  Properties.ShowTime := False;
+
+  Properties.OnPropertiesChanged := PropertiesChangeHandler;
+end;
+
+procedure TOMScxDBDateEdit.DropDownDisableHandler(Sender: TObject);
+begin
+  (Sender as TcxCustomDropDownEdit).DroppedDown := False;
 end;
 
 procedure TOMScxDBDateEdit.SetEnabled(Value: Boolean);
@@ -46,8 +58,14 @@ end;
 procedure TOMScxDBDateEdit.PropertiesChangeHandler(Sender: TObject);
 begin
   if Properties.ReadOnly
-    then Style.Color := clWindow
-    else Style.Color := clOMSEditableHighlight;
+    then begin
+      Style.Color := clWindow;
+      Properties.OnPopup := DropDownDisableHandler;
+    end
+    else begin
+      Style.Color := clOMSEditableHighlight;
+      Properties.OnPopup := Nil;
+    end;
 end;
 
 end.

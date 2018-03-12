@@ -47,6 +47,7 @@ begin
 
   OnDblClick := DblClickHandled;
   Properties.OnAssignPicture := PropertiesAssignPictureHandler;
+  Properties.OnPropertiesChanged := PropertiesChangeHandler;
 end;
 
 procedure TOMScxDBImage.CreateWnd;

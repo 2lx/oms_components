@@ -1,15 +1,13 @@
-unit uOMScxSpinEdit;
+unit uOMScxCurrencyEdit;
 
 interface
 
-uses Classes, cxSpinEdit, Windows;
+uses Classes, cxCurrencyEdit, Windows;
 
 type
-  TOMScxSpinEdit = class(TcxSpinEdit)
+  TOMScxCurrencyEdit = class(TcxCurrencyEdit)
   private
     procedure PropertiesChangeHandler(Sender: TObject);
-    procedure MouseWheelHandler(Sender: TObject; Shift: TShiftState; WheelDelta: Integer;
-          MousePos: TPoint; var Handled: Boolean);
 
   protected
     procedure Loaded; override;
@@ -24,7 +22,7 @@ implementation
 
 uses uOMSStyle, Graphics, cxDropDownEdit;
 
-constructor TOMScxSpinEdit.Create(AOwner: TComponent);
+constructor TOMScxCurrencyEdit.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
 
@@ -32,28 +30,21 @@ begin
   Properties.OnPropertiesChanged := PropertiesChangeHandler;
 end;
 
-procedure TOMScxSpinEdit.Loaded;
+procedure TOMScxCurrencyEdit.Loaded;
 begin
   inherited;
 
-  OnMouseWheel := MouseWheelHandler;
   Properties.OnPropertiesChanged := PropertiesChangeHandler;
 end;
 
-procedure TOMScxSpinEdit.MouseWheelHandler(Sender: TObject; Shift: TShiftState;
-  WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
-begin
-  Handled := True;
-end;
-
-procedure TOMScxSpinEdit.SetEnabled(Value: Boolean);
+procedure TOMScxCurrencyEdit.SetEnabled(Value: Boolean);
 begin
   inherited SetEnabled(True);
 
   Properties.ReadOnly := not Value;   // call PropertiesChanged
 end;
 
-procedure TOMScxSpinEdit.PropertiesChangeHandler(Sender: TObject);
+procedure TOMScxCurrencyEdit.PropertiesChangeHandler(Sender: TObject);
 begin
   if Properties.ReadOnly
     then Style.Color := clWindow
