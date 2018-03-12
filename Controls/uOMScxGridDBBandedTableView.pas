@@ -167,10 +167,10 @@ end;
 
 procedure TOMScxGridDBBandedTableView.setSelectionType( const gst : TGridSelectionType );
 begin
-  OptionsSelection.CellMultiSelect := gst in [ gstMultiCellMultiRow];
+  OptionsSelection.CellMultiSelect := gst in [ gstMultiCellMultiRow ];
   OptionsSelection.CellSelect := gst in [ gstOneCellOneRow, gstMultiCellMultiRow ];
   OptionsSelection.InvertSelect := gst in [ ];
-  OptionsSelection.MultiSelect := gst in [gstMultiCellMultiRow];
+  OptionsSelection.MultiSelect := gst in [ gstMultiCellMultiRow ];
 
   FCurrentSelectionType := gst;
 end;

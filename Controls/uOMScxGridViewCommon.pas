@@ -18,7 +18,7 @@ type
       AItem: TcxCustomGridTableItem; var AStyle: TcxStyle ) of object;
 
 type
-  TOMScxGridViewCommon = class (TcxCustomGridView)
+  TOMScxGridViewCommon = class
   public
     class procedure GridViewInitEditHandler(Sender: TcxCustomGridTableView; AItem: TcxCustomGridTableItem;
       AEdit: TcxCustomEdit);
