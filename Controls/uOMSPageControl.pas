@@ -12,7 +12,6 @@ type
     FUserChangeHandler: TProcChangeHandler;
 
     procedure ChangeHandler( Sender: TObject );
-    procedure OpenFirstVisibleTab;
 
   protected
     procedure Loaded; override;
@@ -20,6 +19,8 @@ type
   published
   public
     constructor Create(AOwner: TComponent); override;
+
+    procedure OpenFirstVisibleTab;
   end;
 
 implementation
