@@ -201,10 +201,10 @@ begin
     with grid do
     begin
       cellWidthPix := (ctrlPanel.ClientWidth - 2*HOR_PADDING + horCellMarginPix) div gridSizeC.Width - horCellMarginPix;
-      cellHeightPix := 28 + ( US.FontSize - 7 ) * 2;
+      cellHeightPix := 22 + ( US.FontSize - 7 ) * 2;
 
      if Assigned(ctrlPanel) AND not (ctrlPanel.Align in [alClient, alLeft, alRight ] )
-        then ctrlPanel.Height := gridSizeC.Height * cellHeightPix + 2*VER_PADDING;
+        then ctrlPanel.Height := gridSizeC.Height * (cellHeightPix + VER_CELL_MARGIN) + 2*VER_PADDING - VER_CELL_MARGIN;
 
       for cell in LayoutCells do
       begin

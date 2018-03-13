@@ -2,12 +2,14 @@ unit uOMSADOQuery;
 
 interface
 
-uses Classes, Data.Win.ADODB, Data.DB;
+uses Classes, Data.Win.ADODB, Data.DB, Windows;
 
 type
   TOMSADOQuery = class(TADOQuery)
   private
     FBookmark: TBookmark;
+    FFormHandle : HWND;
+    FEnableMessage : Boolean;
 
     procedure DeleteErrorHandler(DataSet: TDataSet; E: EDatabaseError; var Action: TDataAction);
     procedure EditErrorHandler(DataSet: TDataSet; E: EDatabaseError; var Action: TDataAction);
@@ -30,11 +32,13 @@ type
 
 implementation
 
-uses uOMSDialogs, uLogging, Forms, SysUtils, uAppMessages, Windows, Main;
+uses uOMSDialogs, uLogging, Forms, SysUtils, uAppMessages;
 
 constructor TOMSADOQuery.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
+
+  FEnableMessage := False;
 
   OnEditError := EditErrorHandler;
   OnDeleteError := DeleteErrorHandler;
@@ -49,6 +53,16 @@ end;
 procedure TOMSADOQuery.Loaded;
 begin
   inherited;
+
+  if (Owner is TForm) AND (Owner.ClassName <> 'TDataForm') AND (Owner.ClassName <> 'TdmOMSREF')
+    AND (Owner.ClassName <> 'TFormDataOrders') AND (Owner.ClassName <> 'TOMSMainForm')
+    {AND (Owner.ClassName <> 'TfrmOMSMessages') } then
+  begin
+    FFormHandle := (Owner as TForm).Handle;
+    ExecuteOptions := [ eoAsyncExecute ];
+    FEnableMessage := True;
+//    ShowInformation( Owner.CLassName );
+  end;
 
   CommandTimeOut := 90;
 end;
@@ -89,13 +103,16 @@ end;
 function TOMSADOQuery.SafeOpen : Boolean;
 begin
   try
-    SendMessage( OMSMainForm.Handle, WM_ADOQ_BEGIN_MESSAGE, 0, 0 );
+    if FEnableMessage
+      then PostMessage( FFormHandle, WM_ADOQ_BEGIN_MESSAGE, 0, 0 );
+
     if (not Active) then Open;
 
-    while ( State = dsOpening ) do 
+    while ( State = dsOpening ) do
       Application.ProcessMessages;
 
-    SendMessage( OMSMainForm.Handle, WM_ADOQ_END_MESSAGE, 0, 0 );
+    if FEnableMessage
+      then PostMessage( FFormHandle, WM_ADOQ_END_MESSAGE, 0, 0 );
 
     Result := True;      
   except

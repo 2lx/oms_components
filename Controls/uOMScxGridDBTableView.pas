@@ -82,7 +82,7 @@ begin
   OptionsView.NewItemRowInfoText := 'ярпнйю дкъ днаюбкемхъ гюохях';
 
   if CurrentSelectionType = gstNone
-    then setSelectionType( gstOneCellOneRow );
+    then setSelectionType( gstMultiCellMultiRow );
 
   if Assigned(Styles.OnGetContentStyle)
     then FUserContentStyleHandler := Styles.OnGetContentStyle;
