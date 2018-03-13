@@ -32,7 +32,7 @@ type
     procedure AddRow( const ctrls: TArray2OfControl );
   end;
 
-  TLayoutVec = class
+  TFormLayouts = class
   private
     FLayoutGrids : TList< TLayoutGrid >;
   public
@@ -103,12 +103,12 @@ end;
 
 //--------------------------------------------------------------------------------------------------
 
-constructor TLayoutVec.Create;
+constructor TFormLayouts.Create;
 begin
   FLayoutGrids := TList< TLayoutGrid >.Create;
 end;
 
-destructor TLayoutVec.Free;
+destructor TFormLayouts.Free;
 var
   lay : TLayoutGrid;
 begin
@@ -118,7 +118,7 @@ begin
   FLayoutGrids.Free;
 end;
 
-function TLayoutVec.AddLayout( ctrlPanel: TControl; const colCount, rowCount: Integer;
+function TFormLayouts.AddLayout( ctrlPanel: TControl; const colCount, rowCount: Integer;
         const labelWidthPix : Integer; horCellMarginPix: Integer ) : Integer;
 var
   lay : TLayoutGrid;
@@ -134,7 +134,7 @@ begin
   Result := FLayoutGrids.Count;
 end;
 
-function TLayoutVec.Add( ctrlPanel: TControl; const colCount: Integer; const rowCount: Integer = -1;
+function TFormLayouts.Add( ctrlPanel: TControl; const colCount: Integer; const rowCount: Integer = -1;
         const labelWidthPix : Integer = -1; horCellMarginPix: Integer = 10 ) : TLayoutGrid;
 var
   lay : TLayoutGrid;
@@ -153,7 +153,7 @@ begin
   Result := FLayoutGrids[ FLayoutGrids.Count - 1 ];
 end;
 
-procedure TLayoutVec.AddLayoutCell(const layoutID: Integer; ctrlLabel, ctrlEdit: TControl; const cLeft,
+procedure TFormLayouts.AddLayoutCell(const layoutID: Integer; ctrlLabel, ctrlEdit: TControl; const cLeft,
   cTop, cWidth, cHeight: Integer);
 var
   sc : TLayoutCell;
@@ -171,7 +171,7 @@ begin
   end;
 end;
 
-procedure TLayoutVec.Resize;
+procedure TFormLayouts.Resize;
 const
   HOR_PADDING : Integer = 6;
   VER_PADDING : Integer = 4;
