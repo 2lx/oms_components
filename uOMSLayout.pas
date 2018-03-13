@@ -2,21 +2,34 @@ unit uOMSLayout;
 
 interface
 
-uses Controls, Types, System.Generics.Collections;
+uses Controls, Types, System.Generics.Collections, SysUtils,
+
+{$I OMSComponentsInclude.inc}
 
 type
   TLayoutCell = record
-    compLbl : TControl;
-    compEdit : TControl;
-    Rect : TRect;
+    ctrlLabel : TControl;
+    ctrlEdit  : TControl;
+    RectC : TRect;
   end;
 
-  TLayoutGrid = record
+  TArray1OfControl = array of TControl;
+  TArray2OfControl = array of TArray1OfControl;
+
+  TLayoutGrid = class
+  private
+    ctrlPanel : TControl;
+    gridSizeC : TSize;
     LayoutCells : TList<TLayoutCell>;
-    ColumnCount, LabelWidth : Integer;
-    CompPanel : TControl;
-    CompPanelHeight : Integer;
-    BeetweenWidth : Integer;
+    labelWidthPix, horCellMarginPix : Integer;
+
+    FRowsCount : Integer;
+  public
+    constructor Create;
+    destructor Free; virtual;
+
+    procedure AddCell( ctrlLabel, ctrlEdit: TControl; const cLeft, cTop, cWidth, cHeight: Integer );
+    procedure AddRow( const ctrls: TArray2OfControl );
   end;
 
   TLayoutVec = class
@@ -26,10 +39,13 @@ type
     constructor Create;
     destructor Free; virtual;
 
-    function AddLayout( const ColumnCount, LabelWidth: Integer; compPanel: TControl;
-        const iGridHeight: Integer; const BeetweenW : Integer = 10 ) : Integer;
-    procedure AddLayoutCell( const GridID : Integer; compLbl, compEdit: TControl;
-        const iLeft, iTop, iWidth, iHeight: Integer );
+    function AddLayout( ctrlPanel: TControl; const colCount, rowCount: Integer;
+        const labelWidthPix : Integer; horCellMarginPix: Integer = 10 ) : Integer; deprecated;
+    procedure AddLayoutCell( const layoutID : Integer; ctrlLabel, ctrlEdit: TControl;
+        const cLeft, cTop, cWidth, cHeight: Integer ); deprecated;
+
+    function Add( ctrlPanel: TControl; const colCount: Integer; const rowCount: Integer = -1;
+        const labelWidthPix : Integer = -1; horCellMarginPix: Integer = 10 ) : TLayoutGrid;
 
     procedure Resize;
   end;
@@ -39,6 +55,53 @@ implementation
 { TVectorGrid }
 
 uses uUserSettings;
+
+constructor TLayoutGrid.Create;
+begin
+  FRowsCount := 0;
+  LayoutCells := TList< TLayoutCell >.Create;
+end;
+
+destructor TLayoutGrid.Free;
+begin
+  LayoutCells.Free;
+end;
+
+procedure TLayoutGrid.AddCell(ctrlLabel, ctrlEdit: TControl; const cLeft, cTop, cWidth, cHeight: Integer);
+var
+  sc : TLayoutCell;
+begin
+  sc.ctrlLabel := ctrlLabel;
+  sc.ctrlEdit := ctrlEdit;
+  sc.RectC := TRect.Create( TPoint.Create(cLeft, cTop), cWidth, cHeight);
+
+  LayoutCells.Add(sc);
+end;
+
+procedure TLayoutGrid.AddRow( const ctrls: TArray2OfControl );
+var
+  ctrlPair : TArray1OfControl;
+  curCol : Integer;
+begin
+  Inc(FRowsCount);
+  curCol := 1;
+
+  for ctrlPair in ctrls do begin
+    case High(ctrlPair) + 1 of
+      0 : Inc(curCol);
+      1 : begin
+        AddCell( ctrlPair[0], Nil, curCol, FRowsCount, 1, 1 );
+        Inc(curCol);
+      end;
+      2 : begin
+        AddCell( ctrlPair[0], ctrlPair[1], curCol, FRowsCount, 2, 1 );
+        curCol := curCol + 2;
+      end;
+    end;
+  end;
+end;
+
+//--------------------------------------------------------------------------------------------------
 
 constructor TLayoutVec.Create;
 begin
@@ -50,96 +113,116 @@ var
   lay : TLayoutGrid;
 begin
   for lay in FLayoutGrids do
-    lay.LayoutCells.Free;
+    lay.Free;
 
   FLayoutGrids.Free;
 end;
 
-function TLayoutVec.AddLayout(const ColumnCount, LabelWidth: Integer; compPanel: TControl;
-  const iGridHeight, BeetweenW: Integer) : Integer;
+function TLayoutVec.AddLayout( ctrlPanel: TControl; const colCount, rowCount: Integer;
+        const labelWidthPix : Integer; horCellMarginPix: Integer ) : Integer;
 var
   lay : TLayoutGrid;
 begin
-  lay.CompPanel := compPanel;
-  lay.CompPanelHeight := iGridHeight;
-  lay.ColumnCount := ColumnCount;
-  lay.LabelWidth := LabelWidth;
-  lay.BeetweenWidth := BeetweenW;
-  lay.LayoutCells := TList<TLayoutCell>.Create;
+  lay := TLayoutGrid.Create;
+
+  lay.ctrlPanel := ctrlPanel;
+  lay.gridSizeC := TSize.Create( colCount, rowCount );
+  lay.labelWidthPix := labelWidthPix;
+  lay.horCellMarginPix := horCellMarginPix;
 
   FLayoutGrids.Add(lay);
   Result := FLayoutGrids.Count;
 end;
 
-procedure TLayoutVec.AddLayoutCell(const GridID: Integer; compLbl, compEdit: TControl; const iLeft,
-  iTop, iWidth, iHeight: Integer);
+function TLayoutVec.Add( ctrlPanel: TControl; const colCount: Integer; const rowCount: Integer = -1;
+        const labelWidthPix : Integer = -1; horCellMarginPix: Integer = 10 ) : TLayoutGrid;
+var
+  lay : TLayoutGrid;
+begin
+  lay := TLayoutGrid.Create;
+
+  lay.ctrlPanel := ctrlPanel;
+
+  lay.gridSizeC := TSize.Create( colCount, rowCount );
+  if labelWidthPix = -1
+    then lay.labelWidthPix := US.LabelWidth
+    else lay.labelWidthPix := labelWidthPix;
+  lay.horCellMarginPix := horCellMarginPix;
+
+  FLayoutGrids.Add(lay);
+  Result := FLayoutGrids[ FLayoutGrids.Count - 1 ];
+end;
+
+procedure TLayoutVec.AddLayoutCell(const layoutID: Integer; ctrlLabel, ctrlEdit: TControl; const cLeft,
+  cTop, cWidth, cHeight: Integer);
 var
   sc : TLayoutCell;
 begin
-  if GridID > FLayoutGrids.Count
+  if layoutID > FLayoutGrids.Count
     then Exit;
 
-  with FLayoutGrids[ GridID - 1 ] do
+  with FLayoutGrids[ layoutID - 1 ] do
   begin
-    sc.compLbl := compLbl;
-    sc.compEdit := compEdit;
-    sc.Rect := TRect.Create( TPoint.Create(iLeft, iTop), iWidth, iHeight);
+    sc.ctrlLabel := ctrlLabel;
+    sc.ctrlEdit := ctrlEdit;
+    sc.RectC := TRect.Create( TPoint.Create(cLeft, cTop), cWidth, cHeight);
 
     LayoutCells.Add(sc);
   end;
 end;
 
 procedure TLayoutVec.Resize;
+const
+  HOR_PADDING : Integer = 6;
+  VER_PADDING : Integer = 4;
+  LABEL_EDIT_MARGIN : Integer = 2;
+  VER_CELL_MARGIN : Integer = 4;
 var
-  cw, dw, dh, k : Integer;
+  cellWidthPix, cellHeightPix : Integer;
   txRect: TRect;
   txStr: String;
-  lay : TLayoutGrid;
-  sc : TLayoutCell;
-begin
-  for lay in FLayoutGrids do
+  grid : TLayoutGrid;
+  cell : TLayoutCell;
+
+  function isOneLineControl( var ctrl : TControl ) : Boolean;
   begin
-    with lay do
+    Result := ( ctrl is TOMScxDBCurrencyEdit ) OR ( ctrl is TOMScxCurrencyEdit )
+           OR ( ctrl is TOMScxDBDateEdit ) OR ( ctrl is TOMScxDateEdit )
+           OR ( ctrl is TOMScxDBTextEdit ) OR (ctrl is TOMScxTextEdit )
+           OR ( ctrl is TOMScxDBExtLookupComboBox ) OR (ctrl is TOMScxExtLookupComboBox )
+           OR ( ctrl is TOMScxDBLookupComboBox ) OR (ctrl is TOMScxLookupComboBox )
+           OR ( ctrl is TOMScxComboBox )
+           OR ( ctrl is TOMScxDBSpinEdit ) OR ( ctrl is TOMScxSpinEdit );
+  end;
+
+begin
+  for grid in FLayoutGrids do
+  begin
+    with grid do
     begin
-      cw := CompPanel.ClientWidth - BeetweenWidth;
-      dw := cw div ColumnCount;
-      dh := 30 + ( US.FontSize - 7 ) * 2;
+      cellWidthPix := (ctrlPanel.ClientWidth - 2*HOR_PADDING + horCellMarginPix) div gridSizeC.Width - horCellMarginPix;
+      cellHeightPix := 28 + ( US.FontSize - 7 ) * 2;
 
-     if ( CompPanel <> Nil )
-        then CompPanel.Height := CompPanelHeight * dh + 10;
+     if Assigned(ctrlPanel) AND not (ctrlPanel.Align in [alClient, alLeft, alRight ] )
+        then ctrlPanel.Height := gridSizeC.Height * cellHeightPix + 2*VER_PADDING;
 
-      for sc in LayoutCells do
+      for cell in LayoutCells do
       begin
-        if sc.compLbl = Nil
-          then Break;
+        if not Assigned(cell.ctrlLabel) then Continue;
 
-{        if LayoutCells[ i ].compLbl is TcxLabel then
-          with ( LayoutCells[ i ].compLbl As TcxLabel ) do
-            if ( Properties.Alignment.Horz = taLeftJustify )
-              then} sc.compLbl.Height := sc.Rect.Height * dh - 8;
+        cell.ctrlLabel.Left         := HOR_PADDING + ( cell.RectC.Left - 1 ) * (cellWidthPix + horCellMarginPix);
+        cell.ctrlLabel.Top          := VER_PADDING + ( cell.RectC.Top - 1 ) * (cellHeightPix + VER_CELL_MARGIN);
+        if Assigned(cell.ctrlEdit)
+          then cell.ctrlLabel.Width := labelWidthPix - LABEL_EDIT_MARGIN
+          else cell.ctrlLabel.Width := cell.RectC.Width * (cellWidthPix + horCellMarginPix) - horCellMarginPix;
+        cell.ctrlLabel.Height       := cell.RectC.Height * (cellHeightPix + VER_CELL_MARGIN) - VER_CELL_MARGIN;
 
-        sc.compLbl.Left := ( sc.Rect.Left - 1 ) * dw + BeetweenWidth;
-        sc.compLbl.Top := ( sc.Rect.Top - 1 ) * dh + 8;
+        if not Assigned(cell.ctrlEdit) then Continue;
 
-        if Assigned(sc.compLbl) then
-{        if ( sc.compLbl is TcxImage ) OR ( LayoutCells[ i ].compLbl is TcxGrid )
-            OR ( LayoutCells[ i ].compLbl is TcxDBImage ) OR ( LayoutCells[ i ].compLbl is TcxButton )
-            OR ( LayoutCells[ i ].compLbl is TcxDBMemo )
-            OR ( LayoutCells[ i ].compLbl is TListBox ) OR ( LayoutCells[ i ].compLbl is TcxMemo )
-          then } sc.compLbl.Height := sc.Rect.Height * dh - 8;
-
-        if sc.compEdit = Nil
-          then sc.compLbl.Width := sc.Rect.Width * dw - BeetweenWidth
-          else
-          begin
-            sc.compLbl.Width := LabelWidth - BeetweenWidth - 4;
-
-            sc.compEdit.Left := ( sc.Rect.Left - 1 ) * dw + LabelWidth;
-            sc.compEdit.Top := ( sc.Rect.Top - 1 ) * dh + 8;
-
-            sc.compEdit.Width := ( dw - LabelWidth ) + ( sc.Rect.Width - 1 ) * dw;
-            sc.compEdit.Height := sc.Rect.Height * dh - 8;
-          end;
+        cell.ctrlEdit.Left   := HOR_PADDING + (cell.RectC.Left - 1) * (cellWidthPix + horCellMarginPix) + labelWidthPix;
+        cell.ctrlEdit.Top    := VER_PADDING + (cell.RectC.Top - 1) * (cellHeightPix + VER_CELL_MARGIN);
+        cell.ctrlEdit.Width  := (cellWidthPix - labelWidthPix) + (cell.RectC.Width - 1) * (cellWidthPix + horCellMarginPix);
+        cell.ctrlEdit.Height := cell.RectC.Height * (cellHeightPix + VER_CELL_MARGIN) - VER_CELL_MARGIN;
       end;
     end;
   end;
