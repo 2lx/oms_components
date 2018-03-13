@@ -13,6 +13,7 @@ type
     procedure EditErrorHandler(DataSet: TDataSet; E: EDatabaseError; var Action: TDataAction);
     procedure PostErrorHandler(DataSet: TDataSet; E: EDatabaseError; var Action: TDataAction);
   protected
+    procedure Loaded; override;
   public
     constructor Create(AOwner: TComponent); override;
 
@@ -29,7 +30,7 @@ type
 
 implementation
 
-uses uOMSDialogs, uLogging, Forms, SysUtils;
+uses uOMSDialogs, uLogging, Forms, SysUtils, uAppMessages, Windows, Main;
 
 constructor TOMSADOQuery.Create(AOwner: TComponent);
 begin
@@ -37,12 +38,19 @@ begin
 
   OnEditError := EditErrorHandler;
   OnDeleteError := DeleteErrorHandler;
-  OnPostError := PostErrorHandler;  
+  OnPostError := PostErrorHandler;
 end;
 
 function TOMSADOQuery.isEdited : Boolean;
 begin
   Result := Active AND (not Eof) AND (State in [ dsInsert, dsEdit ]);
+end;
+
+procedure TOMSADOQuery.Loaded;
+begin
+  inherited;
+
+  CommandTimeOut := 90;
 end;
 
 procedure TOMSADOQuery.SafePost( const isReopen: Boolean );
@@ -81,10 +89,13 @@ end;
 function TOMSADOQuery.SafeOpen : Boolean;
 begin
   try
+    SendMessage( OMSMainForm.Handle, WM_ADOQ_BEGIN_MESSAGE, 0, 0 );
     if (not Active) then Open;
 
     while ( State = dsOpening ) do 
       Application.ProcessMessages;
+
+    SendMessage( OMSMainForm.Handle, WM_ADOQ_END_MESSAGE, 0, 0 );
 
     Result := True;      
   except

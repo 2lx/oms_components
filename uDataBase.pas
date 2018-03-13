@@ -86,6 +86,8 @@ begin
     adoq := TOMSADOQuery.Create(Nil);
     adoq.Connection := DataForm.adoconnOrdersForSch;
     adoq.LockType := ltReadOnly;
+    adoq.CommandTimeOut := 90;
+    adoq.ExecuteOptions := [ eoAsyncExecute ];
 
     strSQL := 'EXEC [' + getCatalog( dbCatalog ) + '].' + dbScheme + '.[' + procName + '] ';
     strSQL := strSQL + parseParameters( adoq, params );
@@ -131,6 +133,7 @@ begin
     adoq := TOMSADOQuery.Create(Nil);
     adoq.Connection := DataForm.adoconnOrdersForSch;
     adoq.LockType := ltReadOnly;
+    adoq.CommandTimeOut := 90;
 
     strSQL := 'SELECT [' + getCatalog( dbCatalog ) + '].' + dbScheme + '.[' + funcName + '] ( ';
     strSQL := strSQL + parseParameters( adoq, params );
