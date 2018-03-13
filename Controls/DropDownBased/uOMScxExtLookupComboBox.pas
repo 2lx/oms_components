@@ -5,8 +5,12 @@ interface
 uses Classes, cxDBExtLookupComboBox, Windows;
 
 type
+  TProcPropertiesHandler = procedure( Sender: TObject ) of object;
+
   TOMScxExtLookupComboBox = class(TcxExtLookupComboBox)
   private
+    FUserProcPropertiesHandler : TProcPropertiesHandler;
+
     procedure PropertiesChangeHandler(Sender: TObject);
     procedure DropDownDisableHandler(Sender: TObject);
     procedure MouseWheelHandler(Sender: TObject; Shift: TShiftState; WheelDelta: Integer;
@@ -45,6 +49,9 @@ begin
     then Properties.DropDownWidth := 600;
 
   OnMouseWheel := MouseWheelHandler;
+
+  if Assigned( Properties.OnPropertiesChanged )
+    then FUserProcPropertiesHandler := Properties.OnPropertiesChanged;
   Properties.OnPropertiesChanged := PropertiesChangeHandler;
 end;
 
@@ -68,6 +75,9 @@ end;
 
 procedure TOMScxExtLookupComboBox.PropertiesChangeHandler(Sender: TObject);
 begin
+  if Assigned( FUserProcPropertiesHandler )
+    then FUserProcPropertiesHandler(Sender);
+
   if Properties.ReadOnly
     then begin
       Style.Color := clWindow;

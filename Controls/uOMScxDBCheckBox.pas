@@ -5,8 +5,12 @@ interface
 uses Classes, cxDBEdit, Windows;
 
 type
+  TProcPropertiesHandler = procedure( Sender: TObject ) of object;
+
   TOMScxDBCheckBox = class(TcxDBCheckBox)
   private
+    FUserProcPropertiesHandler : TProcPropertiesHandler;
+
     procedure PropertiesChangeHandler(Sender: TObject);
 
   protected
@@ -34,6 +38,9 @@ begin
   inherited;
 
   AutoSize := True;
+
+  if Assigned( Properties.OnPropertiesChanged )
+    then FUserProcPropertiesHandler := Properties.OnPropertiesChanged;
   Properties.OnPropertiesChanged := PropertiesChangeHandler;
 end;
 
@@ -46,9 +53,18 @@ end;
 
 procedure TOMScxDBCheckBox.PropertiesChangeHandler(Sender: TObject);
 begin
-  if Properties.ReadOnly
-    then Style.Color := clWindow
-    else Style.Color := clOMSEditableHighlight;
+  if Assigned( FUserProcPropertiesHandler )
+    then FUserProcPropertiesHandler(Sender);
+
+  if Properties.ReadOnly then
+  begin
+    ParentBackground := True;
+  end
+  else
+  begin
+    ParentBackground := False;
+    Style.Color := clOMSEditableHighlight;
+  end;
 end;
 
 end.

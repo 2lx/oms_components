@@ -5,8 +5,12 @@ interface
 uses Classes, cxCheckBox, Windows;
 
 type
+  TProcPropertiesHandler = procedure( Sender: TObject ) of object;
+
   TOMScxCheckBox = class(TcxCheckBox)
   private
+    FUserProcPropertiesHandler : TProcPropertiesHandler;
+
     procedure PropertiesChangeHandler(Sender: TObject);
 
   protected
@@ -35,6 +39,8 @@ begin
 
   AutoSize := True;
 
+  if Assigned( Properties.OnPropertiesChanged )
+    then FUserProcPropertiesHandler := Properties.OnPropertiesChanged;
   Properties.OnPropertiesChanged := PropertiesChangeHandler;
 end;
 
@@ -47,9 +53,18 @@ end;
 
 procedure TOMScxCheckBox.PropertiesChangeHandler(Sender: TObject);
 begin
-  if Properties.ReadOnly
-    then Style.Color := clWindow
-    else Style.Color := clOMSEditableHighlight;
+  if Assigned( FUserProcPropertiesHandler )
+    then FUserProcPropertiesHandler(Sender);
+
+  if Properties.ReadOnly then
+  begin
+    ParentBackground := True;
+  end
+  else
+  begin
+    ParentBackground := False;
+    Style.Color := clOMSEditableHighlight;
+  end;
 end;
 
 end.

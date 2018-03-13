@@ -5,8 +5,11 @@ interface
 uses Classes, cxDBEdit, Messages, Graphics;
 
 type
+  TProcPropertiesHandler = procedure( Sender: TObject ) of object;
+
   TOMScxDBImage = class(TcxDBImage)
   private
+    FUserProcPropertiesHandler : TProcPropertiesHandler;
     FPictureMaxSize : Integer;
 
     procedure DblClickHandled(Sender: TObject);
@@ -47,6 +50,9 @@ begin
 
   OnDblClick := DblClickHandled;
   Properties.OnAssignPicture := PropertiesAssignPictureHandler;
+
+  if Assigned( Properties.OnPropertiesChanged )
+    then FUserProcPropertiesHandler := Properties.OnPropertiesChanged;
   Properties.OnPropertiesChanged := PropertiesChangeHandler;
 end;
 
@@ -71,6 +77,9 @@ end;
 
 procedure TOMScxDBImage.PropertiesChangeHandler(Sender: TObject);
 begin
+  if Assigned( FUserProcPropertiesHandler )
+    then FUserProcPropertiesHandler(Sender);
+
   if Properties.ReadOnly
     then Style.Color := clWindow
     else Style.Color := clOMSEditableHighlight;

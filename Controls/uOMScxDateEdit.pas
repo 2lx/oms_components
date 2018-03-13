@@ -5,8 +5,12 @@ interface
 uses Classes, cxCalendar, Windows;
 
 type
+  TProcPropertiesHandler = procedure( Sender: TObject ) of object;
+
   TOMScxDateEdit = class(TcxDateEdit)
   private
+    FUserProcPropertiesHandler : TProcPropertiesHandler;
+
     procedure PropertiesChangeHandler(Sender: TObject);
     procedure DropDownDisableHandler(Sender: TObject);
 
@@ -40,6 +44,8 @@ begin
   Properties.SaveTime := False;
   Properties.ShowTime := False;
 
+  if Assigned( Properties.OnPropertiesChanged )
+    then FUserProcPropertiesHandler := Properties.OnPropertiesChanged;
   Properties.OnPropertiesChanged := PropertiesChangeHandler;
 end;
 
@@ -57,6 +63,9 @@ end;
 
 procedure TOMScxDateEdit.PropertiesChangeHandler(Sender: TObject);
 begin
+  if Assigned( FUserProcPropertiesHandler )
+    then FUserProcPropertiesHandler(Sender);
+
   if Properties.ReadOnly
     then begin
       Style.Color := clWindow;

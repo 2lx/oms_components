@@ -5,8 +5,12 @@ interface
 uses Classes, cxDBEdit, Windows;
 
 type
+  TProcPropertiesHandler = procedure( Sender: TObject ) of object;
+
   TOMScxDBMemo = class(TcxDBMemo)
   private
+    FUserProcPropertiesHandler : TProcPropertiesHandler;
+
     procedure PropertiesChangeHandler(Sender: TObject);
 
   protected
@@ -34,6 +38,8 @@ procedure TOMScxDBMemo.Loaded;
 begin
   inherited;
 
+  if Assigned( Properties.OnPropertiesChanged )
+    then FUserProcPropertiesHandler := Properties.OnPropertiesChanged;
   Properties.OnPropertiesChanged := PropertiesChangeHandler;
 end;
 
@@ -47,6 +53,9 @@ end;
 
 procedure TOMScxDBMemo.PropertiesChangeHandler(Sender: TObject);
 begin
+  if Assigned( FUserProcPropertiesHandler )
+    then FUserProcPropertiesHandler(Sender);
+
   if Properties.ReadOnly
     then Style.Color := clWindow
     else Style.Color := clOMSEditableHighlight;

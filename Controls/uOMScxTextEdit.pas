@@ -5,8 +5,12 @@ interface
 uses Classes, cxTextEdit, Windows;
 
 type
+  TProcPropertiesHandler = procedure( Sender: TObject ) of object;
+
   TOMScxTextEdit = class(TcxTextEdit)
   private
+    FUserProcPropertiesHandler : TProcPropertiesHandler;
+
     procedure PropertiesChangeHandler(Sender: TObject);
 
   protected
@@ -34,6 +38,8 @@ procedure TOMScxTextEdit.Loaded;
 begin
   inherited;
 
+  if Assigned( Properties.OnPropertiesChanged )
+    then FUserProcPropertiesHandler := Properties.OnPropertiesChanged;
   Properties.OnPropertiesChanged := PropertiesChangeHandler;
 end;
 
@@ -46,6 +52,9 @@ end;
 
 procedure TOMScxTextEdit.PropertiesChangeHandler(Sender: TObject);
 begin
+  if Assigned( FUserProcPropertiesHandler )
+    then FUserProcPropertiesHandler(Sender);
+
   if Properties.ReadOnly
     then Style.Color := clWindow
     else Style.Color := clOMSEditableHighlight;
