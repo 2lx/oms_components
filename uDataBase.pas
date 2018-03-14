@@ -14,7 +14,7 @@ function DBProcedure( procName: String; const params: array of Variant;
     const dbCatalog : TDBCatalog = dbOrders; const dbScheme: String = 'dbo') : Boolean;
 
 function DBProcedureResult( procName: String; const params: array of Variant; var RValue: Variant;
-    const dbCatalog : TDBCatalog = dbOrders; const dbScheme: String = 'dbo') : Boolean;
+    const dbCatalog : TDBCatalog = dbOrders; const dbScheme: String = 'dbo'; isAsync : Boolean = False ) : Boolean;
 
 function DBFunction( funcName: String; const params: array of Variant; var RValue: Variant;
     const dbCatalog : TDBCatalog = dbOrders; const dbScheme: String = 'dbo' ) : Boolean;
@@ -63,11 +63,11 @@ function DBProcedure( procName: String; const params: array of Variant;
 var
   RValue : Variant;
 begin
-  Result := DBProcedureResult( procName, params, RValue, dbCatalog, dbScheme );
+  Result := DBProcedureResult( procName, params, RValue, dbCatalog, dbScheme, True );
 end;
 
 function DBProcedureResult( procName: String; const params: array of Variant; var RValue: Variant;
-    const dbCatalog : TDBCatalog; const dbScheme: String ) : Boolean;
+    const dbCatalog : TDBCatalog; const dbScheme: String; isAsync : Boolean ) : Boolean;
 var
   strResult: String;
   adoq : TOMSADOQuery;
@@ -87,7 +87,8 @@ begin
     adoq.Connection := DataForm.adoconnOrdersForSch;
     adoq.LockType := ltReadOnly;
     adoq.CommandTimeOut := 90;
-    adoq.ExecuteOptions := [ eoAsyncExecute ];
+    if isAsync
+      then adoq.ExecuteOptions := [ eoAsyncExecute, eoAsyncFetchNonBlocking ];
 
     strSQL := 'EXEC [' + getCatalog( dbCatalog ) + '].' + dbScheme + '.[' + procName + '] ';
     strSQL := strSQL + parseParameters( adoq, params );
@@ -154,6 +155,7 @@ function DBUserSettingsSet(const SName : String; const SValue : Variant) : Boole
 var
   baseType : Integer;
 begin
+  Result := False;
   baseType := VarType( SValue ) and VarTypeMask;
 
   case baseType of
@@ -172,6 +174,8 @@ function DBUserSettingsGet(const SName : String ) : Variant;
 var
   adoq : TOMSADOQuery;
 begin
+  Result := False;
+
   try
     adoq := TOMSADOQuery.Create(Nil);
     adoq.Connection := DataForm.adoconnOrdersForSch;

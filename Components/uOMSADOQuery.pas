@@ -32,7 +32,7 @@ type
 
 implementation
 
-uses uOMSDialogs, uLogging, Forms, SysUtils, uAppMessages;
+uses uOMSDialogs, uLogging, Forms, SysUtils, uAppMessages, uOMSForm;
 
 constructor TOMSADOQuery.Create(AOwner: TComponent);
 begin
@@ -54,12 +54,10 @@ procedure TOMSADOQuery.Loaded;
 begin
   inherited;
 
-  if (Owner is TForm) AND (Owner.ClassName <> 'TDataForm') AND (Owner.ClassName <> 'TdmOMSREF')
-    AND (Owner.ClassName <> 'TFormDataOrders') AND (Owner.ClassName <> 'TOMSMainForm')
-    {AND (Owner.ClassName <> 'TfrmOMSMessages') } then
+  if (Owner is TOMSForm) then
   begin
     FFormHandle := (Owner as TForm).Handle;
-    ExecuteOptions := [ eoAsyncExecute ];
+    ExecuteOptions := [ eoAsyncExecute, eoAsyncFetchNonBlocking ];
     FEnableMessage := True;
 //    ShowInformation( Owner.CLassName );
   end;
@@ -103,6 +101,8 @@ end;
 function TOMSADOQuery.SafeOpen : Boolean;
 begin
   try
+    DisableControls;
+
     if FEnableMessage
       then PostMessage( FFormHandle, WM_ADOQ_BEGIN_MESSAGE, 0, 0 );
 
@@ -114,11 +114,14 @@ begin
     if FEnableMessage
       then PostMessage( FFormHandle, WM_ADOQ_END_MESSAGE, 0, 0 );
 
-    Result := True;      
+    Result := True;
+    EnableControls;
+
   except
     on E: Exception do begin
       Result := False;
-      
+      EnableControls;
+
       ShowError('Ошибка открытия запроса. ' + E.ToString );
       logQueryError( Name, SQL.Text, 'OpenError', E.ToString );
     end;
