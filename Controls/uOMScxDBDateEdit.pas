@@ -39,6 +39,8 @@ procedure TOMScxDBDateEdit.Loaded;
 begin
   inherited;
 
+  Properties.ImmediatePost := True;
+
   Properties.DisplayFormat := 'dd.mm.yyyy';
   Properties.EditFormat := 'dd.mm.yyyy';
   Properties.SaveTime := False;

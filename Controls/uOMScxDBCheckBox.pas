@@ -38,6 +38,7 @@ begin
   inherited;
 
   AutoSize := True;
+  Properties.ImmediatePost := True;
 
   if Assigned( Properties.OnPropertiesChanged )
     then FUserProcPropertiesHandler := Properties.OnPropertiesChanged;

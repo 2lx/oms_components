@@ -42,6 +42,7 @@ begin
   inherited;
 
   Properties.DropDownListStyle := lsEditFixedList;
+  Properties.ImmediatePost := True;
 
   if Properties.DropDownRows < 20
     then Properties.DropDownRows := 20;

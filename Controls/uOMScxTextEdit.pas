@@ -38,6 +38,8 @@ procedure TOMScxTextEdit.Loaded;
 begin
   inherited;
 
+  Properties.ImmediatePost := True;
+
   if Assigned( Properties.OnPropertiesChanged )
     then FUserProcPropertiesHandler := Properties.OnPropertiesChanged;
   Properties.OnPropertiesChanged := PropertiesChangeHandler;

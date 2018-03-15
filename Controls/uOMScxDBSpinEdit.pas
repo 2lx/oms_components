@@ -41,6 +41,8 @@ procedure TOMScxDBSpinEdit.Loaded;
 begin
   inherited;
 
+  Properties.ImmediatePost := True;
+
   OnMouseWheel := MouseWheelHandler;
 
   if Assigned( Properties.OnPropertiesChanged )

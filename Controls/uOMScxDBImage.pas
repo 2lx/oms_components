@@ -50,6 +50,7 @@ begin
 
   OnDblClick := DblClickHandled;
   Properties.OnAssignPicture := PropertiesAssignPictureHandler;
+  Properties.ImmediatePost := True;
 
   if Assigned( Properties.OnPropertiesChanged )
     then FUserProcPropertiesHandler := Properties.OnPropertiesChanged;
