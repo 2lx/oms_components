@@ -66,6 +66,8 @@ begin
   inherited;
 
   CommandTimeOut := 90;
+  CursorType := ctKeyset;
+  CursorLocation := clUseClient;
 end;
 
 procedure TOMSADOQuery.SafeEdit;

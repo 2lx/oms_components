@@ -80,8 +80,8 @@ type
     FGUID: Variant;
     FMDIChildType: TMDIChildType;
     FLayouts : TFormLayouts;
-    FIsWasFirstLoaded : Boolean;
     FADOQOpeningCount : Integer;
+    FDBUIN : String;
 
     FADOQList : TList<TOMSADOQuery>;
 
@@ -89,7 +89,7 @@ type
 
     procedure OnADOQBeginMessage(var Msg: TMessage); message WM_ADOQ_BEGIN_MESSAGE;
     procedure OnADOQEndMessage(var Msg: TMessage); message WM_ADOQ_END_MESSAGE;
-    procedure OnFormAfterShow(var Msg: TMessage); message WM_FORM_AFTER_SHOW;
+    procedure OnFormAfterShow(var Msg: TMessage); message WM_MDIFORM_AFTER_SHOW;
 
     procedure DoShow; override;
 
@@ -122,9 +122,10 @@ type
 //    procedure ModifyFontsFor( ctrl: TWinControl; const FontSize: Integer );
 
   public
+    property MDIChildType : TMDIChildType read FMDIChildType;
     property ObjGUID : Variant read FGUID;
+    property DBUIN : String read FDBUIN;
     property Layouts : TFormLayouts read FLayouts;
-    property IsWasFirstLoaded : Boolean read FIsWasFirstLoaded;
 
     constructor Create( AOwner: TComponent ); overload; virtual;
     constructor Create( AOwner: TComponent; const guid: Variant ); overload; virtual;
@@ -137,18 +138,14 @@ type
     procedure PostAllQueries;
     procedure CancelAllQueries;
     procedure CloseAllQueries;
-    procedure DisableAllQueries;
-    procedure EnableAllQueries;
 
     function CanCloseCheckQueriesStates: Boolean;
     function CanCloseCheckRequiredFields( const canDelete: Boolean = False ): Boolean;
 
     function DBProcedure( procName: String; const params: array of Variant;
         const dbCatalog : TDBCatalog = dbOrders; const dbScheme: String = 'dbo') : Boolean;
-
     function DBProcedureResult( procName: String; const params: array of Variant; var RValue: Variant;
         const dbCatalog : TDBCatalog = dbOrders; const dbScheme: String = 'dbo'; isAsync : Boolean = False ) : Boolean;
-
     function DBFunction( funcName: String; const params: array of Variant; var RValue: Variant;
         const dbCatalog : TDBCatalog = dbOrders; const dbScheme: String = 'dbo' ) : Boolean;
   end;
@@ -164,12 +161,16 @@ uses uUserSettings, ADODB, Variants, System.SysUtils, VCL.Dialogs, cxCheckBox, d
 //------------------------------------------------------------------------------
 
 constructor TOMSForm.Create(AOwner: TComponent; const guid: Variant);
+var
+  fRet : Variant;
 begin
   inherited Create( AOwner );
 
-  FADOQOpeningCount := 0;
-  FGUID := guid;
   FMDIChildType := mdictMultiple;
+  FGUID := guid;
+
+  if DBFunction( 'OMS_OBJECT_GetUNumber', [ ObjGUID ], fRet ) AND (not VarIsNull( fRet ))
+    then FDBUIN := 'УИН: ' + VarToStr( fRet );
 
   CreateCommon;
 end;
@@ -178,9 +179,9 @@ constructor TOMSForm.Create(AOwner: TComponent);
 begin
   Inherited Create( AOwner );
 
-  FADOQOpeningCount := 0;
-  FGUID := NULL;
   FMDIChildType := mdictUnique;
+  FGUID := NULL;
+  FDBUIN := '';
 
   if not Assigned( onClose )
     then ShowMessage( 'Необходимо имплементировать событие onClose и обNilить указатель экземпляра' );
@@ -204,8 +205,9 @@ procedure TOMSForm.CreateCommon;
   end;
 
 begin
+  FADOQOpeningCount := 0;
+
   FLayouts := TFormLayouts.Create;
-  FIsWasFirstLoaded := False;
 
   RestoreUserSettings;
 
@@ -234,7 +236,9 @@ procedure TOMSForm.DoShow;
 begin
   inherited;
 
-  PostMessage(Self.Handle, WM_FORM_AFTER_SHOW, 0, 0);
+  PostMessage(Self.Handle, WM_MDIFORM_AFTER_SHOW, 0, 0);
+  if (Owner is TWinControl)
+    then PostMessage((Owner as TWinControl).Handle, WM_MDIFORM_AFTER_SHOW, 0, 0);
 end;
 
 procedure TOMSForm.OnFormAfterShow(var Msg: TMessage);
@@ -439,22 +443,6 @@ var
 begin
   for adoq in FADOQList do
     adoq.SafeClose;
-end;
-
-procedure TOMSForm.DisableAllQueries;
-var
-  adoq : TOMSADOQuery;
-begin
-  for adoq in FADOQList do
-    adoq.DisableControls;
-end;
-
-procedure TOMSForm.EnableAllQueries;
-var
-  adoq : TOMSADOQuery;
-begin
-  for adoq in FADOQList do
-    adoq.EnableControls;
 end;
 
 function TOMSForm.CanCloseCheckQueriesStates: Boolean;
@@ -681,8 +669,6 @@ var
   lastFrameName : String;
 
 begin
-  FIsWasFirstLoaded := True;
-
 //  if not {$I FormBaseEnabledForms.inc} then Exit;
 
   lastFrameName := '-';

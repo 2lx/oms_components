@@ -177,24 +177,30 @@ end;
 
 procedure TOMScxGridDBTableView.processSelectedRecords( func: TPFuncGUIDBoolean; const colGuidIndex: Integer );
 var
-  i, succCount : Integer;
+  i, succCount, selCount : Integer;
   guid : Variant;
 begin
   succCount := 0;
+  selCount := Controller.SelectedRecordCount;
+
+  if selCount <= 0 then begin
+    ShowWarning( 'Ни одной записи не выделено.' );
+    Exit;
+  end;
+
+  if not ShowQuestionYesNo('Вы уверены, что хотите выполнить групповую операцию? '
+        + #13'Выделено строк: ' + IntToStr( selCount ) ) then Exit;
 
   try
     DataController.DataSet.DisableControls;
 
-    if Controller.SelectedRecordCount > 0 then
-    begin
-      for i := 0 to Controller.SelectedRecordCount - 1 do
-        if func( Controller.SelectedRecords[ i ].Values[ colGuidIndex ] )
-          then Inc(succCount);
+    for i := 0 to Controller.SelectedRecordCount - 1 do
+      if func( Controller.SelectedRecords[ i ].Values[ colGuidIndex ] )
+        then Inc(succCount);
 
-      ShowInformation( 'Успешно обновлено записей: ' + IntToStr( succCount ) + ' из '
+    ShowInformation( 'Успешно обновлено записей: ' + IntToStr( succCount ) + ' из '
           + IntToStr( Controller.SelectedRecordCount ));
-    end
-    else ShowWarning( 'Ни одной записи не выделено.' );
+
   finally
     DataController.DataSet.EnableControls;
   end;
