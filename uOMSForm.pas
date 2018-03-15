@@ -2,10 +2,9 @@ unit uOMSForm;
 
 interface
 
-uses VCL.Forms, Classes, DataModule, Vcl.Controls, cxPC, Vcl.ComCtrls, Data.DB,
-    ExtCtrls, cxButtons, cxGridCustomTableView, cxDBEdit,
-    Windows, cxEdit, WinAPI.Messages, cxGrid, cxGridDBTableView, cxStyles, Vcl.Graphics,
-    cxBarEditItem, cxDBLookupComboBox, cxLookupEdit, cxLabel, uOMSLayout, uAppMessages, uDataBase,
+uses VCL.Forms, Classes, DataModule, Vcl.Controls, Vcl.ComCtrls, Data.DB,
+    ExtCtrls, Windows, WinAPI.Messages, cxStyles, Vcl.Graphics,
+    uOMSLayout, uAppMessages, uDataBase, System.Generics.Collections,
 
  {$I OMSComponentsInclude.inc}
 
@@ -84,6 +83,8 @@ type
     FIsWasFirstLoaded : Boolean;
     FADOQOpeningCount : Integer;
 
+    FADOQList : TList<TOMSADOQuery>;
+
     procedure CreateCommon;
 
     procedure OnADOQBeginMessage(var Msg: TMessage); message WM_ADOQ_BEGIN_MESSAGE;
@@ -129,13 +130,15 @@ type
     procedure InitializeRights; virtual; final;
     procedure SetupRightsRestriction; virtual;
 
-    function CanCloseCheckQueriesStates: Boolean;
-    function CanCloseCheckRequiredFields( const canDelete: Boolean = False ): Boolean;
-
     function CheckAllQueries: Boolean;
     procedure PostAllQueries;
     procedure CancelAllQueries;
     procedure CloseAllQueries;
+    procedure DisableAllQueries;
+    procedure EnableAllQueries;
+
+    function CanCloseCheckQueriesStates: Boolean;
+    function CanCloseCheckRequiredFields( const canDelete: Boolean = False ): Boolean;
 
     function DBProcedure( procName: String; const params: array of Variant;
         const dbCatalog : TDBCatalog = dbOrders; const dbScheme: String = 'dbo') : Boolean;
@@ -153,7 +156,7 @@ uses uUserSettings, ADODB, Variants, System.SysUtils, VCL.Dialogs, cxCheckBox, d
   cxGridDBBandedTableView, TypInfo,  dxRibbon, main, cxImage, cxDBLabel, cxDropDownEdit, cxDBExtLookupComboBox,
   UnitDifFuncs, cxGridDBCardView, cxNavigator, ShellAPI, UnitOMSFormBaseInterface,  UnitFileRoutines, cxCalendar,
   cxCurrencyEdit, cxTextEdit, cxGraphics, UnitDataOMSREF, cxTimeEdit, cxMemo, uOMSStyle,
-  uOMSDialogs, dxGDIPlusClasses;
+  uOMSDialogs, dxGDIPlusClasses, cxGridDBTableView, cxBarEditItem, cxGrid, cxPC, cxButtons;
 
 //------------------------------------------------------------------------------
 
@@ -183,8 +186,20 @@ begin
 end;
 
 procedure TOMSForm.CreateCommon;
-var
-  fontSize: integer;
+
+  procedure PopulateAdoQList( frm : TComponent );
+  var
+    i : Integer;
+  begin
+    for i := 0 to frm.ComponentCount - 1 do
+    begin
+      if ( frm.Components[ i ] is TFrame )
+        then PopulateAdoQList( frm.Components[ i ] as TFrame )
+      else if ( frm.Components[ i ] is TOMSADOQuery )
+          then FADOQList.Add( frm.Components[ i ] as TOMSADOQuery );
+    end;
+  end;
+
 begin
   FLayouts := TFormLayouts.Create;
   FIsWasFirstLoaded := False;
@@ -199,11 +214,15 @@ begin
 
   if not Assigned( onClose )
     then onClose := FormClose;
+
+  FADOQList := TList<TOMSADOQuery>.Create;
+  PopulateAdoQList( Self );
 end;
 
 destructor TOMSForm.Destroy;
 begin
   FLayouts.Free;
+  FADOQList.Free;
 
   inherited;
 end;
@@ -270,6 +289,7 @@ begin
   Inc(FADOQOpeningCount);
   if FADOQOpeningCount <= 0 then Exit;
 
+//  DisableAllQueries;
   OMSMainForm.lblAnimationADOQ.Visible := True;
   OMSMainForm.imgAnimationADOQ.Visible := True;
   TdxSmartImage( OMSMainForm.imgAnimationADOQ.Picture.Graphic).StartAnimation;
@@ -283,6 +303,7 @@ begin
   OMSMainForm.lblAnimationADOQ.Visible := False;
   OMSMainForm.imgAnimationADOQ.Visible := False;
   TdxSmartImage( OMSMainForm.imgAnimationADOQ.Picture.Graphic).StopAnimation;
+//  EnableAllQueries;
 end;
 
 {
@@ -360,94 +381,55 @@ end;
 
 procedure TOMSForm.PostAllQueries;
 var
-  i, j : Integer;
+  adoq : TOMSADOQuery;
 begin
-  i := 0;
-  try
-    while i < ComponentCount - 1 do
-    begin
-      if ( Components[ i ] is TFrame ) then
-      begin
-        j := 0;
-        while j < ( Components[ i ] as TFrame ).ComponentCount - 1 do
-        begin
-          if ( ( Components[ i ] as TFrame ).Components[ j ] is TOMSADOQuery )
-            then ( ( Components[ i ] as TFrame ).Components[ j ] as TOMSADOQuery ).SafePost;
-
-          Inc( j );
-        end;
-      end;
-
-      if ( Components[ i ] is TOMSADOQuery )
-        then ( Components[ i ] as TOMSADOQuery ).SafePost;
-
-      Inc( i );
-    end;
-  except
-  end;
+  for adoq in FADOQList do
+    adoq.SafePost;
 end;
 
 procedure TOMSForm.CancelAllQueries;
 var
-  i, j : Integer;
+  adoq : TOMSADOQuery;
 begin
-  i := 0;
-  try
-    while i < ComponentCount - 1 do
-    begin
-      if ( Components[ i ] is TFrame ) then
-      begin
-        j := 0;
-        while j < ( Components[ i ] as TFrame ).ComponentCount - 1 do
-        begin
-          if ( ( Components[ i ] as TFrame ).Components[ j ] is TOMSADOQuery )
-            then ( ( Components[ i ] as TFrame ).Components[ j ] as TOMSADOQuery ).SafeCancel;
-
-          Inc( j );
-        end;
-      end;
-
-      if ( Components[ i ] is TOMSADOQuery )
-        then ( Components[ i ] as TOMSADOQuery ).SafeCancel;
-
-      Inc( i );
-    end;
-  except
-  end;
+  for adoq in FADOQList do
+    adoq.SafeCancel;
 end;
 
 function TOMSForm.CheckAllQueries : Boolean;
 var
-  i, j : Integer;
+  adoq : TOMSADOQuery;
 begin
-  i := 0;
   Result := False;
-  try
-    while i < ComponentCount - 1 do
-    begin
-      if ( Components[ i ] is TFrame ) then
-      begin
-        j := 0;
-        while j < ( Components[ i ] as TFrame ).ComponentCount - 1 do
-        begin
-          if ( ( Components[ i ] as TFrame ).Components[ j ] is TOMSADOQuery )
-            then if ( ( Components[ i ] as TFrame ).Components[ j ] as TOMSADOQuery ).IsEdited
-              then Result := True;
 
-          if Result = True then Break;
-          Inc( j );
-        end;
-      end;
-
-      if ( Components[ i ] is TOMSADOQuery ) then
-        if ( Components[ i ] as TOMSADOQuery ).IsEdited
-          then Result := True;
-
-      if Result = True then Break;
-      Inc( i );
+  for adoq in FADOQList do
+    if adoq.IsEdited then begin
+      Result := True;
+      Break;
     end;
-  except
-  end;
+end;
+
+procedure TOMSForm.CloseAllQueries;
+var
+  adoq : TOMSADOQuery;
+begin
+  for adoq in FADOQList do
+    adoq.SafeClose;
+end;
+
+procedure TOMSForm.DisableAllQueries;
+var
+  adoq : TOMSADOQuery;
+begin
+  for adoq in FADOQList do
+    adoq.DisableControls;
+end;
+
+procedure TOMSForm.EnableAllQueries;
+var
+  adoq : TOMSADOQuery;
+begin
+  for adoq in FADOQList do
+    adoq.EnableControls;
 end;
 
 function TOMSForm.CanCloseCheckQueriesStates: Boolean;
@@ -493,32 +475,8 @@ begin
   end;
 end;
 
-procedure TOMSForm.CloseAllQueries;
-var
-  i, j : Integer;
-begin
-  i := 0;
-  try
-    while i < ( ComponentCount - 1 ) do
-    begin
-      if ( Components[ i ] is TFrame ) then
-      begin
-        j := 0;
-        while j < ( Components[ i ] as TFrame ).ComponentCount - 1 do
-        begin
-          if ( ( Components[ i ] as TFrame ).Components[ j ] is TOMSADOQuery )
-            then ( ( Components[ i ] as TFrame ).Components[ j ] as TOMSADOQuery ).SafeClose;
-          Inc( j );
-        end;
-      end;
-
-      if ( Components[ i ] is TOMSADOQuery )
-        then ( Components[ i ] as TOMSADOQuery ).SafeClose;
-      Inc( i );
-    end;
-  except
-  end;
-end;
+//--------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 
 procedure TOMSForm.AddComponentGridFullAccess( gView: TOMScxGridDBTableView;
     const FrameName : WideString = ''; const NamePostfix : WideString = '' );

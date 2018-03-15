@@ -31,6 +31,8 @@ type
     procedure SafeClose( const doPost: Boolean = True );
     procedure SafeOpen;
 
+    procedure SafeSetParam(const parName : String; const AValue : Variant );
+
     procedure SafeResync;
   end;
 
@@ -68,6 +70,9 @@ end;
 
 procedure TOMSADOQuery.SafePost;
 begin
+  while ( State = dsOpening ) do Exit;
+//    Application.ProcessMessages;
+
   if isEdited then Post;
 end;
 
@@ -79,12 +84,17 @@ end;
 
 procedure TOMSADOQuery.SafeCancel;
 begin
+  while ( State = dsOpening ) do Exit;
+//    Application.ProcessMessages;
+
   if isEdited then Cancel;
 end;
 
 procedure TOMSADOQuery.SafeClose( const doPost: Boolean );
 begin
 //  DisableControls;
+  while ( State = dsOpening ) do
+    Application.ProcessMessages;
 
   FBookmark := Nil;
   if Active AND (not Eof)
@@ -99,16 +109,10 @@ begin
   Result := False;
 
   try
-    if FEnableMessage
-      then PostMessage( FFormHandle, WM_ADOQ_BEGIN_MESSAGE, 0, 0 );
-
     if (not Active) then Open;
 
     while ( State = dsOpening ) do
       Application.ProcessMessages;
-
-    if FEnableMessage
-      then PostMessage( FFormHandle, WM_ADOQ_END_MESSAGE, 0, 0 );
 
     Result := True;
   except
@@ -124,8 +128,14 @@ end;
 procedure TOMSADOQuery.SafeOpen;
 begin
   try
+    if FEnableMessage
+      then SendMessage( FFormHandle, WM_ADOQ_BEGIN_MESSAGE, 0, 0 );
+
     if SafeOpenBase AND ( FBookmark <> Nil ) AND BookmarkValid( FBookmark )
       then GotoBookmark( FBookmark );
+
+    if FEnableMessage
+      then SendMessage( FFormHandle, WM_ADOQ_END_MESSAGE, 0, 0 );
 
 //    DataEvent(deLayoutChange, 0);
   finally
@@ -135,10 +145,21 @@ end;
 
 procedure TOMSADOQuery.SafeResync;
 begin
+  while ( State = dsOpening ) do
+    Application.ProcessMessages;
+
   DisableControls;
   SafeClose( True );
   SafeOpen;
   EnableControls;
+end;
+
+procedure TOMSADOQuery.SafeSetParam(const parName: String; const AValue: Variant);
+begin
+  while ( State = dsOpening ) do
+    Application.ProcessMessages;
+
+  Parameters.ParamByName( parName ).Value := AValue;
 end;
 
 procedure TOMSADOQuery.DeleteErrorHandler(DataSet: TDataSet; E: EDatabaseError; var Action: TDataAction);
