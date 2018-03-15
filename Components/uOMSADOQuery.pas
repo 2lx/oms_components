@@ -21,7 +21,6 @@ type
 
   public
     constructor Create(AOwner: TComponent); override;
-//    destructor Free
 
     function isEdited : Boolean;
     procedure SafeEdit;
@@ -83,34 +82,23 @@ begin
   if isEdited then Cancel;
 end;
 
-procedure TOMSADOQuery.SafeOpen;
-begin
-  try
-    if SafeOpenBase AND ( FBookmark <> Nil ) AND BookmarkValid( FBookmark )
-      then GotoBookmark( FBookmark );
-  finally
-    EnableControls;
-  end;
-end;
-
 procedure TOMSADOQuery.SafeClose( const doPost: Boolean );
 begin
-  DisableControls;
-
-  if doPost then SafePost;
+//  DisableControls;
 
   FBookmark := Nil;
   if Active AND (not Eof)
     then FBookmark := GetBookmark;
 
+  if doPost then SafePost;
   if Active then Close;
 end;
 
 function TOMSADOQuery.SafeOpenBase : Boolean;
 begin
-  try
-    DisableControls;
+  Result := False;
 
+  try
     if FEnableMessage
       then PostMessage( FFormHandle, WM_ADOQ_BEGIN_MESSAGE, 0, 0 );
 
@@ -123,11 +111,9 @@ begin
       then PostMessage( FFormHandle, WM_ADOQ_END_MESSAGE, 0, 0 );
 
     Result := True;
-    EnableControls;
   except
     on E: Exception do begin
       Result := False;
-      EnableControls;
 
       ShowError('Ошибка открытия запроса. ' + E.ToString );
       logQueryError( Name, SQL.Text, 'OpenError', E.ToString );
@@ -135,10 +121,24 @@ begin
   end;
 end;
 
+procedure TOMSADOQuery.SafeOpen;
+begin
+  try
+    if SafeOpenBase AND ( FBookmark <> Nil ) AND BookmarkValid( FBookmark )
+      then GotoBookmark( FBookmark );
+
+//    DataEvent(deLayoutChange, 0);
+  finally
+//    EnableControls;
+  end;
+end;
+
 procedure TOMSADOQuery.SafeResync;
 begin
+  DisableControls;
   SafeClose( True );
   SafeOpen;
+  EnableControls;
 end;
 
 procedure TOMSADOQuery.DeleteErrorHandler(DataSet: TDataSet; E: EDatabaseError; var Action: TDataAction);
