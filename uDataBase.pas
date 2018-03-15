@@ -2,6 +2,8 @@ unit uDataBase;
 
 interface
 
+uses Classes;
+
 type
   TDBCatalog = (
     dbOrders,
@@ -10,13 +12,22 @@ type
     dbManagement
   );
 
-function DBProcedure( procName: String; const params: array of Variant;
-    const dbCatalog : TDBCatalog = dbOrders; const dbScheme: String = 'dbo') : Boolean;
+function DBProcedureNil( procName: String; const params: array of Variant;
+    const dbCatalog : TDBCatalog = dbOrders; const dbScheme: String = 'dbo' ) : Boolean;
 
-function DBProcedureResult( procName: String; const params: array of Variant; var RValue: Variant;
+function DBProcedureOwner( AOwner: TComponent; procName: String; const params: array of Variant;
+    const dbCatalog : TDBCatalog = dbOrders; const dbScheme: String = 'dbo' ) : Boolean;
+
+function DBProcedureResultNil( procName: String; const params: array of Variant; var RValue: Variant;
     const dbCatalog : TDBCatalog = dbOrders; const dbScheme: String = 'dbo'; isAsync : Boolean = False ) : Boolean;
 
-function DBFunction( funcName: String; const params: array of Variant; var RValue: Variant;
+function DBProcedureResultOwner( AOwner: TComponent; procName: String; const params: array of Variant; var RValue: Variant;
+    const dbCatalog : TDBCatalog = dbOrders; const dbScheme: String = 'dbo'; isAsync : Boolean = False ) : Boolean;
+
+function DBFunctionNil( funcName: String; const params: array of Variant; var RValue: Variant;
+    const dbCatalog : TDBCatalog = dbOrders; const dbScheme: String = 'dbo' ) : Boolean;
+
+function DBFunctionOwner( AOwner: TComponent; funcName: String; const params: array of Variant; var RValue: Variant;
     const dbCatalog : TDBCatalog = dbOrders; const dbScheme: String = 'dbo' ) : Boolean;
 
 function DBUserSettingsSet(const SName : String; const SValue : Variant) : Boolean;
@@ -24,7 +35,7 @@ function DBUserSettingsGet(const SName : String ) : Variant;
 
 implementation
 
-uses ADODB, DataModule, SysUtils, uOMSADOQuery, uOMSDialogs, uLogging, Variants;
+uses ADODB, DataModule, SysUtils, uOMSADOQuery, uOMSDialogs, uLogging, Variants, DB;
 
 function getCatalog( const dbc: TDBCatalog ) : String;
 begin
@@ -53,20 +64,38 @@ begin
     with adoq.Parameters.AddParameter do
     begin
       Name := paramName;
-      Value := params[ i ];
+      if VarIsNull(params[ i ] ) then
+      begin
+         Attributes := [ paNullable ];
+         DataType := ftGuid;
+         Value := Null;
+      end
+      else Value := params[ i ];
     end;
   end;
 end;
 
-function DBProcedure( procName: String; const params: array of Variant;
+function DBProcedureNil( procName: String; const params: array of Variant;
+    const dbCatalog : TDBCatalog = dbOrders; const dbScheme: String = 'dbo' ) : Boolean;
+begin
+  Result := DBProcedureOwner( Nil, procName, params, dbCatalog, dbScheme );
+end;
+
+function DBProcedureOwner( AOwner: TComponent; procName: String; const params: array of Variant;
     const dbCatalog : TDBCatalog; const dbScheme: String ) : Boolean;
 var
   RValue : Variant;
 begin
-  Result := DBProcedureResult( procName, params, RValue, dbCatalog, dbScheme, True );
+  Result := DBProcedureResultOwner( AOwner, procName, params, RValue, dbCatalog, dbScheme, True );
 end;
 
-function DBProcedureResult( procName: String; const params: array of Variant; var RValue: Variant;
+function DBProcedureResultNil( procName: String; const params: array of Variant; var RValue: Variant;
+    const dbCatalog : TDBCatalog = dbOrders; const dbScheme: String = 'dbo'; isAsync : Boolean = False ) : Boolean;
+begin
+  Result := DBProcedureResultOwner( Nil, procName, params, RValue, dbCatalog, dbScheme, isAsync );
+end;
+
+function DBProcedureResultOwner( AOwner: TComponent; procName: String; const params: array of Variant; var RValue: Variant;
     const dbCatalog : TDBCatalog; const dbScheme: String; isAsync : Boolean ) : Boolean;
 var
   strResult: String;
@@ -83,18 +112,19 @@ begin
   end;
 }
   try
-    adoq := TOMSADOQuery.Create(Nil);
+    adoq := TOMSADOQuery.Create( AOwner );
     adoq.Connection := DataForm.adoconnOrdersForSch;
     adoq.LockType := ltReadOnly;
-    adoq.CommandTimeOut := 90;
-    if isAsync
-      then adoq.ExecuteOptions := [ eoAsyncExecute, eoAsyncFetchNonBlocking ];
+
+    if not isAsync
+      then adoq.ExecuteOptions := [ ];
 
     strSQL := 'EXEC [' + getCatalog( dbCatalog ) + '].' + dbScheme + '.[' + procName + '] ';
     strSQL := strSQL + parseParameters( adoq, params );
     adoq.SQL.Text := strSQL;
 
-    if ( not adoq.SafeOpen ) OR ( adoq.FindField('Result') = Nil ) then
+    adoq.SafeResync;
+    if ( not adoq.Active ) OR ( adoq.Eof ) OR ( adoq.FindField('Result') = Nil ) then
     begin
       adoq.Free;
       Exit;
@@ -121,7 +151,13 @@ begin
   end;
 end;
 
-function DBFunction( funcName: String; const params: array of Variant; var RValue: Variant;
+function DBFunctionNil( funcName: String; const params: array of Variant; var RValue: Variant;
+    const dbCatalog : TDBCatalog; const dbScheme: String ) : Boolean;
+begin
+  Result := DBFunctionOwner( Nil, funcName, params, RValue, dbCatalog, dbScheme );
+end;
+
+function DBFunctionOwner( AOwner: TComponent; funcName: String; const params: array of Variant; var RValue: Variant;
     const dbCatalog : TDBCatalog = dbOrders; const dbScheme: String = 'dbo' ) : Boolean;
 var
   strResult: String;
@@ -131,17 +167,18 @@ begin
   Result := False;
 
   try
-    adoq := TOMSADOQuery.Create(Nil);
+    adoq := TOMSADOQuery.Create( AOwner );
     adoq.Connection := DataForm.adoconnOrdersForSch;
     adoq.LockType := ltReadOnly;
-    adoq.CommandTimeOut := 90;
-
+{    adoq.CommandTimeOut := 90;
+}
     strSQL := 'SELECT [' + getCatalog( dbCatalog ) + '].' + dbScheme + '.[' + funcName + '] ( ';
     strSQL := strSQL + parseParameters( adoq, params );
     strSQL := strSQL + ' ) AS Result';
     adoq.SQL.Text := strSQL;
 
-    if (adoq.SafeOpen ) AND ( not adoq.Eof ) then
+    adoq.SafeResync;
+    if ( adoq.Active ) AND ( not adoq.Eof ) then
     begin
       RValue := adoq.FieldByName( 'Result' ).Value;
       Result := True;
@@ -159,13 +196,13 @@ begin
   baseType := VarType( SValue ) and VarTypeMask;
 
   case baseType of
-    varDate :     Result := DBProcedure( 'OMS_USERSETTINGS_SetDateTime', [ SName, TDateTime( SValue ) ] );
-    varBoolean :  Result := DBProcedure( 'OMS_USERSETTINGS_SetBoolean', [ SName, Boolean( SValue ) ] );
-    varInteger :  Result := DBProcedure( 'OMS_USERSETTINGS_SetInteger', [ SName, Integer( SValue ) ] );
+    varDate :     Result := DBProcedureNil( 'OMS_USERSETTINGS_SetDateTime', [ SName, TDateTime( SValue ) ] );
+    varBoolean :  Result := DBProcedureNil( 'OMS_USERSETTINGS_SetBoolean', [ SName, Boolean( SValue ) ] );
+    varInteger :  Result := DBProcedureNil( 'OMS_USERSETTINGS_SetInteger', [ SName, Integer( SValue ) ] );
     varString  :  begin
       if (String( SValue )[1] = '{') AND (Length(String( SValue) ) = 38)
-        then Result := DBProcedure( 'OMS_USERSETTINGS_SetGUID', [ SName, SValue ] )
-        else Result := DBProcedure( 'OMS_USERSETTINGS_SetString', [ SName, String( SValue ) ] );
+        then Result := DBProcedureNil( 'OMS_USERSETTINGS_SetGUID', [ SName, SValue ] )
+        else Result := DBProcedureNil( 'OMS_USERSETTINGS_SetString', [ SName, String( SValue ) ] );
     end
   end;
 end;
@@ -183,7 +220,8 @@ begin
 
     adoq.SQL.Text := 'EXEC [ORDERS].dbo.[OMS_USERSETTINGS_GET]';
 
-    if ( not adoq.SafeOpen ) OR ( adoq.Eof )
+    adoq.SafeResync;
+    if ( not adoq.Active ) OR ( adoq.Eof )
       then Result := Null
       else Result := adoq.FieldByName( SName ).Value;
   finally

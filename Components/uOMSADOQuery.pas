@@ -14,19 +14,24 @@ type
     procedure DeleteErrorHandler(DataSet: TDataSet; E: EDatabaseError; var Action: TDataAction);
     procedure EditErrorHandler(DataSet: TDataSet; E: EDatabaseError; var Action: TDataAction);
     procedure PostErrorHandler(DataSet: TDataSet; E: EDatabaseError; var Action: TDataAction);
+
+    function  SafeOpenBase : Boolean;
   protected
     procedure Loaded; override;
+
   public
     constructor Create(AOwner: TComponent); override;
+//    destructor Free
 
     function isEdited : Boolean;
-    procedure SafePost( const isReopen: Boolean = True );
+    procedure SafeEdit;
+
+    procedure SafePost;
     procedure SafeCancel;
 
-    procedure CloseWithBookmark( const doPost: Boolean = True );
-    procedure OpenWithBookmark;
+    procedure SafeClose( const doPost: Boolean = True );
+    procedure SafeOpen;
 
-    function  SafeOpen : Boolean;
     procedure SafeResync;
   end;
 
@@ -38,7 +43,12 @@ constructor TOMSADOQuery.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
 
-  FEnableMessage := False;
+  FEnableMessage := (Owner is TOMSForm);
+  if FEnableMessage then
+  begin
+    FFormHandle := (Owner as TForm).Handle;
+//    ExecuteOptions := [ eoAsyncExecute, eoAsyncFetchNonBlocking ];
+  end;
 
   OnEditError := EditErrorHandler;
   OnDeleteError := DeleteErrorHandler;
@@ -54,20 +64,18 @@ procedure TOMSADOQuery.Loaded;
 begin
   inherited;
 
-  if (Owner is TOMSForm) then
-  begin
-    FFormHandle := (Owner as TForm).Handle;
-    ExecuteOptions := [ eoAsyncExecute, eoAsyncFetchNonBlocking ];
-    FEnableMessage := True;
-//    ShowInformation( Owner.CLassName );
-  end;
-
   CommandTimeOut := 90;
 end;
 
-procedure TOMSADOQuery.SafePost( const isReopen: Boolean );
+procedure TOMSADOQuery.SafePost;
 begin
   if isEdited then Post;
+end;
+
+procedure TOMSADOQuery.SafeEdit;
+begin
+  if not ( State in [ dsEdit, dsInsert ] )
+    then Edit;
 end;
 
 procedure TOMSADOQuery.SafeCancel;
@@ -75,17 +83,17 @@ begin
   if isEdited then Cancel;
 end;
 
-procedure TOMSADOQuery.OpenWithBookmark;
+procedure TOMSADOQuery.SafeOpen;
 begin
   try
-    if SafeOpen AND ( FBookmark <> Nil ) AND BookmarkValid( FBookmark )
+    if SafeOpenBase AND ( FBookmark <> Nil ) AND BookmarkValid( FBookmark )
       then GotoBookmark( FBookmark );
   finally
     EnableControls;
   end;
 end;
 
-procedure TOMSADOQuery.CloseWithBookmark( const doPost: Boolean );
+procedure TOMSADOQuery.SafeClose( const doPost: Boolean );
 begin
   DisableControls;
 
@@ -98,7 +106,7 @@ begin
   if Active then Close;
 end;
 
-function TOMSADOQuery.SafeOpen : Boolean;
+function TOMSADOQuery.SafeOpenBase : Boolean;
 begin
   try
     DisableControls;
@@ -116,7 +124,6 @@ begin
 
     Result := True;
     EnableControls;
-
   except
     on E: Exception do begin
       Result := False;
@@ -130,8 +137,8 @@ end;
 
 procedure TOMSADOQuery.SafeResync;
 begin
-  CloseWithBookmark( True );
-  OpenWithBookmark;
+  SafeClose( True );
+  SafeOpen;
 end;
 
 procedure TOMSADOQuery.DeleteErrorHandler(DataSet: TDataSet; E: EDatabaseError; var Action: TDataAction);

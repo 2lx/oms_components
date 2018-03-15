@@ -11,7 +11,7 @@ uses uDataBase;
 procedure logQueryError(const AQName, AQSQLText, QEType, QError : String);
 begin
   try
-    DBProcedure( 'OMS_PROGRAMERRORLOG_Insert', [ AQName, AQSQLText, QEType, QError ] )
+    DBProcedureNil( 'OMS_PROGRAMERRORLOG_Insert', [ AQName, AQSQLText, QEType, QError ] )
   except
   end;
 end;

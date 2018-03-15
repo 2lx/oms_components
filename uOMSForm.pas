@@ -5,7 +5,7 @@ interface
 uses VCL.Forms, Classes, DataModule, Vcl.Controls, cxPC, Vcl.ComCtrls, Data.DB,
     ExtCtrls, cxButtons, cxGridCustomTableView, cxDBEdit,
     Windows, cxEdit, WinAPI.Messages, cxGrid, cxGridDBTableView, cxStyles, Vcl.Graphics,
-    cxBarEditItem, cxDBLookupComboBox, cxLookupEdit, cxLabel, uOMSLayout, uAppMessages,
+    cxBarEditItem, cxDBLookupComboBox, cxLookupEdit, cxLabel, uOMSLayout, uAppMessages, uDataBase,
 
  {$I OMSComponentsInclude.inc}
 
@@ -136,6 +136,15 @@ type
     procedure PostAllQueries;
     procedure CancelAllQueries;
     procedure CloseAllQueries;
+
+    function DBProcedure( procName: String; const params: array of Variant;
+        const dbCatalog : TDBCatalog = dbOrders; const dbScheme: String = 'dbo') : Boolean;
+
+    function DBProcedureResult( procName: String; const params: array of Variant; var RValue: Variant;
+        const dbCatalog : TDBCatalog = dbOrders; const dbScheme: String = 'dbo'; isAsync : Boolean = False ) : Boolean;
+
+    function DBFunction( funcName: String; const params: array of Variant; var RValue: Variant;
+        const dbCatalog : TDBCatalog = dbOrders; const dbScheme: String = 'dbo' ) : Boolean;
   end;
 
 implementation
@@ -143,7 +152,7 @@ implementation
 uses uUserSettings, ADODB, Variants, System.SysUtils, VCL.Dialogs, cxCheckBox, dxBar, ActnList, StdCtrls, cxSpinEdit,
   cxGridDBBandedTableView, TypInfo,  dxRibbon, main, cxImage, cxDBLabel, cxDropDownEdit, cxDBExtLookupComboBox,
   UnitDifFuncs, cxGridDBCardView, cxNavigator, ShellAPI, UnitOMSFormBaseInterface,  UnitFileRoutines, cxCalendar,
-  cxCurrencyEdit, cxTextEdit, cxGraphics, UnitDataOMSREF, cxTimeEdit, cxMemo, uOMSStyle, uDataBase,
+  cxCurrencyEdit, cxTextEdit, cxGraphics, UnitDataOMSREF, cxTimeEdit, cxMemo, uOMSStyle,
   uOMSDialogs, dxGDIPlusClasses;
 
 //------------------------------------------------------------------------------
@@ -236,6 +245,24 @@ end;
 procedure TOMSForm.SetupRightsRestriction;
 begin
 
+end;
+
+function TOMSForm.DBProcedure( procName: String; const params: array of Variant;
+        const dbCatalog : TDBCatalog = dbOrders; const dbScheme: String = 'dbo') : Boolean;
+begin
+  Result := DBProcedureOwner( Self, procName, params, dbCatalog, dbScheme );
+end;
+
+function TOMSForm.DBProcedureResult( procName: String; const params: array of Variant; var RValue: Variant;
+        const dbCatalog : TDBCatalog = dbOrders; const dbScheme: String = 'dbo'; isAsync : Boolean = False ) : Boolean;
+begin
+  Result := DBProcedureResultOwner( Self, procName, params, RValue, dbCatalog, dbScheme, False );
+end;
+
+function TOMSForm.DBFunction( funcName: String; const params: array of Variant; var RValue: Variant;
+        const dbCatalog : TDBCatalog = dbOrders; const dbScheme: String = 'dbo' ) : Boolean;
+begin
+  Result := DBFunctionOwner( Self, funcName, params, RValue, dbCatalog, dbScheme );
 end;
 
 procedure TOMSForm.OnADOQBeginMessage(var Msg: TMessage);
@@ -344,21 +371,16 @@ begin
         j := 0;
         while j < ( Components[ i ] as TFrame ).ComponentCount - 1 do
         begin
-          if ( ( Components[ i ] as TFrame ).Components[ j ] is TOMSADOQuery ) then
-            if ( ( Components[ i ] as TFrame ).Components[ j ] as TOMSADOQuery ).State in [ dsInsert, dsEdit ] then
-              if DataForm.testConnection
-                then ( ( Components[ i ] as TFrame ).Components[ j ] as TOMSADOQuery ).Post;
+          if ( ( Components[ i ] as TFrame ).Components[ j ] is TOMSADOQuery )
+            then ( ( Components[ i ] as TFrame ).Components[ j ] as TOMSADOQuery ).SafePost;
+
           Inc( j );
         end;
       end;
 
-      if ( Components[ i ] is TOMSADOQuery ) then
-        if ( Components[ i ] as TOMSADOQuery ).State in [ dsInsert, dsEdit ]
-          then
-            begin
-//            ShowMessage( Components[ i ].Name );
-            ( Components[ i ] as TOMSADOQuery ).Post;
-            end;
+      if ( Components[ i ] is TOMSADOQuery )
+        then ( Components[ i ] as TOMSADOQuery ).SafePost;
+
       Inc( i );
     end;
   except
@@ -378,17 +400,16 @@ begin
         j := 0;
         while j < ( Components[ i ] as TFrame ).ComponentCount - 1 do
         begin
-          if ( ( Components[ i ] as TFrame ).Components[ j ] is TOMSADOQuery ) then
-            if ( ( Components[ i ] as TFrame ).Components[ j ] as TOMSADOQuery ).State in [ dsInsert, dsEdit ] then
-              if DataForm.testConnection
-                then ( ( Components[ i ] as TFrame ).Components[ j ] as TOMSADOQuery ).Cancel;
+          if ( ( Components[ i ] as TFrame ).Components[ j ] is TOMSADOQuery )
+            then ( ( Components[ i ] as TFrame ).Components[ j ] as TOMSADOQuery ).SafeCancel;
+
           Inc( j );
         end;
       end;
 
-      if ( Components[ i ] is TOMSADOQuery ) then
-        if ( Components[ i ] as TOMSADOQuery ).State in [ dsInsert, dsEdit ]
-          then ( Components[ i ] as TOMSADOQuery ).Cancel;
+      if ( Components[ i ] is TOMSADOQuery )
+        then ( Components[ i ] as TOMSADOQuery ).SafeCancel;
+
       Inc( i );
     end;
   except
@@ -409,8 +430,8 @@ begin
         j := 0;
         while j < ( Components[ i ] as TFrame ).ComponentCount - 1 do
         begin
-          if ( ( Components[ i ] as TFrame ).Components[ j ] is TOMSADOQuery ) then
-            if ( ( Components[ i ] as TFrame ).Components[ j ] as TOMSADOQuery ).State in [ dsInsert, dsEdit ]
+          if ( ( Components[ i ] as TFrame ).Components[ j ] is TOMSADOQuery )
+            then if ( ( Components[ i ] as TFrame ).Components[ j ] as TOMSADOQuery ).IsEdited
               then Result := True;
 
           if Result = True then Break;
@@ -419,7 +440,7 @@ begin
       end;
 
       if ( Components[ i ] is TOMSADOQuery ) then
-        if ( Components[ i ] as TOMSADOQuery ).State in [ dsInsert, dsEdit ]
+        if ( Components[ i ] as TOMSADOQuery ).IsEdited
           then Result := True;
 
       if Result = True then Break;
@@ -431,16 +452,13 @@ end;
 
 function TOMSForm.CanCloseCheckQueriesStates: Boolean;
 var
-  btnId : Integer;
   interfEditor : IOMSFormBaseInterfaceEditor;
 begin
   Result := True;
 
   if CheckAllQueries then
   begin
-    btnId := MessageDlg( 'Äàííûå áûëè èçìåíåíû, ÑÎÕÐÀÍÈÒÜ?', mtWarning, mbYesNo, 0 );
-    if btnId = mrYes
-      then
+    if ShowQuestionYesNo( 'Äàííûå áûëè èçìåíåíû, ÑÎÕÐÀÍÈÒÜ?' ) then
       begin
         if ( GetInterface( IOMSFormBaseInterfaceEditor, interfEditor ) )
           then interfEditor.PostData
@@ -489,13 +507,13 @@ begin
         while j < ( Components[ i ] as TFrame ).ComponentCount - 1 do
         begin
           if ( ( Components[ i ] as TFrame ).Components[ j ] is TOMSADOQuery )
-            then ( ( Components[ i ] as TFrame ).Components[ j ] as TOMSADOQuery ).Close;
+            then ( ( Components[ i ] as TFrame ).Components[ j ] as TOMSADOQuery ).SafeClose;
           Inc( j );
         end;
       end;
 
       if ( Components[ i ] is TOMSADOQuery )
-        then ( Components[ i ] as TOMSADOQuery ).Close;
+        then ( Components[ i ] as TOMSADOQuery ).SafeClose;
       Inc( i );
     end;
   except
