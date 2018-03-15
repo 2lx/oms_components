@@ -89,6 +89,9 @@ type
 
     procedure OnADOQBeginMessage(var Msg: TMessage); message WM_ADOQ_BEGIN_MESSAGE;
     procedure OnADOQEndMessage(var Msg: TMessage); message WM_ADOQ_END_MESSAGE;
+    procedure OnFormAfterShow(var Msg: TMessage); message WM_FORM_AFTER_SHOW;
+
+    procedure DoShow; override;
 
   protected
     procedure InsertControlComponents; virtual;
@@ -225,6 +228,28 @@ begin
   FADOQList.Free;
 
   inherited;
+end;
+
+procedure TOMSForm.DoShow;
+begin
+  inherited;
+
+  PostMessage(Self.Handle, WM_FORM_AFTER_SHOW, 0, 0);
+end;
+
+procedure TOMSForm.OnFormAfterShow(var Msg: TMessage);
+var
+  interfEditor : IOMSFormBaseInterfaceEditor;
+  interfRefresh : IOMSFormBaseInterfaceRefresh;
+begin
+  InitializeRights;
+
+  if ( GetInterface( IOMSFormBaseInterfaceEditor, interfEditor ) )
+    then interfEditor.RefreshData
+  else if ( GetInterface( IOMSFormBaseInterfaceRefresh, interfRefresh ) )
+    then interfRefresh.RefreshData;
+
+  SetupRightsRestriction;
 end;
 
 //--------------------------------------------------------------------------------------------------
