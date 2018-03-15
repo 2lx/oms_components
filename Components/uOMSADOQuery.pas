@@ -68,35 +68,35 @@ begin
   CommandTimeOut := 90;
 end;
 
-procedure TOMSADOQuery.SafePost;
-begin
-  while ( State = dsOpening ) do Exit;
-//    Application.ProcessMessages;
-
-  if isEdited then Post;
-end;
-
 procedure TOMSADOQuery.SafeEdit;
 begin
   if not ( State in [ dsEdit, dsInsert ] )
     then Edit;
 end;
 
+procedure TOMSADOQuery.SafePost;
+begin
+  if ( State = dsOpening ) then Exit;
+
+  if isEdited then Post;
+end;
+
 procedure TOMSADOQuery.SafeCancel;
 begin
-  while ( State = dsOpening ) do Exit;
-//    Application.ProcessMessages;
+  if ( State = dsOpening ) then Exit;
 
   if isEdited then Cancel;
 end;
 
 procedure TOMSADOQuery.SafeClose( const doPost: Boolean );
 begin
-//  DisableControls;
-  while ( State = dsOpening ) do
-    Application.ProcessMessages;
-
   FBookmark := Nil;
+
+  while ( State = dsOpening ) do begin
+    Cancel;
+    Application.ProcessMessages;
+  end;
+
   if Active AND (not Eof)
     then FBookmark := GetBookmark;
 

@@ -43,6 +43,10 @@ begin
 
   Properties.DropDownListStyle := lsEditFixedList;
   Properties.ImmediatePost := True;
+  Properties.ListOptions.CaseInsensitive := True;
+
+  if Properties.ListColumns.Count = 1
+    then Properties.ListOptions.ShowHeader := False;
 
   if Properties.DropDownRows < 20
     then Properties.DropDownRows := 20;
