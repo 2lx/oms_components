@@ -38,16 +38,19 @@ type
 
 implementation
 
-uses uOMSDialogs, uLogging, Forms, SysUtils, uAppMessages, uOMSForm;
+uses uOMSDialogs, uLogging, Forms, SysUtils, uAppMessages, uOMSForm, uUtils;
 
 constructor TOMSADOQuery.Create(AOwner: TComponent);
+var
+  frm : TComponent;
 begin
   inherited Create(AOwner);
 
-  FEnableMessage := (Owner is TOMSForm);
+  frm := getOwnerForm(Owner);
+  FEnableMessage := (frm is TOMSForm);
   if FEnableMessage then
   begin
-    FFormHandle := (Owner as TForm).Handle;
+    FFormHandle := (frm as TForm).Handle;
 //    ExecuteOptions := [ eoAsyncExecute, eoAsyncFetchNonBlocking ];
   end;
 
