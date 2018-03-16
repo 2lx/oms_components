@@ -15,7 +15,9 @@ type
     procedure EditErrorHandler(DataSet: TDataSet; E: EDatabaseError; var Action: TDataAction);
     procedure PostErrorHandler(DataSet: TDataSet; E: EDatabaseError; var Action: TDataAction);
 
+    procedure SafeOpen;
     function  SafeOpenBase : Boolean;
+
   protected
     procedure Loaded; override;
 
@@ -29,11 +31,10 @@ type
     procedure SafeCancel;
 
     procedure SafeClose( const doPost: Boolean = True );
-    procedure SafeOpen;
+    procedure SafeResync;
 
     procedure SafeSetParam(const parName : String; const AValue : Variant );
 
-    procedure SafeResync;
   end;
 
 implementation
@@ -48,6 +49,7 @@ begin
 
   frm := getOwnerForm(Owner);
   FEnableMessage := (frm is TOMSForm);
+
   if FEnableMessage then
   begin
     FFormHandle := (frm as TForm).Handle;

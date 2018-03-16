@@ -3,7 +3,7 @@ unit uWinRegistry;
 interface
 
 function WinRegistryGet( const RKey, FieldName: String; const DefValue: Variant ) : Variant;
-procedure WinRegistrySet( const RKey, FieldName: String; AValue: Variant );
+function WinRegistrySet( const RKey, FieldName: String; AValue: Variant ) : Boolean;
 procedure WinRegistryDelete( const RKey, FieldName: String );
 
 implementation
@@ -39,11 +39,12 @@ begin
   end;
 end;
 
-procedure WinRegistrySet( const RKey, FieldName: String; AValue: Variant );
+function WinRegistrySet( const RKey, FieldName: String; AValue: Variant ) : Boolean;
 var
   Registry : TRegistry;
   baseType : Integer;
 begin
+  Result := False;
   try
     Registry:= TRegistry.Create;
     Registry.RootKey := HKEY_CURRENT_USER;
@@ -63,6 +64,7 @@ begin
       Registry.CloseKey;
     end;
 
+    Result := True;
    finally
      Registry.Free;
    end;

@@ -203,7 +203,8 @@ begin
       if (String( SValue )[1] = '{') AND (Length(String( SValue) ) = 38)
         then Result := DBProcedureNil( 'OMS_USERSETTINGS_SetGUID', [ SName, SValue ] )
         else Result := DBProcedureNil( 'OMS_USERSETTINGS_SetString', [ SName, String( SValue ) ] );
-    end
+    end;
+    varNull : Result := DBProcedureNil( 'OMS_USERSETTINGS_SetGUID', [ SName, SValue ] );
   end;
 end;
 
