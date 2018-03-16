@@ -66,7 +66,7 @@ begin
   inherited;
 
   CommandTimeOut := 90;
-  CursorType := ctKeyset;
+  CursorType := ctStatic;
   CursorLocation := clUseClient;
 end;
 

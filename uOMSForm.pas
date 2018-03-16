@@ -319,9 +319,9 @@ begin
   if FADOQOpeningCount <= 0 then Exit;
 
 //  DisableAllQueries;
-  OMSMainForm.lblAnimationADOQ.Visible := True;
-  OMSMainForm.imgAnimationADOQ.Visible := True;
-  TdxSmartImage( OMSMainForm.imgAnimationADOQ.Picture.Graphic).StartAnimation;
+  frmMain.lblAnimationADOQ.Visible := True;
+  frmMain.imgAnimationADOQ.Visible := True;
+  TdxSmartImage( frmMain.imgAnimationADOQ.Picture.Graphic).StartAnimation;
 end;
 
 procedure TOMSForm.OnADOQEndMessage(var Msg: TMessage);
@@ -329,9 +329,9 @@ begin
   Dec(FADOQOpeningCount);
   if FADOQOpeningCount > 0 then Exit;
 
-  OMSMainForm.lblAnimationADOQ.Visible := False;
-  OMSMainForm.imgAnimationADOQ.Visible := False;
-  TdxSmartImage( OMSMainForm.imgAnimationADOQ.Picture.Graphic).StopAnimation;
+  frmMain.lblAnimationADOQ.Visible := False;
+  frmMain.imgAnimationADOQ.Visible := False;
+  TdxSmartImage( frmMain.imgAnimationADOQ.Picture.Graphic).StopAnimation;
 //  EnableAllQueries;
 end;
 
