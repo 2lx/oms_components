@@ -15,7 +15,7 @@ type
     procedure EditErrorHandler(DataSet: TDataSet; E: EDatabaseError; var Action: TDataAction);
     procedure PostErrorHandler(DataSet: TDataSet; E: EDatabaseError; var Action: TDataAction);
 
-    procedure SafeOpen;
+    function SafeOpen : Boolean;
     function  SafeOpenBase : Boolean;
 
   protected
@@ -31,7 +31,7 @@ type
     procedure SafeCancel;
 
     procedure SafeClose( const doPost: Boolean = True );
-    procedure SafeResync;
+    function SafeResync : Boolean;
 
     procedure SafeSetParam(const parName : String; const AValue : Variant );
 
@@ -132,32 +132,38 @@ begin
   end;
 end;
 
-procedure TOMSADOQuery.SafeOpen;
+function TOMSADOQuery.SafeOpen : Boolean;
 begin
+  Result := False;
+
   try
     if FEnableMessage
       then SendMessage( FFormHandle, WM_ADOQ_BEGIN_MESSAGE, 0, 0 );
 
-    if SafeOpenBase AND ( FBookmark <> Nil ) AND BookmarkValid( FBookmark )
+    if not SafeOpenBase then Exit;
+
+    if ( FBookmark <> Nil ) AND BookmarkValid( FBookmark )
       then GotoBookmark( FBookmark );
 
-    if FEnableMessage
-      then SendMessage( FFormHandle, WM_ADOQ_END_MESSAGE, 0, 0 );
-
+    Result := True;
 //    DataEvent(deLayoutChange, 0);
   finally
-//    EnableControls;
+    if FEnableMessage
+      then SendMessage( FFormHandle, WM_ADOQ_END_MESSAGE, 0, 0 );
   end;
 end;
 
-procedure TOMSADOQuery.SafeResync;
+function TOMSADOQuery.SafeResync : Boolean;
 begin
+  Result := False;
+
+  DisableControls;
   while ( State = dsOpening ) do
     Application.ProcessMessages;
 
-  DisableControls;
   SafeClose( True );
-  SafeOpen;
+  Result := SafeOpen;
+
   EnableControls;
 end;
 
