@@ -2,32 +2,31 @@ unit uAccessRules;
 
 interface
 
-uses Classes,
+uses Classes, Forms, uOMSForm,
 
  {$I OMSComponentsInclude.inc}
 
-procedure AddGridRules( gridView: TOMScxGridDBTableView; const Comment: WideString = '' );
+procedure AddGridRules( gridView: TOMScxGridDBTableView );
 
 procedure AddComponentRule( cmpn: TComponent; const arrCmpns : array of TComponent;
     const commentBase : WideString = '' );
 
-//procedure InitializeRights;
+procedure ApplyRules(var frm: TOMSForm);
 
 implementation
 
 uses uDataBase, System.TypInfo, Controls, uUtils, uDialogs, cxGrid, cxGridDBTableView, cxPC,
-  ComCtrls, SysUtils;
-{dxBar,  cxButtons,}
+  ComCtrls, SysUtils, DataModule, dxBar, cxButtons, cxBarEditItem, cxGridTableView;
 
-procedure AddGridRules( gridView: TOMScxGridDBTableView; const Comment: WideString = '' );
+procedure AddGridRules( gridView: TOMScxGridDBTableView );
 var
   i : Integer;
 begin
-  AddComponentRule( gridView, [], 'таблица ' + Comment );
+  AddComponentRule( gridView, []);
 
   for i := 0 to gridView.ColumnCount - 1 do
     if ( gridView.Columns[ i ].Width <> 0 ) AND ( gridView.Columns[ i ].Options.Editing )
-      then AddComponentRule( gridView.Columns[ i ], [], 'столбец таблицы ' + Comment );
+      then AddComponentRule( gridView.Columns[ i ], [] );
 end;
 
 function AddComponentOneRule( cmpn : TComponent; const CompGUID : Variant ): Boolean;
@@ -63,10 +62,13 @@ begin
   ruleLabel := '';
   PropInfo := GetPropInfo( cmpn, 'Caption' );
 
-  if Assigned(PropInfo)
+  if (cmpn is TcxGridDBColumn)
+    then ruleLabel := 'Столбец "' + (cmpn as TcxGridDBColumn).Caption
+        + '" таблицы "' + (cmpn as TcxGridDBColumn).GridView.Name + '"'
+  else if Assigned(PropInfo)
     then ruleLabel := GetPropValue( cmpn, PropInfo )
-  else if ( cmpn is TOMScxGridDBTableView ) OR ( cmpn is TOMScxGridDBBandedTableView )
-    then ruleLabel := 'Таблица'
+  else if (cmpn is TOMScxGridDBTableView) OR (cmpn is TOMScxGridDBBandedTableView)
+    then ruleLabel := 'Tаблица "' + cmpn.Name + '"'
   else ruleLabel := '';
 
   isVisible := True; // всегда видимый по умолчанию, у колонок не влияет видимость т.к. будет сохранение вида
@@ -105,6 +107,103 @@ begin
 
   for icmpn in arrCmpns do
     AddComponentOneRule( icmpn, CompGUID );
+end;
+
+procedure ApplyRules(var frm: TOMSForm);
+var
+  adoq: TOMSADOQuery;
+  strComponentName, strFrameName, lastFrameName : String;
+  Control: TControl;
+  cmpn, cmpnFrame: TComponent;
+  isVisible, isEditable, isInsertable, isDeletable: Boolean;
+begin
+  lastFrameName := '-';
+  try
+    adoq := TOMSADOQuery.Create( frm );
+    adoq.Connection := DataForm.adoconnOrders;
+    adoq.SQL.Text := 'OMS_USERFORM_SelectRules :formName';
+    adoq.Parameters.ParamByName( 'formName' ).Value := frm.ClassName;
+    if not adoq.SafeResync then Exit;
+
+    while not adoq.Eof do
+    begin
+      strComponentName := adoq.FieldByName( 'ComponentName' ).AsWideString;
+      strFrameName := adoq.FieldByName( 'FrameName' ).AsWideString;
+      isVisible := adoq.FieldByName( 'IsVisible' ).AsBoolean;
+      isEditable := adoq.FieldByName( 'IsEditable' ).AsBoolean;
+      isInsertable := adoq.FieldByName( 'IsInsertable' ).AsBoolean;
+      isDeletable := adoq.FieldByName( 'IsDeletable' ).AsBoolean;
+
+      cmpn := Nil;
+      if strFrameName <> '' then
+      begin
+        if ( lastFrameName <> strFrameName ) then
+        begin
+          lastFrameName := strFrameName;
+          cmpnFrame := frm.FindComponent( strFrameName );
+        end;
+
+        if Assigned(cmpnFrame)
+          then cmpn := cmpnFrame.FindComponent( strComponentName );
+      end
+      else cmpn := frm.FindComponent( strComponentName );
+
+      if not Assigned( cmpn ) then
+      begin
+{$IFDEF DEBUG}
+        if DBProcedureNil( 'OMS_USERCOMPONENTONE_Delete', [ adoq.FieldByName( 'OUCO_GUID' ).AsVariant ] )
+          then ShowInformation( 'Был удален компонент: "' +  strComponentName + '", фрейм: "' + strFrameName + '"' );
+{$ENDIF}
+        adoq.Next;
+        Continue;
+      end;
+
+      if ( cmpn is TdxBarItem ) then
+        with cmpn as TdxBarLargeButton do
+        begin
+          if isVisible
+              then Visible := ivAlways
+              else Visible := ivNever;
+
+          Enabled := isEditable;
+        end
+      else if (cmpn is TcxGridTableView) then
+        with cmpn as TcxGridTableView do
+        begin
+          getParentControl(cmpn).Visible := isVisible;
+
+          OptionsData.Editing := isEditable;
+          OptionsData.Appending := isEditable;
+          OptionsData.Inserting := isEditable;
+          OptionsData.Deleting := isEditable;
+        end
+      else  if ( cmpn is TcxGridDBColumn ) then
+        with cmpn as TcxGridDBColumn do
+        begin
+          Visible := isVisible;
+          VisibleForCustomization := isVisible;
+
+          Options.Editing := isEditable;
+        end
+      else if cmpn is TControl then
+      begin
+        if cmpn is TTabSheet
+          then (cmpn as TTabSheet).TabVisible := isVisible
+        else if cmpn is TcxTabSheet
+          then (cmpn as TcxTabSheet).TabVisible := isVisible
+        else begin
+          (cmpn as TControl).Visible := True;
+          (cmpn as TControl).Enabled := isEditable;
+        end;
+      end
+      else ShowError( 'Для компонента типа "' + cmpn.ClassName + '" не сработали права доступа.' );
+
+      adoq.Next;
+    end;
+
+  finally
+    adoq.Free;
+  end;
 end;
 
 end.

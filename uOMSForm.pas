@@ -131,7 +131,6 @@ type
     constructor Create( AOwner: TComponent; const guid: Variant ); overload; virtual;
     destructor Destroy; override;
 
-    procedure InitializeRights; virtual; final;
     procedure SetupRightsRestriction; virtual;
 
     function CheckAllQueries: Boolean;
@@ -139,6 +138,7 @@ type
     procedure CancelAllQueries;
     procedure CloseAllQueries;
 
+    procedure InitializeRights;
     function CanCloseCheckQueriesStates: Boolean;
     function CanCloseCheckRequiredFields( const canDelete: Boolean = False ): Boolean;
 
@@ -319,7 +319,6 @@ begin
   Inc(FADOQOpeningCount);
   if FADOQOpeningCount <= 0 then Exit;
 
-//  DisableAllQueries;
   frmMain.lblAnimationADOQ.Visible := True;
   frmMain.imgAnimationADOQ.Visible := True;
   TdxSmartImage( frmMain.imgAnimationADOQ.Picture.Graphic).StartAnimation;
@@ -333,7 +332,6 @@ begin
   frmMain.lblAnimationADOQ.Visible := False;
   frmMain.imgAnimationADOQ.Visible := False;
   TdxSmartImage( frmMain.imgAnimationADOQ.Picture.Graphic).StopAnimation;
-//  EnableAllQueries;
 end;
 
 {
@@ -495,7 +493,7 @@ end;
 procedure TOMSForm.AddComponentGridFullAccess( gView: TOMScxGridDBTableView;
     const FrameName : WideString = ''; const NamePostfix : WideString = '' );
 begin
-  AddGridRules( gView, NamePostfix );
+  AddGridRules( gView );
 end;
 
 procedure TOMSForm.AddComponentAccess( Component: TComponent; const FrameName : WideString = '';
@@ -503,8 +501,6 @@ procedure TOMSForm.AddComponentAccess( Component: TComponent; const FrameName : 
 begin
   AddComponentRule( Component, [ ], NamePostfix );
 end;
-
-//------------------------------------------------------------------------------
 
 procedure TOMSForm.AddComponentGroupAccess( ComponentLBL: TComponent;
     ComponentArray: array of TComponent; const FrameName : WideString = '';
@@ -516,158 +512,8 @@ end;
 //------------------------------------------------------------------------------
 
 procedure TOMSForm.InitializeRights;
-const
-  isEnbTrans = False;
-var
-  adoq: TADOQuery;
-  strComponentName: String;
-  strFrameName: String;
-  Control: TControl;
-  cmpn, cmpnFrame: TComponent;
-  isVisible, isEnable: Boolean;
-  strHint : WideString;
-  i : Integer;
-  lastFrameName : String;
-
 begin
-//  if not {$I FormBaseEnabledForms.inc} then Exit;
-
-  lastFrameName := '-';
-  adoq := TADOQuery.Create( Self );
-  try
-    adoq.Connection := DataForm.adoconnOrders;
-    adoq.SQL.Text := 'OMS_USERCOMPONENT_SelectByForm :formName';
-    adoq.Parameters.ParamByName( 'formName' ).Value := Self.ClassName;
-    if not DataForm.OMSRefreshADOQuerySimple( adoq )
-      then Exit;
-
-    adoq.First;
-    while not adoq.Eof do begin
-      try
-        strComponentName := adoq.FieldByName( 'ComponentName' ).AsWideString;
-        strFrameName := adoq.FieldByName( 'FrameName' ).AsWideString;
-        cmpn := Nil;
-
-        if strFrameName <> '' then
-        begin
-          if ( lastFrameName <> strFrameName ) then
-          begin
-            lastFrameName := strFrameName;
-            cmpnFrame := FindComponent( strFrameName );
-          end;
-
-          if Assigned(cmpnFrame)
-            then cmpn := cmpnFrame.FindComponent( strComponentName );
-        end
-        else cmpn := FindComponent( strComponentName );
-
-        if not Assigned( cmpn ) then
-        begin
-{$IFDEF DEBUG}
-          if DBProcedure( 'OMS_USERCOMPONENTONE_Delete', [ adoq.FieldByName( 'OUCO_GUID' ).AsVariant ] )
-            then ShowInformation( 'Был удален компонент: "' +  strComponentName + '", фрейм: "' + strFrameName + '"' );
-{$ENDIF}
-          adoq.Next;
-          Continue;
-        end;
-
-        isVisible := (adoq.FieldByName( 'IsVisible' ).AsInteger = 1);
-        isEnable := (adoq.FieldByName( 'IsEnable' ).AsInteger = 1);
-        strHint := adoq.FieldByName( 'Hint' ).AsWideString;
-
-        if Assigned( cmpn ) then
-        begin
-          if ( cmpn is TdxBarLargeButton ) then
-            with cmpn as TdxBarLargeButton do
-            begin
-              if isVisible
-                then Visible := ivAlways
-                else Visible := ivNever;
-
-              Enabled := isEnable;
-              Hint := strHint;
-            end
-          else if ( cmpn is TdxBarButton ) then
-            with cmpn as TdxBarButton do
-            begin
-              if isVisible
-                then Visible := ivAlways
-                else Visible := ivNever;
-
-              Enabled := isEnable;
-              Hint := strHint;
-            end
-          else if ( cmpn is TcxBarEditItem ) then
-            with cmpn as TcxBarEditItem do
-            begin
-              if isVisible
-                then Visible := ivAlways
-                else Visible := ivNever;
-
-              Enabled := isEnable;
-              Hint := strHint;
-            end
-          else if (cmpn is TOMScxGridDBTableView) then
-            with cmpn as TOMScxGridDBTableView do
-            begin
-              ( Control as TcxGrid ).Visible := isVisible;
-
-              OptionsData.Editing := isEnable;
-              OptionsData.Inserting := isEnable;
-              OptionsData.Deleting := isEnable;
-              OptionsData.Appending := isEnable;
-            end
-          else if (cmpn is TOMScxGridDBBandedTableView ) then
-            with cmpn as TOMScxGridDBBandedTableView do
-            begin
-              ( Control as TcxGrid ).Visible := isVisible;
-
-              OptionsData.Editing := isEnable;
-              OptionsData.Inserting := isEnable;
-              OptionsData.Deleting := isEnable;
-              OptionsData.Appending := isEnable;
-            end
-          else  if ( cmpn is TcxGridDBColumn ) then
-            with cmpn as TcxGridDBColumn do
-            begin
-              Visible := isVisible;
-              VisibleForCustomization := isVisible;
-
-              Options.Editing := isEnable;
-              HeaderHint := strHint;
-            end
-          else // если визуальный контрол
-          begin
-            Control := cmpn as TControl;
-            if Assigned( Control ) then
-            begin
-              if (Control is TTabSheet) then
-                with (Control as TTabSheet) do begin
-                  TabVisible := isVisible;
-                  Enabled := True;
-              end
-              else if Control is TcxTabSheet then
-                with (Control as TcxTabSheet ) do begin
-                  TabVisible := isVisible;
-                  Enabled := True;
-              end
-              else begin
-                Control.Visible := isVisible;
-                Control.Enabled := isEnable;
-              end;
-
-              Control.Hint := strHint;
-            end; // if Assigned( Control ) then
-          end; // if Assigned( cmpn ) then
-        end;
-      except
-      end;
-      adoq.Next;
-    end;
-  finally
-    adoq.Free;
-  end;
-
+  ApplyRules( Self );
   Resize;
 end;
 
