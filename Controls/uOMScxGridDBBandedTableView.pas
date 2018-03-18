@@ -35,7 +35,7 @@ implementation
 
 uses uOMSStyle, Windows, Graphics, cxGraphics, cxDBExtLookupComboBox,
   cxDBLookupComboBox, cxSpinEdit, cxGridTableView, uDMComponents, cxNavigator, uDataExport, cxGrid,
-  uOMSDialogs, Controls, SysUtils;
+  uDialogs, Controls, SysUtils;
 
 constructor TOMScxGridDBBandedTableView.Create(AOwner: TComponent);
 begin

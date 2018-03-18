@@ -1,4 +1,4 @@
-unit uOMSDialogs;
+unit uDialogs;
 
 interface
 

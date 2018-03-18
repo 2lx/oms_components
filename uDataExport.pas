@@ -10,7 +10,7 @@ procedure cxGridToExcelWithImages( const strDocument: String; cxGrid: TcxGrid; A
 
 implementation
 
-uses cxGridExportLink, ComObj, uFileSystem, Windows, uOMSDialogs;
+uses cxGridExportLink, ComObj, uFileSystem, Windows, uDialogs;
 
 procedure cxGridToExcelWithImages( const strDocument: String; cxGrid: TcxGrid; AExpand: Boolean );
 var

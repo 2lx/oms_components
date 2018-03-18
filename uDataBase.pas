@@ -35,7 +35,7 @@ function DBUserSettingsGet(const SName : String ) : Variant;
 
 implementation
 
-uses ADODB, DataModule, SysUtils, uOMSADOQuery, uOMSDialogs, uLogging, Variants, DB;
+uses ADODB, DataModule, SysUtils, uOMSADOQuery, uDialogs, uLogging, Variants, DB;
 
 function getCatalog( const dbc: TDBCatalog ) : String;
 begin

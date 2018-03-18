@@ -69,6 +69,16 @@ var
   cxStyleBlueGreen : TcxStyle;
   cxStylePink : TcxStyle;
 
+  cxStyleLightRed : TcxStyle;
+  cxStyleLightOrange : TcxStyle;
+  cxStyleLightYellow : TcxStyle;
+  cxStyleLightGreen : TcxStyle;
+  cxStyleLightSkyBlue : TcxStyle;
+  cxStyleLightBlue : TcxStyle;
+  cxStyleLightPurple : TcxStyle;
+  cxStyleLightBlueGreen : TcxStyle;
+  cxStyleLightPink : TcxStyle;
+
   cxStyleRedBold : TcxStyle;
   cxStyleYellowBold : TcxStyle;
   cxStyleOrangeBold : TcxStyle;
@@ -152,6 +162,16 @@ begin
   InitOneStyle( cxStyleBlueGreen,          clOMSSpecialBlueGreen );
   InitOneStyle( cxStylePink,               clOMSSpecialPink );
 
+  InitOneStyle( cxStyleLightRed,           clOMSSpecialLightRed );
+  InitOneStyle( cxStyleLightOrange,        clOMSSpecialLightOrange );
+  InitOneStyle( cxStyleLightYellow,        clOMSSpecialLightYellow );
+  InitOneStyle( cxStyleLightGreen,         clOMSSpecialLightGreen );
+  InitOneStyle( cxStyleLightSkyBlue,       clOMSSpecialLightSkyBlue );
+  InitOneStyle( cxStyleLightBlue,          clOMSSpecialLightBlue );
+  InitOneStyle( cxStyleLightPurple,        clOMSSpecialLightPurple );
+  InitOneStyle( cxStyleLightBlueGreen,     clOMSSpecialLightBlueGreen );
+  InitOneStyle( cxStyleLightPink,          clOMSSpecialLightPink );
+
   InitOneStyle( cxStyleRedBold,            clOMSSpecialRed, [ fsBold ] );
   InitOneStyle( cxStyleYellowBold,         clOMSSpecialYellow, [ fsBold ] );
   InitOneStyle( cxStyleOrangeBold,         clOMSSpecialOrange, [ fsBold ] );
@@ -181,6 +201,14 @@ begin
   FreeAndNil(cxStyleSkyBlue);
   FreeAndNil(cxStyleBlue);
   FreeAndNil(cxStylePurple);
+
+  FreeAndNil(cxStyleLightRed);
+  FreeAndNil(cxStyleLightOrange);
+  FreeAndNil(cxStyleLightYellow);
+  FreeAndNil(cxStyleLightGreen);
+  FreeAndNil(cxStyleLightSkyBlue);
+  FreeAndNil(cxStyleLightBlue);
+  FreeAndNil(cxStyleLightPurple);
 
   FreeAndNil(cxStyleRedBold);
   FreeAndNil(cxStyleYellowBold);

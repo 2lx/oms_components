@@ -113,11 +113,11 @@ type
         const iLeft, iTop, iWidth, iHeight: Integer ); deprecated;
 
    procedure AddComponentGridFullAccess( gView: TOMScxGridDBTableView;
-        const FrameName : WideString = ''; const NamePostfix : WideString = '' );
+        const FrameName : WideString = ''; const NamePostfix : WideString = '' ); deprecated;
     procedure AddComponentAccess( Component: TComponent;
-        const FrameName : WideString = ''; const NamePostfix : WideString = '' );
+        const FrameName : WideString = ''; const NamePostfix : WideString = '' ); deprecated;
     procedure AddComponentGroupAccess( ComponentLBL: TComponent; ComponentArray: array of TComponent;
-        const FrameName : WideString = ''; const NamePostfix : WideString = '' );
+        const FrameName : WideString = ''; const NamePostfix : WideString = '' ); deprecated;
 
 //    procedure ModifyFontsFor( ctrl: TWinControl; const FontSize: Integer );
 
@@ -156,7 +156,8 @@ uses uUserSettings, ADODB, Variants, System.SysUtils, VCL.Dialogs, cxCheckBox, d
   cxGridDBBandedTableView, TypInfo,  dxRibbon, main, cxImage, cxDBLabel, cxDropDownEdit, cxDBExtLookupComboBox,
   UnitDifFuncs, cxGridDBCardView, cxNavigator, ShellAPI, UnitOMSFormBaseInterface,  UnitFileRoutines, cxCalendar,
   cxCurrencyEdit, cxTextEdit, cxGraphics, UnitDataOMSREF, cxTimeEdit, cxMemo, uOMSStyle,
-  uOMSDialogs, dxGDIPlusClasses, cxGridDBTableView, cxBarEditItem, cxGrid, cxPC, cxButtons;
+  uDialogs, dxGDIPlusClasses, cxGridDBTableView, cxBarEditItem, cxGrid, cxPC, cxButtons,
+  uAccessRules;
 
 //------------------------------------------------------------------------------
 
@@ -212,7 +213,7 @@ begin
   RestoreUserSettings;
 
 {$IFDEF DEBUG}
-//  InsertControlComponents;
+  InsertControlComponents;
 {$ENDIF}
 
   InsertLayouts;
@@ -493,117 +494,14 @@ end;
 
 procedure TOMSForm.AddComponentGridFullAccess( gView: TOMScxGridDBTableView;
     const FrameName : WideString = ''; const NamePostfix : WideString = '' );
-var
-  i : Integer;
 begin
-  AddComponentAccess( gView, FrameName, 'таблица ' + NamePostfix );
-
-  for i := 0 to gView.ColumnCount - 1 do
-    if ( gView.Columns[ i ].Width <> 0 )
-      then AddComponentAccess( gView.Columns[ i ], FrameName, 'столбец таблицы ' + NamePostfix );
+  AddGridRules( gView, NamePostfix );
 end;
 
 procedure TOMSForm.AddComponentAccess( Component: TComponent; const FrameName : WideString = '';
   const NamePostfix : WideString = '' );
-var
-  CompType: Integer;
-  LabelRussian: WideString;
-  bbtn : TdxBarLargeButton;
-  bsmbtn : TdxBarButton;
-  cxBEI: TcxBarEditItem;
-  gridDBTableView: TOMScxGridDBTableView;
-  gridDBBandedTableView: TOMScxGridDBBandedTableView;
-  gridDBColumn: TcxGridDBColumn;
-  isVisible, isEnable : Boolean;
-  FormGUID, CompOneTGUID, CompGUID : Variant;
 begin
-  try
-//    Control := TControl( Component );
-    if ( Component is TcxGrid ) then Exit;
-
-    LabelRussian := '';
-    if ( Component is TcxLabel )
-      then LabelRussian := ( Component AS TOMScxLabel ).Caption
-    else if ( Component is TOMScxDBCheckBox )
-      then LabelRussian := ( Component AS TOMScxDBCheckBox ).Caption
-    else if ( Component is TOMScxCheckBox )
-      then LabelRussian := ( Component AS TOMScxCheckBox ).Caption
-    else if ( Component is TTabSheet )
-      then LabelRussian := ( Component AS TTabSheet ).Caption
-    else if ( Component is TcxTabSheet )
-      then LabelRussian := ( Component AS TcxTabSheet ).Caption
-    else if ( Component is TcxButton )
-      then LabelRussian := ( Component AS TcxButton ).Caption
-    else if ( Component is TdxBarLargeButton )
-      then begin
-        bbtn := TdxBarLargeButton( Component );
-        LabelRussian := bbtn.Caption;
-      end
-    else if ( Component is TdxBarButton )
-      then begin
-        bsmbtn := TdxBarButton( Component );
-        LabelRussian := bsmbtn.Caption;
-      end
-    else if ( Component is TOMScxGridDBTableView )
-      then begin
-        LabelRussian := 'Таблица';
-        gridDBTableView := TOMScxGridDBTableView( Component );
-      end
-    else if ( Component is TOMScxGridDBBandedTableView )
-      then begin
-        LabelRussian := 'Таблица';
-        gridDBBandedTableView := TOMScxGridDBBandedTableView( Component );
-      end
-    else if ( Component is TcxBarEditItem )
-      then begin
-        LabelRussian := ( Component as TcxBarEditItem ).Caption;
-      end
-    else if ( Component is TcxGridDBColumn )
-      then begin
-        gridDBColumn := TcxGridDBColumn( Component );
-        LabelRussian := gridDBColumn.Caption;
-      end;
-
-    if ( Component is TTabSheet )
-      then isVisible := ( Component AS TTabSheet ).TabVisible
-    else if ( Component is TcxTabSheet )
-      then isVisible := ( Component AS TcxTabSheet ).TabVisible
-    else if ( Component is TdxBarLargeButton )
-      then isVisible := bbtn.Visible = ivAlways
-    else if ( Component is TcxBarEditItem )
-      then isVisible := cxBEI.Visible = ivAlways
-    else if ( Component is TOMScxGridDBTableView )
-      then isVisible := ( gridDBTableView.Control as TcxGrid ).Visible
-    else if ( Component is TOMScxGridDBBandedTableView )
-      then isVisible := ( gridDBBandedTableView.Control as TcxGrid ).Visible
-    else if ( Component is TcxGridDBColumn )
-      then isVisible := gridDBColumn.Visible
-    else if ( Component is TdxBarButton )
-      then isVisible := bsmbtn.Visible = ivAlways
-    else isVisible := ( Component AS TControl ).Visible;
-
-    if ( Component is TdxBarLargeButton )
-      then isEnable := bbtn.Enabled
-    else if ( Component is TdxBarButton )
-      then isEnable := bsmbtn.Enabled
-    else if ( Component is TcxBarEditItem )
-      then isEnable := cxBEI.Enabled
-    else if ( Component is TOMScxGridDBTableView )
-      then isEnable := gridDBTableView.OptionsData.Editing
-    else if ( Component is TOMScxGridDBBandedTableView )
-      then isEnable := gridDBBandedTableView.OptionsData.Editing
-    else if ( Component is TcxGridDBColumn )
-      then isEnable := gridDBColumn.Options.Editing
-    else isEnable := ( Component AS TControl ).Enabled;
-
-    DBProcedureResult( 'OMS_USERFORM_Insert', [ GetParentForm( Component ).ClassName ], FormGUID );
-    DBProcedureResult( 'OMS_USERCOMPONENT_Insert',
-        [ FormGUID, Component.Name, isVisible, isEnable, LabelRussian, NamePostfix, FrameName ], CompGUID );
-    DBProcedureResult( 'OMS_USERCOMPONENTONE_TYPE_Insert', [ Component.ClassName ], CompOneTGUID );
-
-    DBProcedure( 'OMS_USERCOMPONENTONE_Insert', [ CompGUID, Component.Name, CompOneTGUID, FrameName ] );
-  except
-  end;
+  AddComponentRule( Component, [ ], NamePostfix );
 end;
 
 //------------------------------------------------------------------------------
@@ -611,45 +509,8 @@ end;
 procedure TOMSForm.AddComponentGroupAccess( ComponentLBL: TComponent;
     ComponentArray: array of TComponent; const FrameName : WideString = '';
     const NamePostfix : WideString = '' );
-var
-  CompType, i: Integer;
-  LabelRussian: WideString;
-  ControlLBL, ControlEDIT : TControl;
-  isVisible, isEnable : Boolean;
-  FormGUID, CompOneTGUID, CompGUID : Variant;
 begin
-  try
-    ControlLBL := TControl( ComponentLBL );
-
-    LabelRussian := '';
-    if ( ControlLBL IS TcxLabel )
-      then LabelRussian := ( ControlLBL AS TcxLabel ).Caption
-    else if ( ControlLBL IS TOMScxLabel )
-      then LabelRussian := ( ControlLBL AS TOMScxLabel ).Caption
-    else if ( ControlLBL IS TcxButton )
-      then LabelRussian := ( ControlLBL AS TcxButton ).Caption
-    else if ( ControlLBL IS TcxDBCheckBox )
-      then LabelRussian := ( ControlLBL AS TcxDBCheckBox ).Caption;
-
-    isVisible := ControlLBL.Visible;
-    isEnable := ControlLBL.Enabled;
-
-    DBProcedureResult( 'OMS_USERFORM_Insert', [ GetParentForm( ControlLBL ).ClassName ], FormGUID );
-    DBProcedureResult( 'OMS_USERCOMPONENT_Insert',
-        [ FormGUID, ControlLBL.Name, isVisible, isEnable, LabelRussian, NamePostfix, FrameName ], CompGUID );
-    DBProcedureResult( 'OMS_USERCOMPONENTONE_TYPE_Insert', [ ControlLBL.ClassName ], CompOneTGUID );
-
-    DBProcedure( 'OMS_USERCOMPONENTONE_Insert', [ CompGUID, ControlLBL.Name, CompOneTGUID, FrameName ] );
-
-    for i := 0 to High( ComponentArray ) do
-    begin
-      ControlEDIT := TControl( ComponentArray[ i ] );
-      DBProcedureResult( 'OMS_USERCOMPONENTONE_TYPE_Insert', [ ControlEDIT.ClassName ], CompOneTGUID );
-
-      DBProcedure( 'OMS_USERCOMPONENTONE_Insert', [ CompGUID, ControlEDIT.Name, CompOneTGUID, FrameName ] );
-    end;
-  except
-  end;
+  AddComponentRule( ComponentLBL, ComponentArray, NamePostfix );
 end;
 
 //------------------------------------------------------------------------------

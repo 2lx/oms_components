@@ -37,7 +37,7 @@ type
 
 implementation
 
-uses Controls, Windows, uOMSDialogs;
+uses Controls, Windows, uDialogs;
 
 constructor TOMSMainForm.Create(AOwner: TComponent);
 begin

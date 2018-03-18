@@ -33,7 +33,7 @@ type
 
 implementation
 
-uses uOMSDialogs, Controls, ShellAPI, SysUtils, Windows, uFileSystem, DB, UnitDifFuncs,
+uses uDialogs, Controls, ShellAPI, SysUtils, Windows, uFileSystem, DB, UnitDifFuncs,
   uOMSStyle;
 
 constructor TOMScxDBImage.Create(AOwner: TComponent);

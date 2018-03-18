@@ -39,7 +39,7 @@ type
 
 implementation
 
-uses uOMSDialogs, uLogging, Forms, SysUtils, uAppMessages, uOMSForm, uUtils;
+uses uDialogs, uLogging, Forms, SysUtils, uAppMessages, uOMSForm, uUtils;
 
 constructor TOMSADOQuery.Create(AOwner: TComponent);
 var
