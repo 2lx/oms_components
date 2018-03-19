@@ -159,7 +159,7 @@ begin
       end;
 
       if ( cmpn is TdxBarItem ) then
-        with cmpn as TdxBarLargeButton do
+        with cmpn as TdxBarItem do
         begin
           if isVisible
               then Visible := ivAlways

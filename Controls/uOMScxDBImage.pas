@@ -13,7 +13,7 @@ type
     FPictureMaxSize : Integer;
 
     procedure DblClickHandled(Sender: TObject);
-    procedure PropertiesAssignPictureHandler(Sender: TObject; const Picture: TPicture);
+    procedure PropertiesAssignPictureHandler(Sender: TObject; const APicture: TPicture);
     procedure PropertiesChangeHandler(Sender: TObject);
   protected
     procedure Loaded; override;
@@ -103,7 +103,7 @@ begin
   strFileExt := UpperCase(ExtractFileExt(strFileName));
   if (strFileExt <> '.JPEG') AND (strFileExt <> '.JPG') then
   begin
-    ShowError( 'Ошибка. Файл должен быть в формате JPG/JPEG' );
+    ShowError( 'Ошибка. Файл должен быть в формате JPEG' );
     Exit;
   end;
 
@@ -115,9 +115,7 @@ begin
     ADisplayValue := Self.EditValue;
     Self.Properties.ValidateDisplayValue(ADisplayValue, AErrorText, AError, Self);
 
-    if AError
-      then ShowError(AErrorText)
-      else Self.PostEditValue;
+    Self.PostEditValue;
   except
     on EInvalidGraphic do ShowError('Ошибка при загрузке изображения, проверьте формат файла') ;
   end
@@ -134,16 +132,20 @@ begin
   ShellExecute(Handle, 'open', PWideChar(tmpFName), nil, nil, SW_SHOWNORMAL);
 end;
 
-procedure TOMScxDBImage.PropertiesAssignPictureHandler(Sender: TObject; const Picture: TPicture);
+procedure TOMScxDBImage.PropertiesAssignPictureHandler(Sender: TObject; const APicture: TPicture);
 begin
   if (not DataBinding.DataSource.DataSet.Active) OR ( DataBinding.DataSource.DataSet.Eof) then Exit;
 
-  if not ( ( Picture.Width = 0 ) OR ( Picture.Height = 0 ) ) then
+  Properties.OnAssignPicture := Nil; // that need when ImmediatePost
+
+  if Assigned( APicture ) and Assigned( APicture.Graphic ) and ( APicture.Graphic.Width > 0 ) then
   begin
     if FPictureMaxSize = 0
-      then Self.Picture.Assign( Picture )
-      else Self.Picture.Assign( ResizePicture( Picture, FPictureMaxSize ) );
+      then Picture.Assign( APicture )
+      else Picture.Assign( ResizePicture( APicture, FPictureMaxSize ) );
   end;
+
+  Properties.OnAssignPicture := PropertiesAssignPictureHandler;
 end;
 
 end.
