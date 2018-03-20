@@ -6,7 +6,7 @@ procedure SetupLocalization;
 
 implementation
 
-uses dxCore, cxGridStrs, dxBarStrs, cxEditConsts;
+uses dxCore, cxGridStrs, dxBarStrs, cxEditConsts{OK}, cxFilterControlStrs{OK}, cxDataConsts, cxFilterConsts{OK};
 
 procedure SetupLocalization;
 begin
@@ -32,7 +32,33 @@ begin
   cxSetResourceString(@scxGridInplaceEditFormButtonCancel, 'Отмена' );
   cxSetResourceString(@scxGridInplaceEditFormButtonUpdate, 'Обновить' );
   cxSetResourceString(@scxGridInplaceEditFormSaveChangesQuery, 'Данные были изменены. Вы хотите сохранить изменения?' );
+{
+  scxGridYesterday = 'Yesterday';
+  scxGridToday = 'Today';
+  scxGridTomorrow = 'Tomorrow';
+  scxGridLast30Days = 'Last 30 days';
+  scxGridLast14Days = 'Last 14 days';
+  scxGridLast7Days = 'Last 7 days';
+  scxGridNext7Days = 'Next 7 days';
+  scxGridNext14Days = 'Next 14 days';
+  scxGridNext30Days = 'Next 30 days';
+  scxGridLastTwoWeeks = 'Last two weeks';
+  scxGridLastWeek = 'Last week';
+  scxGridThisWeek = 'This week';
+  scxGridNextWeek = 'Next week';
+  scxGridNextTwoWeeks = 'Next two weeks';
+  scxGridLastMonth = 'Last month';
+  scxGridThisMonth = 'This month';
+  scxGridNextMonth = 'Next month';
+  scxGridLastYear = 'Last year';
+  scxGridThisYear = 'This year';
+  scxGridNextYear = 'Next year';
+  scxGridPast = 'Past';
+  scxGridFuture = 'Future';
 
+  scxGridMonthFormat = 'mmmm yyyy';
+  scxGridYearFormat = 'yyyy';
+}
   // ExpressBars
   cxSetResourceString(@dxSBAR_SHOWBELOWRIBBON, 'Показывать тулбар быстрого доступа ниже бара' );
   cxSetResourceString(@dxSBAR_SHOWABOVERIBBON, 'Показывать тулбар быстрого доступа выше бара' );
@@ -48,6 +74,114 @@ begin
   cxSetResourceString(@dxSBAR_WANTTODELETETOOLBAR, 'Вы уверены, что хотите удалить %s тулбар?' );
   // ...
 
+  //------------------------------------------------------------------------------------------------
+  // cxFilterControlStrs
+  cxSetResourceString(@cxSFilterBoolOperatorAnd , 'И' );
+  cxSetResourceString(@cxSFilterBoolOperatorOr , 'ИЛИ' );
+  cxSetResourceString(@cxSFilterBoolOperatorNotAnd , 'И НЕ' );
+  cxSetResourceString(@cxSFilterBoolOperatorNotOr , 'ИЛИ НЕ' );
+  //
+  cxSetResourceString(@cxSFilterRootButtonCaption , 'Фильтр' );
+  cxSetResourceString(@cxSFilterAddCondition , 'Добавить &Условие' );
+  cxSetResourceString(@cxSFilterAddGroup , 'Добавить &Группу' );
+  cxSetResourceString(@cxSFilterRemoveRow , '&Удалить строку' );
+  cxSetResourceString(@cxSFilterClearAll , 'Очистить &Всё' );
+  cxSetResourceString(@cxSFilterFooterAddCondition , 'нажмите кнопку, чтобы добавить новое условие' );
+
+  cxSetResourceString(@cxSFilterGroupCaption , 'применить условия' );
+  cxSetResourceString(@cxSFilterRootGroupCaption , '<корень>' );
+  cxSetResourceString(@cxSFilterControlNullString , '<пусто>' );
+
+  cxSetResourceString(@cxSFilterErrorBuilding , 'Не могу построить фильтр из ресурсов' );
+
+  //FilterDialog
+  cxSetResourceString(@cxSFilterDialogCaption , 'Настройка фильтра' );
+  cxSetResourceString(@cxSFilterDialogInvalidValue , 'Неверное значение' );
+  cxSetResourceString(@cxSFilterDialogUse , 'Используйте' );
+  cxSetResourceString(@cxSFilterDialogSingleCharacter , 'чтобы представить любой символ' );
+  cxSetResourceString(@cxSFilterDialogCharactersSeries , 'чтобы представить любую группу символов' );
+  cxSetResourceString(@cxSFilterDialogOperationAnd , 'И' );
+  cxSetResourceString(@cxSFilterDialogOperationOr , 'ИЛИ' );
+  cxSetResourceString(@cxSFilterDialogRows , 'Показать записи, в которых:' );
+
+{  // FilterControlDialog
+  cxSFilterControlDialogCaption = 'Filter builder';
+  cxSFilterControlDialogNewFile = 'untitled.flt';
+  cxSFilterControlDialogOpenDialogCaption = 'Open an existing filter';
+  cxSFilterControlDialogSaveDialogCaption = 'Save the active filter to file';
+  cxSFilterControlDialogActionSaveCaption = '&Save As...';
+  cxSFilterControlDialogActionSaveHint = 'Save As|Saves the active filter with a new name';
+  cxSFilterControlDialogActionOpenCaption = '&Open...';
+  cxSFilterControlDialogActionOpenHint = 'Open|Opens an existing filter';
+  cxSFilterControlDialogActionApplyCaption = '&Apply';
+  cxSFilterControlDialogActionOkCaption = 'OK';
+  cxSFilterControlDialogActionCancelCaption = 'Cancel';
+  cxSFilterControlDialogFileExt = 'flt';
+  cxSFilterControlDialogFileFilter = 'Filters (*.flt)|*.flt';
+  }
+
+  //------------------------------------------------------------------------------------------------
+  // cxFilterConsts
+  cxSetResourceString(@cxSFilterOperatorEqual , 'точно соответствует' );
+  cxSetResourceString(@cxSFilterOperatorNotEqual , 'не соответствует' );
+  cxSetResourceString(@cxSFilterOperatorLess , 'меньше чем' );
+  cxSetResourceString(@cxSFilterOperatorLessEqual , 'меньше или равно чем' );
+  cxSetResourceString(@cxSFilterOperatorGreater , 'больше чем' );
+  cxSetResourceString(@cxSFilterOperatorGreaterEqual , 'больше или равно чем' );
+  cxSetResourceString(@cxSFilterOperatorLike , 'похоже (частичное совпадение для подстроки)' );
+  cxSetResourceString(@cxSFilterOperatorNotLike , 'не похоже (не содержит подстроку)' );
+  cxSetResourceString(@cxSFilterOperatorBetween , 'между' );
+  cxSetResourceString(@cxSFilterOperatorNotBetween , 'не между' );
+  cxSetResourceString(@cxSFilterOperatorInList , 'в списке' );
+  cxSetResourceString(@cxSFilterOperatorNotInList , 'не в списке' );
+
+  cxSetResourceString(@cxSFilterOperatorYesterday , '= вчера' );
+  cxSetResourceString(@cxSFilterOperatorToday , '= сегодня' );
+  cxSetResourceString(@cxSFilterOperatorTomorrow , '= завтра' );
+
+  cxSetResourceString(@cxSFilterOperatorLast7Days , 'последние 7 дней' );
+  cxSetResourceString(@cxSFilterOperatorLastWeek , 'последняя неделя' );
+  cxSetResourceString(@cxSFilterOperatorLast14Days , 'последние 14 дней' );
+  cxSetResourceString(@cxSFilterOperatorLastTwoWeeks , 'последние 2 недели' );
+  cxSetResourceString(@cxSFilterOperatorLast30Days , 'последние 30 дней' );
+  cxSetResourceString(@cxSFilterOperatorLastMonth , 'последний месяц' );
+  cxSetResourceString(@cxSFilterOperatorLastYear , 'последний год' );
+  cxSetResourceString(@cxSFilterOperatorPast , 'до текущего момента' );
+
+  cxSetResourceString(@cxSFilterOperatorThisWeek , 'на этой неделе' );
+  cxSetResourceString(@cxSFilterOperatorThisMonth , 'в этом месяце' );
+  cxSetResourceString(@cxSFilterOperatorThisYear , 'в этом году' );
+
+  cxSetResourceString(@cxSFilterOperatorNext7Days , 'в следющие 7 дней' );
+  cxSetResourceString(@cxSFilterOperatorNextWeek , 'в следующую неделю' );
+  cxSetResourceString(@cxSFilterOperatorNext14Days , 'в следующие 14 дней' );
+  cxSetResourceString(@cxSFilterOperatorNextTwoWeeks , 'в следующие 2 недели' );
+  cxSetResourceString(@cxSFilterOperatorNext30Days , 'в следующие 30 дней' );
+  cxSetResourceString(@cxSFilterOperatorNextMonth , 'в следующий месяц' );
+  cxSetResourceString(@cxSFilterOperatorNextYear , 'в слудующий год' );
+  cxSetResourceString(@cxSFilterOperatorFuture , 'в будущем' );
+
+  cxSetResourceString(@cxSFilterAndCaption , 'и' );
+  cxSetResourceString(@cxSFilterOrCaption , 'или' );
+  cxSetResourceString(@cxSFilterNotCaption , 'не' );
+  cxSetResourceString(@cxSFilterBlankCaption , 'пусто' );
+
+  // derived
+  cxSetResourceString(@cxSFilterOperatorIsNull , '= пусто' );
+  cxSetResourceString(@cxSFilterOperatorIsNotNull , '!= пусто' );
+  cxSetResourceString(@cxSFilterOperatorBeginsWith , 'начинается с' );
+  cxSetResourceString(@cxSFilterOperatorDoesNotBeginWith , 'не начинается с' );
+  cxSetResourceString(@cxSFilterOperatorEndsWith , 'заканчивается на' );
+  cxSetResourceString(@cxSFilterOperatorDoesNotEndWith , 'не заканчивается на' );
+  cxSetResourceString(@cxSFilterOperatorContains , 'содержит' );
+  cxSetResourceString(@cxSFilterOperatorDoesNotContain , 'не содержит' );
+  // filter listbox's values
+  cxSetResourceString(@cxSFilterBoxAllCaption , '(Все)' );
+  cxSetResourceString(@cxSFilterBoxCustomCaption , '(Настройка...)' );
+  cxSetResourceString(@cxSFilterBoxBlanksCaption , '(Пустые)' );
+  cxSetResourceString(@cxSFilterBoxNonBlanksCaption , '(Не пустые)' );
+
+  //------------------------------------------------------------------------------------------------
   // Editors
   cxSetResourceString(@cxSEditButtonCancel, 'Отмена' );
   cxSetResourceString(@cxSEditButtonOK , 'OK' );
