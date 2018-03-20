@@ -13,8 +13,14 @@ type
     pmiSelectionType1Cell: TMenuItem;
     pmiSelectionTypeMultiCell: TMenuItem;
     pmiSeparator1: TMenuItem;
+    pmiShowFilterRow: TMenuItem;
+    pmiShowGroupBox: TMenuItem;
+    pmiShowFindPanel: TMenuItem;
     procedure pmiSelectionType1CellClick(Sender: TObject);
     procedure pmiSelectionTypeMultiCellClick(Sender: TObject);
+    procedure pmiShowFilterRowClick(Sender: TObject);
+    procedure pmiShowGroupBoxClick(Sender: TObject);
+    procedure pmiShowFindPanelClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -32,7 +38,7 @@ implementation
 
 {$R *.dfm}
 
-uses cxGrid, uOMScxGridViewCommon, uOMScxGridDBTableView, uOMScxGridDBBandedTableView, Windows;
+uses cxGrid, uOMScxGridViewCommon, uOMScxGridDBTableView, uOMScxGridDBBandedTableView, Windows, cxGridCustomTableView;
 
 function PopupMenuHeight(Popup: TPopupMenu): integer;
 var
@@ -68,6 +74,27 @@ procedure TDMOMSComponents.pmiSelectionTypeMultiCellClick(Sender: TObject);
 begin
   if (PopupMenuGridViewSettings.PopupComponent is TOMScxGridDBTableView)
     then (PopupMenuGridViewSettings.PopupComponent as TOMScxGridDBTableView).setSelectionType( gstMultiCellMultiRow );
+end;
+
+procedure TDMOMSComponents.pmiShowFilterRowClick(Sender: TObject);
+begin
+  if (PopupMenuGridViewSettings.PopupComponent is TOMScxGridDBTableView)
+    then (PopupMenuGridViewSettings.PopupComponent as TOMScxGridDBTableView).FilterRow.Visible := (Sender as TMenuItem).Checked;
+end;
+
+procedure TDMOMSComponents.pmiShowGroupBoxClick(Sender: TObject);
+begin
+  if (PopupMenuGridViewSettings.PopupComponent is TOMScxGridDBTableView)
+    then (PopupMenuGridViewSettings.PopupComponent as TOMScxGridDBTableView).OptionsView.GroupByBox := (Sender as TMenuItem).Checked;
+end;
+
+procedure TDMOMSComponents.pmiShowFindPanelClick(Sender: TObject);
+begin
+  if (PopupMenuGridViewSettings.PopupComponent is TOMScxGridDBTableView) then
+    with (PopupMenuGridViewSettings.PopupComponent as TOMScxGridDBTableView) do
+      if (Sender as TMenuItem).Checked
+        then FindPanel.DisplayMode := fpdmAlways
+        else FindPanel.DisplayMode := fpdmNever;
 end;
 
 end.

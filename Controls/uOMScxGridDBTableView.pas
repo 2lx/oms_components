@@ -35,7 +35,7 @@ implementation
 
 uses uOMSStyle, Windows, Graphics, cxGraphics, cxDBExtLookupComboBox,
   cxDBLookupComboBox, cxSpinEdit, cxGridTableView, uDMComponents, cxNavigator, uDataExport, cxGrid,
-  uDialogs, Controls, SysUtils;
+  uDialogs, Controls, SysUtils, dxCore, cxGridStrs;
 
 constructor TOMScxGridDBTableView.Create(AOwner: TComponent);
 begin
@@ -60,7 +60,6 @@ begin
   DataController.Filter.Options := [ fcoCaseInsensitive ];
 
   FilterRow.ApplyChanges := fracImmediately;
-  FilterRow.InfoText := 'СТРОКА ДЛЯ УКАЗАНИЯ ФИЛЬТРОВ';
 
   OptionsBehavior.NavigatorHints := True;
   OptionsBehavior.CellHints := True;
@@ -76,10 +75,34 @@ begin
 //  OptionsView.CellEndEllipsis := False;
   OptionsView.Indicator := True;
   OptionsView.IndicatorWidth := 12;
-  OptionsView.NoDataToDisplayInfoText := 'НЕТ ДАННЫХ ДЛЯ ОТОБРАЖЕНИЯ';
   OptionsView.GridLineColor := RGB( 190, 190, 190 );
 
-  OptionsView.NewItemRowInfoText := 'СТРОКА ДЛЯ ДОБАВЛЕНИЯ ЗАПИСИ';
+  cxSetResourceString(@scxGridColumnsQuickCustomizationHint, 'Щелкните здесь, чтобы показать\скрыть\перетащить столбцы');
+  cxSetResourceString(@scxGridCustomizationFormBandsPageCaption, 'Банды' );
+  cxSetResourceString(@scxGridCustomizationFormCaption, 'Настройка' );
+  cxSetResourceString(@scxGridCustomizationFormRowsPageCaption, 'Строки' );
+  cxSetResourceString(@scxGridDeletingFocusedConfirmationText, 'Удалить запись?' );
+  cxSetResourceString(@scxGridDeletingSelectedConfirmationText, 'Удалить все выделенные записи?' );
+  cxSetResourceString(@scxGridFilterApplyButtonCaption, 'Применить фильтр' );
+  cxSetResourceString(@scxGridFilterCustomizeButtonCaption, 'Настроить...' );
+  cxSetResourceString(@scxGridFilterIsEmpty, '<Фильтр пуст>' );
+  cxSetResourceString(@scxGridFilterRowInfoText, 'СТРОКА ДЛЯ УКАЗАНИЯ ФИЛЬТРОВ' );
+  cxSetResourceString(@scxGridGroupByBoxCaption, 'Перетащите заголовок столбца на это поле...');
+  cxSetResourceString(@scxGridLayoutViewRecordCaptionDefaultMask, 'Запись: [RecordIndex]/[RecordCount]' );
+  cxSetResourceString(@scxGridLockedStateImageText, 'Пожалуйста, ждите...' );
+  cxSetResourceString(@scxGridNewItemRowInfoText, 'СТРОКА ДЛЯ ДОБАВЛЕНИЯ ЗАПИСИ' );
+  cxSetResourceString(@scxGridNoDataInfoText, 'НЕТ ДАННЫХ ДЛЯ ОТОБРАЖЕНИЯ' );
+  cxSetResourceString(@scxGridRecursiveLevels, 'Вы не можете создать рекурсивные уровни' );
+  cxSetResourceString(@scxImportErrorCaption, 'Ошибка импорта' );
+
+  cxSetResourceString(@scxGridInplaceEditFormButtonCancel, 'Отмена' );
+  cxSetResourceString(@scxGridInplaceEditFormButtonUpdate, 'Обновить' );
+  cxSetResourceString(@scxGridInplaceEditFormSaveChangesQuery, 'Данные были изменены. Вы хотите сохранить изменения?' );
+
+  FindPanel.ApplyInputDelay := 200;
+  FindPanel.ShowClearButton := False;
+  FindPanel.ShowCloseButton := False;
+  FindPanel.InfoText := 'Введите текст для поиска по таблице...';
 
   if CurrentSelectionType = gstNone
     then setSelectionType( gstMultiCellMultiRow );
@@ -87,8 +110,6 @@ begin
   if Assigned(Styles.OnGetContentStyle)
     then FUserContentStyleHandler := Styles.OnGetContentStyle;
   Styles.OnGetContentStyle := GetContentStyleHandler;
-
-  Navigator.InfoPanel.DisplayMask := 'Запись: [RecordIndex]/[RecordCount]';
 
   with NavigatorButtons do
   begin
@@ -110,6 +131,13 @@ begin
       Cancel.Hint := 'Отменить изменения записи';
 
       CustomButtons.Clear;
+
+      if IsMaster then
+      begin
+        nbtn := CustomButtons.Add;
+        nbtn.ImageIndex := 6;
+        nbtn.Hint := 'Свернуть/развернуть все записи';
+      end;
 
       nbtn := CustomButtons.Add;
       nbtn.ImageIndex := 5;
@@ -143,9 +171,18 @@ begin
         DMOMSComponents.pmiSelectionType1Cell.Checked := FCurrentSelectionType = gstOneCellOneRow;
         DMOMSComponents.pmiSelectionTypeMultiCell.Checked := FCurrentSelectionType = gstMultiCellMultiRow;
 
+        DMOMSComponents.pmiShowFilterRow.Checked := FilterRow.Visible;
+        DMOMSComponents.pmiShowGroupBox.Checked := OptionsView.GroupByBox;
+        DMOMSComponents.pmiShowFindPanel.Checked := FindPanel.DisplayMode = fpdmAlways;
+
         pmHeight := PopupMenuHeight(DMOMSComponents.PopupMenuGridViewSettings);
         DMOMSComponents.PopupMenuGridViewSettings.PopupComponent := Self;
         DMOMSComponents.PopupMenuGridViewSettings.Popup(Mouse.CursorPos.X, Mouse.CursorPos.Y - pmHeight);
+      end;
+      6 : begin // свернуть\развернуть записи
+        if ViewData.GetRecordByIndex( DataController.FocusedRecordIndex ).Expanded
+          then ViewData.Collapse( True )
+          else ViewData.Expand( True );
       end;
     end;
   end;

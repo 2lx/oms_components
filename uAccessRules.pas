@@ -173,7 +173,7 @@ begin
           getParentControl(cmpn).Visible := isVisible;
 
           OptionsData.Editing := isEditable;
-          OptionsData.Appending := isEditable;
+//          OptionsData.Appending := False;
           OptionsData.Inserting := isEditable;
           OptionsData.Deleting := isEditable;
         end
