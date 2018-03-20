@@ -35,7 +35,7 @@ implementation
 
 uses uOMSStyle, Windows, Graphics, cxGraphics, cxDBExtLookupComboBox,
   cxDBLookupComboBox, cxSpinEdit, cxGridTableView, uDMComponents, cxNavigator, uDataExport, cxGrid,
-  uDialogs, Controls, SysUtils, dxCore, cxGridStrs;
+  uDialogs, Controls, SysUtils;
 
 constructor TOMScxGridDBTableView.Create(AOwner: TComponent);
 begin
@@ -77,28 +77,6 @@ begin
   OptionsView.IndicatorWidth := 12;
   OptionsView.GridLineColor := RGB( 190, 190, 190 );
 
-  cxSetResourceString(@scxGridColumnsQuickCustomizationHint, 'Щелкните здесь, чтобы показать\скрыть\перетащить столбцы');
-  cxSetResourceString(@scxGridCustomizationFormBandsPageCaption, 'Банды' );
-  cxSetResourceString(@scxGridCustomizationFormCaption, 'Настройка' );
-  cxSetResourceString(@scxGridCustomizationFormRowsPageCaption, 'Строки' );
-  cxSetResourceString(@scxGridDeletingFocusedConfirmationText, 'Удалить запись?' );
-  cxSetResourceString(@scxGridDeletingSelectedConfirmationText, 'Удалить все выделенные записи?' );
-  cxSetResourceString(@scxGridFilterApplyButtonCaption, 'Применить фильтр' );
-  cxSetResourceString(@scxGridFilterCustomizeButtonCaption, 'Настроить...' );
-  cxSetResourceString(@scxGridFilterIsEmpty, '<Фильтр пуст>' );
-  cxSetResourceString(@scxGridFilterRowInfoText, 'СТРОКА ДЛЯ УКАЗАНИЯ ФИЛЬТРОВ' );
-  cxSetResourceString(@scxGridGroupByBoxCaption, 'Перетащите заголовок столбца на это поле...');
-  cxSetResourceString(@scxGridLayoutViewRecordCaptionDefaultMask, 'Запись: [RecordIndex]/[RecordCount]' );
-  cxSetResourceString(@scxGridLockedStateImageText, 'Пожалуйста, ждите...' );
-  cxSetResourceString(@scxGridNewItemRowInfoText, 'СТРОКА ДЛЯ ДОБАВЛЕНИЯ ЗАПИСИ' );
-  cxSetResourceString(@scxGridNoDataInfoText, 'НЕТ ДАННЫХ ДЛЯ ОТОБРАЖЕНИЯ' );
-  cxSetResourceString(@scxGridRecursiveLevels, 'Вы не можете создать рекурсивные уровни' );
-  cxSetResourceString(@scxImportErrorCaption, 'Ошибка импорта' );
-
-  cxSetResourceString(@scxGridInplaceEditFormButtonCancel, 'Отмена' );
-  cxSetResourceString(@scxGridInplaceEditFormButtonUpdate, 'Обновить' );
-  cxSetResourceString(@scxGridInplaceEditFormSaveChangesQuery, 'Данные были изменены. Вы хотите сохранить изменения?' );
-
   FindPanel.ApplyInputDelay := 200;
   FindPanel.ShowClearButton := False;
   FindPanel.ShowCloseButton := False;
@@ -122,13 +100,13 @@ begin
 
       // TODO: Tcollection ??
       Insert.ImageIndex := 0;
-      Insert.Hint := 'Вставить новую запись';
+//      Insert.Hint := 'Вставить новую запись';
       Delete.ImageIndex := 1;
-      Delete.Hint := 'Удалить запись';
+//      Delete.Hint := 'Удалить запись';
       Post.ImageIndex := 2;
-      Post.Hint := 'Сохранить изменения записи';
+//      Post.Hint := 'Сохранить изменения записи';
       Cancel.ImageIndex := 3;
-      Cancel.Hint := 'Отменить изменения записи';
+//      Cancel.Hint := 'Отменить изменения записи';
 
       CustomButtons.Clear;
 
