@@ -2,13 +2,18 @@ unit uLocalization;
 
 interface
 
-procedure SetupLocalization;
+procedure InitializeLocale;
 
 implementation
 
-uses dxCore, cxGridStrs, dxBarStrs, cxEditConsts{OK}, cxFilterControlStrs{OK}, cxDataConsts, cxFilterConsts{OK};
+uses dxCore,
+    cxGridStrs, cxGridPopupMenuConsts,
+    dxBarStrs,
+    cxEditConsts{OK}, cxExtEditConsts, cxLibraryStrs,
+    cxFilterConsts{OK}, cxFilterControlStrs{OK}, cxDataConsts,
+    cxSchedulerStrs{OK};
 
-procedure SetupLocalization;
+procedure InitializeLocale;
 begin
   // Quantum Grid
   cxSetResourceString(@scxGridColumnsQuickCustomizationHint, 'Щелкните здесь, чтобы показать\скрыть\перетащить столбцы');
@@ -378,6 +383,411 @@ begin
   // Sparkline
   sdxSparklineNoData = '<No data>';
             }
+
+  //------------------------------------------------------------------------------------------------
+  // cxSchedulerStrs
+  cxSetResourceString(@scxUntitledEvent , 'Безымянное событие' );
+
+  cxSetResourceString(@scxVertical   , 'Вертикальный' );
+  cxSetResourceString(@scxHorizontal , 'Горизонтальный' );
+  cxSetResourceString(@scxTimeGrid   , 'Временная шкала' );
+
+  cxSetResourceString(@scxMinute  , 'Минута' );
+  cxSetResourceString(@scxMinutes , 'Минуты' );
+  cxSetResourceString(@scxHour    , 'Час' );
+  cxSetResourceString(@scxHours   , 'Часы' );
+  cxSetResourceString(@scxOneDay  , 'Один день' );
+
+  // Navigation buttons
+  cxSetResourceString(@scxNextAppointment , 'Следующая встреча' );
+  cxSetResourceString(@scxPrevAppointment , 'Предыдущая встреча' );
+
+  // dialogs constants
+  cxSetResourceString(@scxDeleteRecurringEventDescription , 'это периодическое событие. Вы хотите удалить только текущее событие или всю серию?' );
+  cxSetResourceString(@scxEditRecurringEventDescription   , 'это периодическое событие. Вы хотите открыть только текущее событие или всю серию?' );
+
+  cxSetResourceString(@scxGoToDateDialogCaption     , 'Идти на встречу' );
+  cxSetResourceString(@scxDeleteTypeDialogCaption   , 'Подтверждение удаления' );
+  cxSetResourceString(@scxDeleteTypeOccurrenceLabel , 'Удалить это событие' );
+  cxSetResourceString(@scxDeleteTypeSeriesLabel     , 'Удалить эту серию' );
+  cxSetResourceString(@scxEditTypeDialogCaption     , 'Открыть периодическое событие' );
+  cxSetResourceString(@scxEditTypeOccurrenceLabel   , 'Открыть одиночное событие' );
+  cxSetResourceString(@scxEditTypeSeriesLabel       , 'Открыть серию событий' );
+
+  cxSetResourceString(@scxExitConfirmation  , 'Вы хотите сохранить изменения?' );
+  cxSetResourceString(@scxDeleteConfirmation, 'Данные изменились. Вы уверены что хотите удалить их?' );
+  cxSetResourceString(@scxWrongTimeBounds   , 'Введенная вами дата окончания раньше чем дата начала.' );
+  cxSetResourceString(@scxWrongPattern      , 'Периодический шаблон не верный.' );
+  cxSetResourceString(@scxReplaceOccurrenceDate , 'Некоторые месяцы имеют более %s дней. Для этих месяцев событие попадет на последний день месяца.' );
+  cxSetResourceString(@scxInvalidRecurrenceDuration , 'Продолжительность события должна быть короче чем оно встречается. ' +
+    'Уменьшите продолжительность, или измените шаблон периодичности в диалоговом окне настройки периода.' );
+  cxSetResourceString(@scxConfirmLostExceptions , 'Любые особенности связанные с этим периодическим событием будут потеряны. Это OK?' );
+  cxSetResourceString(@scxInvalidNumber      , 'Вы должны ввести верное число.' );
+  cxSetResourceString(@scxShedulerEditorFormNotRegistered , 'Не найдено зарегистрированных форм для редактирования.' );
+  cxSetResourceString(@scxNoAvailableFreeTime , 'Не достаточно свободного времени.' );
+  cxSetResourceString(@scxCannotRescheduleOccurrence , 'Cannot reschedule an occurrence of the recurring appointment "%s" if it skips over a later occurrence of the same appointment.' );
+  cxSetResourceString(@scxTwoOccurrencesPerDay , 'Два события "%s" не могут случиться в один день.' );
+
+  cxSetResourceString(@scxEvent             , 'Событие' );
+  cxSetResourceString(@scxUntitled          , 'Безымянное' );
+
+  cxSetResourceString(@scxNoneEvent         , 'простое событие' );
+  cxSetResourceString(@scxRecurrenceEvent   , 'периодическое событие' );
+  cxSetResourceString(@scxExceptionEvent    , 'исключительное событие' );
+  cxSetResourceString(@scxOccurenceEvent    , 'одиночное событие' );
+
+  cxSetResourceString(@scxAdd               , '&Добавить' );
+  cxSetResourceString(@scxEdit              , '&Редактировать' );
+  cxSetResourceString(@scxDelete            , '&Удалить' );
+  cxSetResourceString(@scxRecurrence        , '&Периодичность' );
+  cxSetResourceString(@scxActionRecurrence  , 'Периодичность' );
+
+  cxSetResourceString(@scxDate              , '&Дата:' );
+  cxSetResourceString(@scxShowIn            , '&Показать в:' );
+  cxSetResourceString(@scxDayCalendar       , 'Календрь по дням' );
+  cxSetResourceString(@scxWeekCalendar      , 'Календарь по неделям' );
+  cxSetResourceString(@scxMonthCalendar     , 'Календарь по месяцам' );
+  cxSetResourceString(@scxWorkWeekCalendar  , 'Календарь по рабочим неделям' );
+
+  cxSetResourceString(@scxEventsConflict    , 'Конфликт с другим событием в вашем расписании.' );
+  cxSetResourceString(@scxResource          , 'Ресурс' );
+  cxSetResourceString(@scxSubject           , '&Субъект:' );
+  cxSetResourceString(@scxLocation          , '&Местонахождение:' );
+  cxSetResourceString(@scxLabelAs           , 'Метка как:' );
+  cxSetResourceString(@scxLabel             , 'Ме&тка:' );
+  cxSetResourceString(@scxStartTime         , 'Время &начала:' );
+  cxSetResourceString(@scxEndTime           , 'Время &конца:' );
+  cxSetResourceString(@scxAllDayEvent       , '&Событие в течение дня' );
+  cxSetResourceString(@scxRecurrenceLabel   , 'Периодичность:' );
+
+  cxSetResourceString(@scxReminder          , 'Напоминать:' );
+  cxSetResourceString(@scxShowTimeAs        , 'Показать время как:' );
+  cxSetResourceString(@scxShowAs            , 'Показать как:' );
+{
+  scxSuffixMinute      = 'minute';
+  scxSuffixMinutes     = 'minutes';
+  scxSuffixHour        = 'hour';
+  scxSuffixHours       = 'hours';
+  scxSuffixDay         = 'day';
+  scxSuffixDays        = 'days';
+  scxSuffixWeek        = 'week';
+  scxSuffixWeeks       = 'weeks';
+
+  scxBusy              = 'Busy';
+  scxFree              = 'Free';
+  scxTentative         = 'Tentative';
+  scxOutOfOffice       = 'Out of office';
+
+  scxRecurrenceCaption         = 'Event recurrence';
+  scxRecurrenceHolidayCaption  = 'Holiday recurrence';
+
+  scxEventTime         = ' Event time ';
+  scxRecurrencePattern = ' Recurrence pattern ';
+  scxRangeOfRecurrence = ' Range of recurrence ';
+  scxStart             = '&Start:';
+  scxStart1            = 'S&tart:';
+  scxEnd               = '&End:';
+  scxDuration          = 'D&uration:';
+  // Pattern
+  scxDaily             = '&Daily';
+  scxWeekly            = '&Weekly';
+  scxQuarterly         = '&Quarterly';
+  scxMonthly           = '&Monthly';
+  scxYearly            = '&Yearly';
+  // daily
+  scxEvery             = 'E&very';
+  scxEveryWeekDay      = 'Every wee&kday';
+  scxDays              = 'day(s)';
+  // weekly
+  scxWeeksOn           = 'week(s) on:';
+  scxRecurEvery        = 'Rec&ur every';
+  //monthly
+  scxOfEvery           = 'of every';
+  scxMonths            = 'month(s)';
+  // yearly
+  scxThe               = 'T&he';
+  scxOf                = 'of';
+
+  // Task links
+
+  scxTaskComplete                   = 'Task co&mplete:';
+  scxTaskStatus                     = 'Task status';
+  scxTaskDependencyEditorCaption    = 'Task Dependency';
+  scxTaskWrongTimeBounds            = 'A new date must be entered within the period of %s - %s.';
+  scxFinishToFinishLong   = 'Finish-to-Finish (FF)';
+  scxFinishToStartLong    = 'Finish-to-Start (FS)';
+  scxFrom                 = 'From:';
+  scxStartToFinishLong    = 'Start-to-Finish (SF)';
+  scxStartToStartLong     = 'Start-to-Start (SS)';
+  scxTo                   = 'To:';
+  scxType                 = '&Type:';
+
+  // other
+  scxFirst             = 'first';
+  scxSecond            = 'second';
+  scxThird             = 'third';
+  scxFourth            = 'fourth';
+  scxLast              = 'last';
+  scxDay               = 'D&ay';
+  scxDay1              = 'day';
+  scxWeekday           = 'weekday';
+  scxWeekendday        = 'weekend day';
+  scxNoEndDate         = '&No end date';
+  scxEndAfter          = 'End a&fter:';
+  scxEndBy             = 'End &by:';
+  scxOccurences        = 'occurrences';
+
+  // buttons
+  scxAdd1              = 'Add';
+  scxAdd1Hint          = 'Add (Ins)';
+  scxEditDotted        = 'Edit...';
+  scxApply             = '&Apply';
+  scxFindAvailableTime = 'Find available time';
+  scxOk                = '&OK';
+  scxSaveAndClose      = 'Save && Close';
+  scxSaveAndCloseHint  = 'Save & Close';
+  scxSave              = 'Save';
+  scxCancel            = '&Cancel';
+  scxClose             = '&Close';
+  scxActionClose       = 'Close';
+  scxDown              = '&Down';
+  scxDelete1           = 'Delete';
+  scxDelete1Hint       = 'Delete (Del)';
+  scxEdit1             = 'Edit';
+  scxImport            = '&Import';
+  scxExport            = '&Export';
+  scxImportHint        = 'Import';
+  scxExportHint        = 'Export';
+  scxRemoveRecur       = '&Remove recurrence';
+  scxSelectAll         = 'Select &all';
+  scxSelectNone        = 'Select &none';
+  scxUp                = '&Up';
+  //
+  scxResourceLayoutCaption = 'Resources layout editor';
+
+  // popup menu resources
+  scxpmNewEvent          = '&New Event';
+  scxpmNewAllDayEvent    = 'New All Day &Event';
+  scxpmNewRecurringEvent = 'New &Recurring Event';
+  scxpmToday             = 'T&oday';
+  scxpmGotoThisDay       = 'Go to This &Day';
+  scxpmGoToDate          = 'Go &to Date...';
+  scxpmResourcesLayout   = 'Resources layout editor...';
+
+  // for event
+  scxpmOpen              = '&Open';
+  scxpmEditSeries        = 'Edit Se&ries';
+  scxpmShowTimeAs        = 'S&how Time As';
+  scxpmDelete            = '&Delete';
+  scxpmFree              = '&Free';
+  scxpmTentative         = '&Tentative';
+  scxpmBusy              = '&Busy';
+  scxpmOutOfOffice       = '&Out of Office';
+  scxpmLabel             = '&Label';
+
+  // event label captions
+  scxEventLabelNone      = 'None';
+  scxEventLabel0         = 'Important';
+  scxEventLabel1         = 'Business';
+  scxEventLabel2         = 'Personal';
+  scxEventLabel3         = 'Vacation';
+  scxEventLabel4         = 'Must Attend';
+  scxEventLabel5         = 'Travel Required';
+  scxEventLabel6         = 'Needs Preparation';
+  scxEventLabel7         = 'Birthday';
+  scxEventLabel8         = 'Anniversary';
+  scxEventLabel9         = 'Phone Call';
+
+  // for time ruler menu items
+  scxpmTimeZone          = 'Chan&ge Time Zone';
+  scxpm60Minutes         = '6&0 Minutes';
+  scxpm30Minutes         = '&30 Minutes';
+  scxpm15Minutes         = '&15 Minutes';
+  scxpm10Minutes         = '10 &Minutes';
+  scxpm6Minutes          = '&6 Minutes';
+  scxpm5Minutes          = '&5 Minutes';
+
+  // for year view scale menu items
+  scxpmFullYear          = '&Full Year';
+  scxpmHalfYear          = '&Half-Year';
+  scxpmQuarter           = '&Quarter';
+
+  // year view scales
+  scxFullYear            = 'Full Year';
+  scxHalfYear            = 'Half-Year';
+  scxQuarter             = 'Quarter';
+  scxHalfYearShort       = 'H';
+  scxQuarterShort        = 'Q';
+
+  //navigator hints
+  scxFirstButtonHint     = 'First Resource';
+  scxPrevPageButtonHint  = 'Previous Page';
+  scxPrevButtonHint      = 'Previous Resource';
+  scxNextButtonHint      = 'Next Resource';
+  scxNextPageButtonHint  = 'Next Page';
+  scxLastButtonHint      = 'Last Resource';
+  scxShowMoreResourcesButtonHint  = 'Show More Resources';
+  scxShowFewerResourcesButtonHint = 'Show Fewer Resources';
+
+  //for reminder
+  scxrCaptionReminder  = '1 Reminder';
+  scxrCaptionReminders = '%d Reminders';
+  scxrDismissButton    = '&Dismiss';
+  scxrDismissAllButton = 'Dismiss &All';
+  scxrDueIn            = 'Due in';
+  scxrOpenItemButton   = '&Open Item';
+  scxrSnoozeButton     = '&Snooze';
+  scxrSubject          = 'Subject';
+  scxrSnoozeLabel      = '&Snooze';
+  scxrSelected         = '%d reminders are selected';
+  scxrStartTime        = 'Start time: %s';
+
+  // time
+  scxTime0m     = '0 minutes';
+  scxTime5m     = '5 minutes';
+  scxTime10m    = '10 minutes';
+  scxTime15m    = '15 minutes';
+  scxTime20m    = '20 minutes';
+  scxTime30m    = '30 minutes';
+  scxTime1h     = '1 hour';
+  scxTime2h     = '2 hours';
+  scxTime3h     = '3 hours';
+  scxTime4h     = '4 hours';
+  scxTime5h     = '5 hours';
+  scxTime6h     = '6 hours';
+  scxTime7h     = '7 hours';
+  scxTime8h     = '8 hours';
+  scxTime9h     = '9 hours';
+  scxTime10h    = '10 hours';
+  scxTime11h    = '11 hours';
+  scxTime12h    = '12 hours';
+  scxTime18h    = '18 hours';
+  scxTime1d     = '1 day';
+  scxTime2d     = '2 days';
+  scxTime3d     = '3 days';
+  scxTime4d     = '4 days';
+  scxTime1w     = '1 week';
+  scxTime2w     = '2 weeks';
+  // advance time
+  scxAdvance0h  = '0 hours before start';
+  scxAdvance5m  = '5 minutes before start';
+  scxAdvance10m = '10 minutes before start';
+  scxAdvance15m = '15 minutes before start';
+
+  // for export
+
+  secxSetDateRangeCaption = 'Set Date Range';
+  secxSetDateRangeText = 'Export and create individual occurrences of appointments or ' +
+    'tasks that occur between:';
+  secxSetDateRangeAnd = 'and';
+  secxTrue = 'TRUE';
+  secxFalse = 'FALSE';
+  secxExportStorageInvalid = 'Storage not assigned';
+
+  // card field names
+
+  secxYes         = 'Yes';
+  secxNo          = 'No';
+  secxSubject     = 'Subject';
+  secxLocation    = 'Location';
+  secxDescription = 'Description';
+  secxAllDay      = 'All day';
+  secxStart       = 'Start';
+  secxFinish      = 'Finish';
+  secxState       = 'State';
+  secxReminder    = 'Reminder';
+
+  // table fields
+
+  secxStartDate          = 'StartDate';
+  secxStartTime          = 'StartTime';
+  secxEndDate            = 'EndDate';
+  secxEndTime            = 'EndTime';
+  secxAlldayevent        = 'Alldayevent';
+  secxReminderonoff      = 'Reminderonoff';
+  secxReminderDate       = 'ReminderDate';
+  secxReminderTime       = 'ReminderTime';
+  secxCategories         = 'Categories';
+  secxShowtimeas         = 'Showtimeas';
+
+  // storage
+  scxRequiredFieldsNeeded = 'The following required fields'#13#10'%sare not assigned!';
+  scxInvalidFieldName = 'Invalid field name';
+  scxInvalidCustomField = 'Invalid custom field';
+
+  // Event fields
+  scxAllDayEventField = 'All Day Event';
+  scxIDField = 'ID';
+  scxActualFinishField = 'Actual Finish';
+  scxActualStartField = 'Actual Start';
+  scxCaptionField = 'Caption';
+  scxEnabledField = 'Enabled';
+  scxEventTypeField = 'Type';
+  scxFinishField = 'Finish';
+  scxLabelField = 'Label';
+  scxLocationField = 'Location';
+  scxMessageField = 'Message';
+  scxParentIDField = 'ParentID';
+  scxGroupIDField = 'GroupID';
+  scxRecurrenceField = 'Recurrence Pattern';
+  scxRecurrenceIndexField = 'Recurrence Index';
+  scxReminderDateField = 'ReminderDate';
+  scxReminderField = 'Reminder';
+  scxReminderMinutesBeforeStartField = 'Reminder Minutes Before Start';
+  scxResourceField = 'Resource';
+  scxStartField = 'Start';
+  scxStateField = 'State';
+  scxTaskCompleteField = 'Task Complete';
+  scxTaskIndexField = 'Task Index';
+  scxTaskLinksField = 'Task Links';
+  scxTaskStatusField = 'Task Status';
+
+  // status
+  scxNotStarted = 'Not Started';
+  scxInProgress = 'In Progress';
+  scxComplete   = 'Complete';
+  scxWaiting    = 'Waiting';
+  scxDeferred   = 'Deferred';
+
+  // Event task relations
+
+  scxFinishToStart  = 'Finish-To-Start';
+  scxStartToStart   = 'Start-To-Start';
+  scxFinishToFinish = 'Finish-To-Finish';
+  scxStartToFinish  = 'Start-To-Finish ';
+
+  scxFinishToStartShort  = 'FS';
+  scxStartToStartShort   = 'SS';
+  scxFinishToFinishShort = 'FF';
+  scxStartToFinishShort  = 'SF';
+
+  scxGanttEventHint = 'Task: %s'#13#10'Complete: %d %%'#13#10'Start: %s'#13#10'Finish: %s';
+  scxLinkHint = 'Task Link: %s (%s)'#13#10'From: %s'#13#10'To: %s';
+
+  //
+
+  scxCompleteDisplayFormat = '0 %';
+
+  scxNone      = 'Simple Event';
+  scxPattern   = 'Recurrence Pattern';
+  scxOccurrence= 'Simple Occurence';
+  scxException = 'Exception Occurrence';
+  scxCustom    = 'Custom Occurrence';
+
+  // Holidays
+
+  scxHolidaysEditorCaption                = 'Holidays editor';
+  scxLocationsGroupBox                    = 'Locations';
+  scxHolidaysGroupBox                     = 'Holidays';
+  scxAddedHolidaysGroupBox                = 'Added holidays';
+  scxLocationName                         = 'Name:';
+  scxHolidaysLocationEditorCaption        = 'Location editor';
+  scxHolidayName                          = 'Name:';
+  scxHolidayDate                          = 'Date:';
+  scxHolidaysLocationHolidayEditorCaption = 'Holiday editor';
+  scxOutlookFormatMismatch                = 'Holiday format mismatch';
+  scxHolidayDisplayFormat                 = '%s (%s)';
+  scxAddedHolidayDisplayFormat            = '%s - %s (%s)';  }
 end;
 
 end.
