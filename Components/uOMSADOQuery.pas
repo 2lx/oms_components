@@ -50,11 +50,14 @@ begin
   frm := getOwnerForm(Owner);
   FEnableMessage := (frm is TOMSForm);
 
-  if FEnableMessage then
-  begin
+  if FEnableMessage then begin
     FFormHandle := (frm as TForm).Handle;
 //    ExecuteOptions := [ eoAsyncExecute, eoAsyncFetchNonBlocking ];
   end;
+
+ // CommandTimeOut := 90;              // for dynamically created ADOqueries
+ // CursorType := ctStatic;
+ // CursorLocation := clUseClient;
 
   OnEditError := EditErrorHandler;
   OnDeleteError := DeleteErrorHandler;
@@ -63,14 +66,14 @@ end;
 
 function TOMSADOQuery.isEdited : Boolean;
 begin
-  Result := Active AND (not Eof) AND (State in [ dsInsert, dsEdit ]);
+  Result := Active {AND (not Eof)} AND (State in [ dsInsert, dsEdit ]);
 end;
 
 procedure TOMSADOQuery.Loaded;
 begin
   inherited;
 
-  CommandTimeOut := 90;
+  CommandTimeOut := 90;              // for form-based ADOqueries
   CursorType := ctStatic;
   CursorLocation := clUseClient;
 end;

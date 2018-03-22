@@ -457,226 +457,226 @@ begin
   cxSetResourceString(@scxLabel             , 'Ме&тка:' );
   cxSetResourceString(@scxStartTime         , 'Время &начала:' );
   cxSetResourceString(@scxEndTime           , 'Время &конца:' );
-  cxSetResourceString(@scxAllDayEvent       , '&Событие в течение дня' );
+  cxSetResourceString(@scxAllDayEvent       , '&Круглодневное событие ' );
   cxSetResourceString(@scxRecurrenceLabel   , 'Периодичность:' );
 
   cxSetResourceString(@scxReminder          , 'Напоминать:' );
   cxSetResourceString(@scxShowTimeAs        , 'Показать время как:' );
   cxSetResourceString(@scxShowAs            , 'Показать как:' );
-{
-  scxSuffixMinute      = 'minute';
-  scxSuffixMinutes     = 'minutes';
-  scxSuffixHour        = 'hour';
-  scxSuffixHours       = 'hours';
-  scxSuffixDay         = 'day';
-  scxSuffixDays        = 'days';
-  scxSuffixWeek        = 'week';
-  scxSuffixWeeks       = 'weeks';
 
-  scxBusy              = 'Busy';
-  scxFree              = 'Free';
-  scxTentative         = 'Tentative';
-  scxOutOfOffice       = 'Out of office';
+  cxSetResourceString(@scxSuffixMinute      , 'минута' );
+  cxSetResourceString(@scxSuffixMinutes     , 'минуты' );
+  cxSetResourceString(@scxSuffixHour        , 'час' );
+  cxSetResourceString(@scxSuffixHours       , 'часы' );
+  cxSetResourceString(@scxSuffixDay         , 'день' );
+  cxSetResourceString(@scxSuffixDays        , 'дни' );
+  cxSetResourceString(@scxSuffixWeek        , 'неделя' );
+  cxSetResourceString(@scxSuffixWeeks       , 'недели' );
 
-  scxRecurrenceCaption         = 'Event recurrence';
-  scxRecurrenceHolidayCaption  = 'Holiday recurrence';
+  cxSetResourceString(@scxBusy              , 'Занят' );
+  cxSetResourceString(@scxFree              , 'Свободен' );
+  cxSetResourceString(@scxTentative         , 'Неопределенный' );
+  cxSetResourceString(@scxOutOfOffice       , 'Не в офисе' );
 
-  scxEventTime         = ' Event time ';
-  scxRecurrencePattern = ' Recurrence pattern ';
-  scxRangeOfRecurrence = ' Range of recurrence ';
-  scxStart             = '&Start:';
-  scxStart1            = 'S&tart:';
-  scxEnd               = '&End:';
-  scxDuration          = 'D&uration:';
+  cxSetResourceString(@scxRecurrenceCaption         , 'Периодичность события' );
+  cxSetResourceString(@scxRecurrenceHolidayCaption  , 'Периодичесность праздника' );
+
+  cxSetResourceString(@scxEventTime         , ' Время события ' );
+  cxSetResourceString(@scxRecurrencePattern , ' Шаблон периода ' );
+  cxSetResourceString(@scxRangeOfRecurrence , ' Длительность периода ' );
+  cxSetResourceString(@scxStart             , '&Начало:' );
+  cxSetResourceString(@scxStart1            , 'Н&ачало:' );
+  cxSetResourceString(@scxEnd               , '&Конец:' );
+  cxSetResourceString(@scxDuration          , 'П&родолжительность:' );
   // Pattern
-  scxDaily             = '&Daily';
-  scxWeekly            = '&Weekly';
-  scxQuarterly         = '&Quarterly';
-  scxMonthly           = '&Monthly';
-  scxYearly            = '&Yearly';
+  cxSetResourceString(@scxDaily             , '&Ежедневно' );
+  cxSetResourceString(@scxWeekly            , '&Еженедельно' );
+  cxSetResourceString(@scxQuarterly         , '&Ежеквартально' );
+  cxSetResourceString(@scxMonthly           , '&Ежемесячно' );
+  cxSetResourceString(@scxYearly            , '&Ежегодно' );
   // daily
-  scxEvery             = 'E&very';
-  scxEveryWeekDay      = 'Every wee&kday';
-  scxDays              = 'day(s)';
+  cxSetResourceString(@scxEvery             , 'К&аждый' );
+  cxSetResourceString(@scxEveryWeekDay      , 'Каждый день недели' );
+  cxSetResourceString(@scxDays              , 'день(дни)' );
   // weekly
-  scxWeeksOn           = 'week(s) on:';
-  scxRecurEvery        = 'Rec&ur every';
+  cxSetResourceString(@scxWeeksOn           , 'неделю в:' );
+  cxSetResourceString(@scxRecurEvery        , 'Повторять каждый' );
   //monthly
-  scxOfEvery           = 'of every';
-  scxMonths            = 'month(s)';
+  cxSetResourceString(@scxOfEvery           , 'каждого' );
+  cxSetResourceString(@scxMonths            , 'месяц(ы)' );
   // yearly
-  scxThe               = 'T&he';
-  scxOf                = 'of';
+  cxSetResourceString(@scxThe               , 'Этот' );
+  cxSetResourceString(@scxOf                , 'у' ); // of
 
   // Task links
 
-  scxTaskComplete                   = 'Task co&mplete:';
-  scxTaskStatus                     = 'Task status';
-  scxTaskDependencyEditorCaption    = 'Task Dependency';
-  scxTaskWrongTimeBounds            = 'A new date must be entered within the period of %s - %s.';
-  scxFinishToFinishLong   = 'Finish-to-Finish (FF)';
-  scxFinishToStartLong    = 'Finish-to-Start (FS)';
-  scxFrom                 = 'From:';
-  scxStartToFinishLong    = 'Start-to-Finish (SF)';
-  scxStartToStartLong     = 'Start-to-Start (SS)';
-  scxTo                   = 'To:';
-  scxType                 = '&Type:';
+  cxSetResourceString(@scxTaskComplete                   , 'Задача выполнена:' );
+  cxSetResourceString(@scxTaskStatus                     , 'Статус задачи' );
+  cxSetResourceString(@scxTaskDependencyEditorCaption    , 'Зависимости задачи' );
+  cxSetResourceString(@scxTaskWrongTimeBounds            , 'Новая дата должна быть внутри периода %s - %s.' );
+  cxSetResourceString(@scxFinishToFinishLong   , 'Конец-Конец (КК)' );
+  cxSetResourceString(@scxFinishToStartLong    , 'Конец-Начало (КН)' );
+  cxSetResourceString(@scxFrom                 , 'Из:' );
+  cxSetResourceString(@scxStartToFinishLong    , 'Начало-Конец (НК)' );
+  cxSetResourceString(@scxStartToStartLong     , 'Начало-Начало (НН)' );
+  cxSetResourceString(@scxTo                   , 'К:' );
+  cxSetResourceString(@scxType                 , '&Тип:' );
 
   // other
-  scxFirst             = 'first';
-  scxSecond            = 'second';
-  scxThird             = 'third';
-  scxFourth            = 'fourth';
-  scxLast              = 'last';
-  scxDay               = 'D&ay';
-  scxDay1              = 'day';
-  scxWeekday           = 'weekday';
-  scxWeekendday        = 'weekend day';
-  scxNoEndDate         = '&No end date';
-  scxEndAfter          = 'End a&fter:';
-  scxEndBy             = 'End &by:';
-  scxOccurences        = 'occurrences';
+  cxSetResourceString(@scxFirst             , 'первый' );
+  cxSetResourceString(@scxSecond            , 'второй' );
+  cxSetResourceString(@scxThird             , 'третий' );
+  cxSetResourceString(@scxFourth            , 'четвертый' );
+  cxSetResourceString(@scxLast              , 'последний' );
+  cxSetResourceString(@scxDay               , 'День' );
+  cxSetResourceString(@scxDay1              , 'день' );
+  cxSetResourceString(@scxWeekday           , 'день недели' );
+  cxSetResourceString(@scxWeekendday        , 'выходной' );
+  cxSetResourceString(@scxNoEndDate         , '&Нет конца' );
+  cxSetResourceString(@scxEndAfter          , 'Закончить после:' );
+  cxSetResourceString(@scxEndBy             , 'Закончить к:' );
+  cxSetResourceString(@scxOccurences        , 'случай' );
 
   // buttons
-  scxAdd1              = 'Add';
-  scxAdd1Hint          = 'Add (Ins)';
-  scxEditDotted        = 'Edit...';
-  scxApply             = '&Apply';
-  scxFindAvailableTime = 'Find available time';
-  scxOk                = '&OK';
-  scxSaveAndClose      = 'Save && Close';
-  scxSaveAndCloseHint  = 'Save & Close';
-  scxSave              = 'Save';
-  scxCancel            = '&Cancel';
-  scxClose             = '&Close';
-  scxActionClose       = 'Close';
-  scxDown              = '&Down';
-  scxDelete1           = 'Delete';
-  scxDelete1Hint       = 'Delete (Del)';
-  scxEdit1             = 'Edit';
-  scxImport            = '&Import';
-  scxExport            = '&Export';
-  scxImportHint        = 'Import';
-  scxExportHint        = 'Export';
-  scxRemoveRecur       = '&Remove recurrence';
-  scxSelectAll         = 'Select &all';
-  scxSelectNone        = 'Select &none';
-  scxUp                = '&Up';
+  cxSetResourceString(@scxAdd1              , 'Добавить' );
+  cxSetResourceString(@scxAdd1Hint          , 'Добавить (Ins)' );
+  cxSetResourceString(@scxEditDotted        , 'Редактировать...' );
+  cxSetResourceString(@scxApply             , '&Применить' );
+  cxSetResourceString(@scxFindAvailableTime , 'Найти доступное время' );
+  cxSetResourceString(@scxOk                , '&OK' );
+  cxSetResourceString(@scxSaveAndClose      , 'Сохранить && Закрыть' );
+  cxSetResourceString(@scxSaveAndCloseHint  , 'Сохранить & Закрыть' );
+  cxSetResourceString(@scxSave              , 'Сохранить' );
+  cxSetResourceString(@scxCancel            , '&Отмена' );
+  cxSetResourceString(@scxClose             , '&Закрыть' );
+  cxSetResourceString(@scxActionClose       , 'Закрыть' );
+  cxSetResourceString(@scxDown              , '&Вниз' );
+  cxSetResourceString(@scxDelete1           , 'Удалить' );
+  cxSetResourceString(@scxDelete1Hint       , 'Удалить (Del)' );
+  cxSetResourceString(@scxEdit1             , 'Редактировать' );
+  cxSetResourceString(@scxImport            , '&Импорт' );
+  cxSetResourceString(@scxExport            , '&Экспорт' );
+  cxSetResourceString(@scxImportHint        , 'Импорт' );
+  cxSetResourceString(@scxExportHint        , 'Экспорт' );
+  cxSetResourceString(@scxRemoveRecur       , '&Убрать периодичность' );
+  cxSetResourceString(@scxSelectAll         , 'Выделить &все' );
+  cxSetResourceString(@scxSelectNone        , 'Убрать выделение' );
+  cxSetResourceString(@scxUp                , '&Вверх' );
   //
-  scxResourceLayoutCaption = 'Resources layout editor';
+  cxSetResourceString(@scxResourceLayoutCaption , 'Редактор положения ресурсов' );
 
   // popup menu resources
-  scxpmNewEvent          = '&New Event';
-  scxpmNewAllDayEvent    = 'New All Day &Event';
-  scxpmNewRecurringEvent = 'New &Recurring Event';
-  scxpmToday             = 'T&oday';
-  scxpmGotoThisDay       = 'Go to This &Day';
-  scxpmGoToDate          = 'Go &to Date...';
-  scxpmResourcesLayout   = 'Resources layout editor...';
+  cxSetResourceString(@scxpmNewEvent          , '&Новое событие' );
+  cxSetResourceString(@scxpmNewAllDayEvent    , 'Новое целодневное событие' );
+  cxSetResourceString(@scxpmNewRecurringEvent , 'Новое периодическое событие' );
+  cxSetResourceString(@scxpmToday             , 'Сегодня' );
+  cxSetResourceString(@scxpmGotoThisDay       , 'Перейти к этому дню' );
+  cxSetResourceString(@scxpmGoToDate          , 'Перейти к дате...' );
+  cxSetResourceString(@scxpmResourcesLayout   , 'Редактор положения ресурсов...' );
 
   // for event
-  scxpmOpen              = '&Open';
-  scxpmEditSeries        = 'Edit Se&ries';
-  scxpmShowTimeAs        = 'S&how Time As';
-  scxpmDelete            = '&Delete';
-  scxpmFree              = '&Free';
-  scxpmTentative         = '&Tentative';
-  scxpmBusy              = '&Busy';
-  scxpmOutOfOffice       = '&Out of Office';
-  scxpmLabel             = '&Label';
+  cxSetResourceString(@scxpmOpen              , '&Открыть' );
+  cxSetResourceString(@scxpmEditSeries        , 'Открыть серию' );
+  cxSetResourceString(@scxpmShowTimeAs        , 'Показаь время как' );
+  cxSetResourceString(@scxpmDelete            , '&Удалить' );
+  cxSetResourceString(@scxpmFree              , '&Очистить' );
+  cxSetResourceString(@scxpmTentative         , '&Попробовать' );
+  cxSetResourceString(@scxpmBusy              , '&Занят' );
+  cxSetResourceString(@scxpmOutOfOffice       , '&Не в офисе' );
+  cxSetResourceString(@scxpmLabel             , '&Метка' );
 
   // event label captions
-  scxEventLabelNone      = 'None';
-  scxEventLabel0         = 'Important';
-  scxEventLabel1         = 'Business';
-  scxEventLabel2         = 'Personal';
-  scxEventLabel3         = 'Vacation';
-  scxEventLabel4         = 'Must Attend';
-  scxEventLabel5         = 'Travel Required';
-  scxEventLabel6         = 'Needs Preparation';
-  scxEventLabel7         = 'Birthday';
-  scxEventLabel8         = 'Anniversary';
-  scxEventLabel9         = 'Phone Call';
+  cxSetResourceString(@scxEventLabelNone      , 'Нет' );
+  cxSetResourceString(@scxEventLabel0         , 'Важное' );
+  cxSetResourceString(@scxEventLabel1         , 'Бизнес' );
+  cxSetResourceString(@scxEventLabel2         , 'Личное' );
+  cxSetResourceString(@scxEventLabel3         , 'Отпуск' );
+  cxSetResourceString(@scxEventLabel4         , 'Требует внимания' );
+  cxSetResourceString(@scxEventLabel5         , 'Требуется командировка' );
+  cxSetResourceString(@scxEventLabel6         , 'Требует подготовки' );
+  cxSetResourceString(@scxEventLabel7         , 'День рождения' );
+  cxSetResourceString(@scxEventLabel8         , 'Юбилей' );
+  cxSetResourceString(@scxEventLabel9         , 'Телефонный звонок' );
 
   // for time ruler menu items
-  scxpmTimeZone          = 'Chan&ge Time Zone';
-  scxpm60Minutes         = '6&0 Minutes';
-  scxpm30Minutes         = '&30 Minutes';
-  scxpm15Minutes         = '&15 Minutes';
-  scxpm10Minutes         = '10 &Minutes';
-  scxpm6Minutes          = '&6 Minutes';
-  scxpm5Minutes          = '&5 Minutes';
+  cxSetResourceString(@scxpmTimeZone          , 'Изменить врем. зону' );
+  cxSetResourceString(@scxpm60Minutes         , '60 минут' );
+  cxSetResourceString(@scxpm30Minutes         , '30 минут' );
+  cxSetResourceString(@scxpm15Minutes         , '15 минут' );
+  cxSetResourceString(@scxpm10Minutes         , '10 минут' );
+  cxSetResourceString(@scxpm6Minutes          , '6 минут' );
+  cxSetResourceString(@scxpm5Minutes          , '5 минут' );
 
   // for year view scale menu items
-  scxpmFullYear          = '&Full Year';
-  scxpmHalfYear          = '&Half-Year';
-  scxpmQuarter           = '&Quarter';
+  cxSetResourceString(@scxpmFullYear          , 'Целый год' );
+  cxSetResourceString(@scxpmHalfYear          , 'Полгода' );
+  cxSetResourceString(@scxpmQuarter           , 'Квартал' );
 
   // year view scales
-  scxFullYear            = 'Full Year';
-  scxHalfYear            = 'Half-Year';
-  scxQuarter             = 'Quarter';
-  scxHalfYearShort       = 'H';
-  scxQuarterShort        = 'Q';
+  cxSetResourceString(@scxFullYear            , 'Целый год' );
+  cxSetResourceString(@scxHalfYear            , 'Полгода' );
+  cxSetResourceString(@scxQuarter             , 'Квартал' );
+  cxSetResourceString(@scxHalfYearShort       , 'ПГ' );
+  cxSetResourceString(@scxQuarterShort        , 'Кв' );
 
   //navigator hints
-  scxFirstButtonHint     = 'First Resource';
-  scxPrevPageButtonHint  = 'Previous Page';
-  scxPrevButtonHint      = 'Previous Resource';
-  scxNextButtonHint      = 'Next Resource';
-  scxNextPageButtonHint  = 'Next Page';
-  scxLastButtonHint      = 'Last Resource';
-  scxShowMoreResourcesButtonHint  = 'Show More Resources';
-  scxShowFewerResourcesButtonHint = 'Show Fewer Resources';
+  cxSetResourceString(@scxFirstButtonHint     , 'Первый источник' );
+  cxSetResourceString(@scxPrevPageButtonHint  , 'Предыдущая страница' );
+  cxSetResourceString(@scxPrevButtonHint      , 'Предыдущий источник' );
+  cxSetResourceString(@scxNextButtonHint      , 'Следующий источник' );
+  cxSetResourceString(@scxNextPageButtonHint  , 'Следующая страница' );
+  cxSetResourceString(@scxLastButtonHint      , 'Последний источник' );
+  cxSetResourceString(@scxShowMoreResourcesButtonHint  , 'Показать больше источников' );
+  cxSetResourceString(@scxShowFewerResourcesButtonHint , 'Показать несколько источников' );
 
   //for reminder
-  scxrCaptionReminder  = '1 Reminder';
-  scxrCaptionReminders = '%d Reminders';
-  scxrDismissButton    = '&Dismiss';
-  scxrDismissAllButton = 'Dismiss &All';
-  scxrDueIn            = 'Due in';
-  scxrOpenItemButton   = '&Open Item';
-  scxrSnoozeButton     = '&Snooze';
-  scxrSubject          = 'Subject';
-  scxrSnoozeLabel      = '&Snooze';
-  scxrSelected         = '%d reminders are selected';
-  scxrStartTime        = 'Start time: %s';
+  cxSetResourceString(@scxrCaptionReminder  , '1 Напоминалка' );
+  cxSetResourceString(@scxrCaptionReminders , '%d напоминалок' );
+  cxSetResourceString(@scxrDismissButton    , '&Отклонить' );
+  cxSetResourceString(@scxrDismissAllButton , 'Отклонить всё' );
+  cxSetResourceString(@scxrDueIn            , 'из-зв' );
+  cxSetResourceString(@scxrOpenItemButton   , '&Открыть пункт' );
+  cxSetResourceString(@scxrSnoozeButton     , '&Вздремнуть' );
+  cxSetResourceString(@scxrSubject          , 'Субъект' );
+  cxSetResourceString(@scxrSnoozeLabel      , '&Вздремнуть' );
+  cxSetResourceString(@scxrSelected         , '%d напоминалок выбрано' );
+  cxSetResourceString(@scxrStartTime        , 'Начальное время: %s' );
 
   // time
-  scxTime0m     = '0 minutes';
-  scxTime5m     = '5 minutes';
-  scxTime10m    = '10 minutes';
-  scxTime15m    = '15 minutes';
-  scxTime20m    = '20 minutes';
-  scxTime30m    = '30 minutes';
-  scxTime1h     = '1 hour';
-  scxTime2h     = '2 hours';
-  scxTime3h     = '3 hours';
-  scxTime4h     = '4 hours';
-  scxTime5h     = '5 hours';
-  scxTime6h     = '6 hours';
-  scxTime7h     = '7 hours';
-  scxTime8h     = '8 hours';
-  scxTime9h     = '9 hours';
-  scxTime10h    = '10 hours';
-  scxTime11h    = '11 hours';
-  scxTime12h    = '12 hours';
-  scxTime18h    = '18 hours';
-  scxTime1d     = '1 day';
-  scxTime2d     = '2 days';
-  scxTime3d     = '3 days';
-  scxTime4d     = '4 days';
-  scxTime1w     = '1 week';
-  scxTime2w     = '2 weeks';
+  cxSetResourceString(@scxTime0m     , '0 минут' );
+  cxSetResourceString(@scxTime5m     , '5 минут' );
+  cxSetResourceString(@scxTime10m    , '10 минут' );
+  cxSetResourceString(@scxTime15m    , '15 минут' );
+  cxSetResourceString(@scxTime20m    , '20 минут' );
+  cxSetResourceString(@scxTime30m    , '30 минут' );
+  cxSetResourceString(@scxTime1h     , '1 час' );
+  cxSetResourceString(@scxTime2h     , '2 часа' );
+  cxSetResourceString(@scxTime3h     , '3 часа' );
+  cxSetResourceString(@scxTime4h     , '4 часа' );
+  cxSetResourceString(@scxTime5h     , '5 часов' );
+  cxSetResourceString(@scxTime6h     , '6 часов' );
+  cxSetResourceString(@scxTime7h     , '7 часов' );
+  cxSetResourceString(@scxTime8h     , '8 часов' );
+  cxSetResourceString(@scxTime9h     , '9 часов' );
+  cxSetResourceString(@scxTime10h    , '10 часов' );
+  cxSetResourceString(@scxTime11h    , '11 часов' );
+  cxSetResourceString(@scxTime12h    , '12 часов' );
+  cxSetResourceString(@scxTime18h    , '18 часов' );
+  cxSetResourceString(@scxTime1d     , '1 день' );
+  cxSetResourceString(@scxTime2d     , '2 дня' );
+  cxSetResourceString(@scxTime3d     , '3 дня' );
+  cxSetResourceString(@scxTime4d     , '4 дня' );
+  cxSetResourceString(@scxTime1w     , '1 неделя' );
+  cxSetResourceString(@scxTime2w     , '2 недели' );
   // advance time
-  scxAdvance0h  = '0 hours before start';
-  scxAdvance5m  = '5 minutes before start';
-  scxAdvance10m = '10 minutes before start';
-  scxAdvance15m = '15 minutes before start';
+  cxSetResourceString(@scxAdvance0h  , '0 часов перед началом' );
+  cxSetResourceString(@scxAdvance5m  , '5 минут перед началом' );
+  cxSetResourceString(@scxAdvance10m , '10 минут перед началом' );
+  cxSetResourceString(@scxAdvance15m , '15 минут перед началом' );
 
   // for export
-
-  secxSetDateRangeCaption = 'Set Date Range';
+{
+  cxSetResourceString(@secxSetDateRangeCaption = 'Set Date Range';
   secxSetDateRangeText = 'Export and create individual occurrences of appointments or ' +
     'tasks that occur between:';
   secxSetDateRangeAnd = 'and';
