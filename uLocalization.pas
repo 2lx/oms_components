@@ -452,7 +452,7 @@ begin
   cxSetResourceString(@scxEventsConflict    , 'Конфликт с другим событием в вашем расписании.' );
   cxSetResourceString(@scxResource          , 'Ресурс' );
   cxSetResourceString(@scxSubject           , '&Субъект:' );
-  cxSetResourceString(@scxLocation          , '&Местонахождение:' );
+  cxSetResourceString(@scxLocation          , '&Место:' );
   cxSetResourceString(@scxLabelAs           , 'Метка как:' );
   cxSetResourceString(@scxLabel             , 'Ме&тка:' );
   cxSetResourceString(@scxStartTime         , 'Время &начала:' );
@@ -461,7 +461,7 @@ begin
   cxSetResourceString(@scxRecurrenceLabel   , 'Периодичность:' );
 
   cxSetResourceString(@scxReminder          , 'Напоминать:' );
-  cxSetResourceString(@scxShowTimeAs        , 'Показать время как:' );
+  cxSetResourceString(@scxShowTimeAs        , 'Время:' );
   cxSetResourceString(@scxShowAs            , 'Показать как:' );
 
   cxSetResourceString(@scxSuffixMinute      , 'минута' );
@@ -577,7 +577,7 @@ begin
   // for event
   cxSetResourceString(@scxpmOpen              , '&Открыть' );
   cxSetResourceString(@scxpmEditSeries        , 'Открыть серию' );
-  cxSetResourceString(@scxpmShowTimeAs        , 'Показаь время как' );
+  cxSetResourceString(@scxpmShowTimeAs        , 'Пометить время' );
   cxSetResourceString(@scxpmDelete            , '&Удалить' );
   cxSetResourceString(@scxpmFree              , '&Очистить' );
   cxSetResourceString(@scxpmTentative         , '&Попробовать' );
@@ -630,17 +630,17 @@ begin
   cxSetResourceString(@scxShowFewerResourcesButtonHint , 'Показать несколько источников' );
 
   //for reminder
-  cxSetResourceString(@scxrCaptionReminder  , '1 Напоминалка' );
-  cxSetResourceString(@scxrCaptionReminders , '%d напоминалок' );
+  cxSetResourceString(@scxrCaptionReminder  , 'Напоминание' );
+  cxSetResourceString(@scxrCaptionReminders , '%d напоминаний' );
   cxSetResourceString(@scxrDismissButton    , '&Отклонить' );
   cxSetResourceString(@scxrDismissAllButton , 'Отклонить всё' );
-  cxSetResourceString(@scxrDueIn            , 'из-зв' );
+  cxSetResourceString(@scxrDueIn            , 'из-за' );
   cxSetResourceString(@scxrOpenItemButton   , '&Открыть пункт' );
-  cxSetResourceString(@scxrSnoozeButton     , '&Вздремнуть' );
+  cxSetResourceString(@scxrSnoozeButton     , '&Напомнить через' );
   cxSetResourceString(@scxrSubject          , 'Субъект' );
-  cxSetResourceString(@scxrSnoozeLabel      , '&Вздремнуть' );
-  cxSetResourceString(@scxrSelected         , '%d напоминалок выбрано' );
-  cxSetResourceString(@scxrStartTime        , 'Начальное время: %s' );
+  cxSetResourceString(@scxrSnoozeLabel      , '&Напомнить еще раз' );
+  cxSetResourceString(@scxrSelected         , '%d напоминаний выбрано' );
+  cxSetResourceString(@scxrStartTime        , 'Время начала: %s' );
 
   // time
   cxSetResourceString(@scxTime0m     , '0 минут' );

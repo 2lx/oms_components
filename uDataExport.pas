@@ -2,15 +2,16 @@ unit uDataExport;
 
 interface
 
-uses cxGrid;
+uses cxGrid, cxSchedulerCustomControls;
 
 procedure cxGridToExcelWithImages( const strDocument: String; cxGrid: TcxGrid; AExpand: Boolean );
+procedure cxScheduleToExcelWithImages( const strDocument: String; AScheduler: TcxCustomScheduler );
 //    procedure StoreGridView( frm: TControl; view: TcxGridTableView );
 //    procedure RestoreGridView( frm: TControl; view: TcxGridTableView );
 
 implementation
 
-uses cxGridExportLink, ComObj, uFileSystem, Windows, uDialogs;
+uses cxGridExportLink, ComObj, uFileSystem, Windows, uDialogs, cxExportSchedulerLink;
 
 procedure cxGridToExcelWithImages( const strDocument: String; cxGrid: TcxGrid; AExpand: Boolean );
 var
@@ -26,6 +27,29 @@ begin
 
   try
     ExportGridToXLSX(fileName, cxGrid, AExpand, True, False, 'xlsx');
+    Workbook := ExcelApp.WorkBooks.Add( fileName );
+  except
+    ShowError('Произошла ошибка при выгрузке в формат XLSX. Обратитесь к программисту.');
+  end;
+
+  ExcelApp.Application.EnableEvents := True;
+  ExcelApp.Visible := True;
+end;
+
+procedure cxScheduleToExcelWithImages( const strDocument: String; AScheduler: TcxCustomScheduler );
+var
+  ExcelApp, Workbook: Variant;
+  fileName: String;
+begin
+  ExcelApp := CreateOleObject('Excel.Application');
+
+  fileName := GetTempDirectory + strDocument + '.xlsx';
+  DeleteFile(PWideChar(WideString( fileName )));
+
+  ExcelApp.Application.EnableEvents := False;
+
+  try
+    cxExportSchedulerToXLSX(fileName, AScheduler, True, True, 'Событие %d');
     Workbook := ExcelApp.WorkBooks.Add( fileName );
   except
     ShowError('Произошла ошибка при выгрузке в формат XLSX. Обратитесь к программисту.');
