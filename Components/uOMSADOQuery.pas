@@ -55,9 +55,9 @@ begin
 //    ExecuteOptions := [ eoAsyncExecute, eoAsyncFetchNonBlocking ];
   end;
 
- // CommandTimeOut := 90;              // for dynamically created ADOqueries
- // CursorType := ctStatic;
- // CursorLocation := clUseClient;
+  CommandTimeOut := 90;              // for dynamically created ADOqueries
+  CursorType := ctStatic;
+  CursorLocation := clUseClient;
 
   OnEditError := EditErrorHandler;
   OnDeleteError := DeleteErrorHandler;
