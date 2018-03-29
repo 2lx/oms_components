@@ -6,30 +6,30 @@ uses Classes, Forms, uOMSForm,
 
  {$I OMSComponentsInclude.inc}
 
-procedure AddGridRules( gridView: TOMScxGridDBTableView );
+procedure AddGridAccessRules( gridView: TOMScxGridDBTableView );
 
-procedure AddComponentRule( cmpn: TComponent; const arrCmpns : array of TComponent;
+procedure AddAccessRule( cmpn: TComponent; const arrCmpns : array of TComponent;
     const commentBase : WideString = '' );
 
-procedure ApplyRules(var frm: TOMSForm);
+procedure ApplyAccessRules(var frm: TOMSForm);
 
 implementation
 
 uses uDataBase, System.TypInfo, Controls, uUtils, uDialogs, cxGrid, cxGridDBTableView, cxPC,
   ComCtrls, SysUtils, DataModule, dxBar, cxButtons, cxBarEditItem, cxGridTableView;
 
-procedure AddGridRules( gridView: TOMScxGridDBTableView );
+procedure AddGridAccessRules( gridView: TOMScxGridDBTableView );
 var
   i : Integer;
 begin
-  AddComponentRule( gridView, []);
+  AddAccessRule( gridView, []);
 
   for i := 0 to gridView.ColumnCount - 1 do
     if ( gridView.Columns[ i ].Width <> 0 ) AND ( gridView.Columns[ i ].Options.Editing )
-      then AddComponentRule( gridView.Columns[ i ], [] );
+      then AddAccessRule( gridView.Columns[ i ], [] );
 end;
 
-function AddComponentOneRule( cmpn : TComponent; const CompGUID : Variant ): Boolean;
+function AddOneAccessRule( cmpn : TComponent; const CompGUID : Variant ): Boolean;
 var
   sOwner : TComponent;
   frameName : String;
@@ -47,7 +47,7 @@ begin
   DBProcedureNil( 'OMS_USERCOMPONENTONE_Insert', [ CompGUID, frameName, cmpn.Name, CompOneTGUID ] );
 end;
 
-procedure AddComponentRule( cmpn: TComponent; const arrCmpns : array of TComponent;
+procedure AddAccessRule( cmpn: TComponent; const arrCmpns : array of TComponent;
     const commentBase : WideString = '' );
 var
   ruleLabel, commentFull: WideString;
@@ -103,13 +103,13 @@ begin
       [ FormGUID, cmpn.Name, ruleLabel, commentFull, isVisible, isEditable, isInsertable, isDeletable ],
         CompGUID );
 
-  AddComponentOneRule( cmpn, CompGUID );
+  AddOneAccessRule( cmpn, CompGUID );
 
   for icmpn in arrCmpns do
-    AddComponentOneRule( icmpn, CompGUID );
+    AddOneAccessRule( icmpn, CompGUID );
 end;
 
-procedure ApplyRules(var frm: TOMSForm);
+procedure ApplyAccessRules(var frm: TOMSForm);
 var
   adoq: TOMSADOQuery;
   strComponentName, strFrameName, lastFrameName : String;

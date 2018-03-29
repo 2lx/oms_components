@@ -9,7 +9,6 @@ uses VCL.Forms, Classes, DataModule, Vcl.Controls, Vcl.ComCtrls, Data.DB,
  {$I OMSComponentsInclude.inc}
 
 const
-//{
   clOMSErrorRed       = TColor( $7F7FFF );
   clOMSAmarant        = TColor( $4B2AE6 );
 	clOMSLightGray      = TColor( $DFDFDF );
@@ -28,49 +27,10 @@ const
   clOMSDarkGray       = TColor( $505050 );
   clOMSLightGreen     = TColor( $62E689 );
   clOMSYellow         = TColor( $00F0FF );
-//  clOMSOrange         = TColor( $13AAFA );
   clOMSBlack          = TColor( $000000 );
-{  clOMSTurkey         = TColor( $E0E0FF );
-  clOMSChina          = TColor( $E0FFE0 );
-  clOMSUzbekistan     = TColor( $E0FFFF );
-  clOMSRussia         = TColor( $FFFFE0 );
-}  clOMSLightPink      = TColor( $C998FF );
+  clOMSLightPink      = TColor( $C998FF );
   clOMSCoral          = TColor( $0E0EC8 );
   clOMSFontBlue       = TColor( $D06600 );
-
-//  clOMSSoftRed        = TColor( $D0BBF8 );
-//  clOMSSoftGreen      = TColor( $C9E6C8 );
-//  clOMSSoftBlue       = TColor( $FCE5B3 );
-//}
-  //Report colors
-  clOMSReport1        = TColor( $FFCC99 );
-  clOMSReport2        = TColor( $99FFFF );
-  clOMSReport3        = TColor( $CC99FF );
-  clOMSReport4        = TColor( $FFFF99 );
-  clOMSReport5        = TColor( $FF99CC );
-  clOMSReport6        = TColor( $FF99FF );
-  clOMSReport7        = TColor( $CCFF99 );
-  clOMSReport8        = TColor( $99FFCC );
-  clOMSReport9        = TColor( $CC99CC );
-  clOMSReport10       = TColor( $99CCFF );
-  clOMSReport11       = TColor( $99CCCC );
-  clOMSReport12       = TColor( $CCFFFF );
-  clOMSReport13       = TColor( $CCCC99 );
-  clOMSReport14       = TColor( $CCCCCC );
-
-  clOMSReportDark1    = TColor( $FFAA44 );
-  clOMSReportDark2    = TColor( $40E3E3 );
-  clOMSReportDark3    = TColor( $AA44FF );
-  clOMSReportDark4    = TColor( $E0E036 );
-  clOMSReportDark5    = TColor( $ED4097 );
-  clOMSReportDark6    = TColor( $ED45ED );
-  clOMSReportDark7    = TColor( $93E640 );
-  clOMSReportDark14   = TColor( $AAAAAA );
-
-
-  clOMSArrayReportColors: array[1..13] of TColor = ( clOMSReport1, clOMSReport2, clOMSReport3,
-      clOMSReport4,  clOMSReport5, clOMSReport6, clOMSReport7, clOMSReport8,
-      clOMSReport9, clOMSReport10, clOMSReport11, clOMSReport12, clOMSReport13 );
 
 type
   TMDIChildType = ( mdictUnique, mdictMultiple );
@@ -94,7 +54,7 @@ type
     procedure DoShow; override;
 
   protected
-    procedure InsertControlComponents; virtual;
+    procedure CreateAccessRules; virtual;
     procedure InsertLayouts; virtual;
     procedure RestoreUserSettings; virtual;
     procedure SaveUserSettings; virtual;
@@ -105,6 +65,10 @@ type
     function CheckData: WideString;
 
     procedure Resize; override;
+
+    procedure AddRule( cmpn: TComponent; const arrCmpns : array of TComponent;
+        const commentBase : WideString = '' );
+    procedure AddGridRules( gridView: TOMScxGridDBTableView );
 
     // deprecated:
     function AddLayout( const Count, ColumnCount, LabelWidth: Integer;
@@ -156,8 +120,7 @@ uses uUserSettings, ADODB, Variants, System.SysUtils, VCL.Dialogs, cxCheckBox, d
   cxGridDBBandedTableView, TypInfo,  dxRibbon, main, cxImage, cxDBLabel, cxDropDownEdit, cxDBExtLookupComboBox,
   UnitDifFuncs, cxGridDBCardView, cxNavigator, ShellAPI, UnitOMSFormBaseInterface,  UnitFileRoutines, cxCalendar,
   cxCurrencyEdit, cxTextEdit, cxGraphics, UnitDataOMSREF, cxTimeEdit, cxMemo, uOMSStyle,
-  uDialogs, dxGDIPlusClasses, cxGridDBTableView, cxBarEditItem, cxGrid, cxPC, cxButtons,
-  uAccessRules;
+  uDialogs, dxGDIPlusClasses, cxGridDBTableView, cxBarEditItem, cxGrid, cxPC, cxButtons,  uAccessRules;
 
 //------------------------------------------------------------------------------
 
@@ -213,7 +176,7 @@ begin
   RestoreUserSettings;
 
 {$IFDEF DEBUG}
-  InsertControlComponents;
+  CreateAccessRules;
 {$ENDIF}
 
   InsertLayouts;
@@ -271,7 +234,7 @@ end;
 
 //------------------------------------------------------------------------------
 
-procedure TOMSForm.InsertControlComponents;
+procedure TOMSForm.CreateAccessRules;
 begin
 
 end;
@@ -490,30 +453,42 @@ end;
 //--------------------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------------------------
 
+procedure TOMSForm.AddRule(cmpn: TComponent; const arrCmpns: array of TComponent;
+  const commentBase: WideString);
+begin
+  AddAccessRule( cmpn, arrCmpns, commentBase );
+end;
+
+procedure TOMSForm.AddGridRules(gridView: TOMScxGridDBTableView);
+begin
+  AddGridAccessRules( gridView );
+end;
+
+// deprecated:
 procedure TOMSForm.AddComponentGridFullAccess( gView: TOMScxGridDBTableView;
     const FrameName : WideString = ''; const NamePostfix : WideString = '' );
 begin
-  AddGridRules( gView );
+  AddGridAccessRules( gView );
 end;
 
 procedure TOMSForm.AddComponentAccess( Component: TComponent; const FrameName : WideString = '';
   const NamePostfix : WideString = '' );
 begin
-  AddComponentRule( Component, [ ], NamePostfix );
+  AddAccessRule( Component, [ ], NamePostfix );
 end;
 
 procedure TOMSForm.AddComponentGroupAccess( ComponentLBL: TComponent;
     ComponentArray: array of TComponent; const FrameName : WideString = '';
     const NamePostfix : WideString = '' );
 begin
-  AddComponentRule( ComponentLBL, ComponentArray, NamePostfix );
+  AddAccessRule( ComponentLBL, ComponentArray, NamePostfix );
 end;
 
 //------------------------------------------------------------------------------
 
 procedure TOMSForm.InitializeRights;
 begin
-  ApplyRules( Self );
+  ApplyAccessRules( Self );
   Resize;
 end;
 

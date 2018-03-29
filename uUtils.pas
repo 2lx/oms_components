@@ -20,7 +20,7 @@ function getParentControl(cmpn : TComponent): TControl;
 
 implementation
 
-uses Forms, ComCtrls, cxPC, uDialogs, cxGridDBTableView, cxGrid, cxBarEditItem, dxBar,
+uses Forms, ComCtrls, cxPC, uDialogs, cxGridDBTableView, cxGrid, cxBarEditItem, dxBar, cxGridDBCardView,
 
 {$I OMSComponentsInclude.inc}
 
@@ -75,6 +75,8 @@ begin
     then Result := (cmpn as TOMScxGridDBTableView).Site.Container
   else if (cmpn is TOMScxGridDBBandedTableView)
     then Result := (cmpn as TOMScxGridDBBandedTableView).Site.Container
+  else if (cmpn is TcxGridDBCardView)
+    then Result := (cmpn as TcxGridDBCardView).Site.Container
   else if cmpn is TcxGridDBColumn
     then Result := (cmpn as TcxGridDBColumn).GridView.Site.Container
   else if cmpn is TControl

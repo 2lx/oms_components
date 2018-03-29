@@ -37,33 +37,33 @@ begin
   cxSetResourceString(@scxGridInplaceEditFormButtonCancel, 'Отмена' );
   cxSetResourceString(@scxGridInplaceEditFormButtonUpdate, 'Обновить' );
   cxSetResourceString(@scxGridInplaceEditFormSaveChangesQuery, 'Данные были изменены. Вы хотите сохранить изменения?' );
-{
-  scxGridYesterday = 'Yesterday';
-  scxGridToday = 'Today';
-  scxGridTomorrow = 'Tomorrow';
-  scxGridLast30Days = 'Last 30 days';
-  scxGridLast14Days = 'Last 14 days';
-  scxGridLast7Days = 'Last 7 days';
-  scxGridNext7Days = 'Next 7 days';
-  scxGridNext14Days = 'Next 14 days';
-  scxGridNext30Days = 'Next 30 days';
-  scxGridLastTwoWeeks = 'Last two weeks';
-  scxGridLastWeek = 'Last week';
-  scxGridThisWeek = 'This week';
-  scxGridNextWeek = 'Next week';
-  scxGridNextTwoWeeks = 'Next two weeks';
-  scxGridLastMonth = 'Last month';
-  scxGridThisMonth = 'This month';
-  scxGridNextMonth = 'Next month';
-  scxGridLastYear = 'Last year';
-  scxGridThisYear = 'This year';
-  scxGridNextYear = 'Next year';
-  scxGridPast = 'Past';
-  scxGridFuture = 'Future';
 
-  scxGridMonthFormat = 'mmmm yyyy';
-  scxGridYearFormat = 'yyyy';
-}
+  cxSetResourceString(@scxGridYesterday , 'Вчера' );
+  cxSetResourceString(@scxGridToday , 'Сегодня' );
+  cxSetResourceString(@scxGridTomorrow , 'Завтра' );
+  cxSetResourceString(@scxGridLast30Days , 'Последние 30 дней' );
+  cxSetResourceString(@scxGridLast14Days , 'Последние 14 дней' );
+  cxSetResourceString(@scxGridLast7Days , 'Последние 7 дней' );
+  cxSetResourceString(@scxGridNext7Days , 'Следующие 7 дней' );
+  cxSetResourceString(@scxGridNext14Days , 'Следующие 14 дней' );
+  cxSetResourceString(@scxGridNext30Days , 'Следующие 30 дней' );
+  cxSetResourceString(@scxGridLastTwoWeeks , 'Последние две недели' );
+  cxSetResourceString(@scxGridLastWeek , 'Последняя неделя' );
+  cxSetResourceString(@scxGridThisWeek , 'Эта неделя' );
+  cxSetResourceString(@scxGridNextWeek , 'Следующая неделя' );
+  cxSetResourceString(@scxGridNextTwoWeeks , 'Следующие две недели' );
+  cxSetResourceString(@scxGridLastMonth , 'Последний месяц' );
+  cxSetResourceString(@scxGridThisMonth , 'Этот месяц' );
+  cxSetResourceString(@scxGridNextMonth , 'Следующий месяц' );
+  cxSetResourceString(@scxGridLastYear , 'Последний год' );
+  cxSetResourceString(@scxGridThisYear , 'Этот год' );
+  cxSetResourceString(@scxGridNextYear , 'Следующий год' );
+  cxSetResourceString(@scxGridPast , 'в прошлом' );
+  cxSetResourceString(@scxGridFuture , 'в будущем' );
+
+  cxSetResourceString(@scxGridMonthFormat , 'mmmm yyyy' );
+  cxSetResourceString(@scxGridYearFormat , 'yyyy' );
+
   // ExpressBars
   cxSetResourceString(@dxSBAR_SHOWBELOWRIBBON, 'Показывать тулбар быстрого доступа ниже бара' );
   cxSetResourceString(@dxSBAR_SHOWABOVERIBBON, 'Показывать тулбар быстрого доступа выше бара' );
@@ -789,5 +789,8 @@ begin
   scxHolidayDisplayFormat                 = '%s (%s)';
   scxAddedHolidayDisplayFormat            = '%s - %s (%s)';  }
 end;
+
+initialization
+  InitializeLocale;
 
 end.
