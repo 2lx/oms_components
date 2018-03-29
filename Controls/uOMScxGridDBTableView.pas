@@ -35,7 +35,7 @@ implementation
 
 uses uOMSStyle, Windows, Graphics, cxGraphics, cxDBExtLookupComboBox,
   cxDBLookupComboBox, cxSpinEdit, cxGridTableView, uDMComponents, cxNavigator, uDataExport, cxGrid,
-  uDialogs, Controls, SysUtils;
+  uDialogs, Controls, SysUtils, cxControls;
 
 constructor TOMScxGridDBTableView.Create(AOwner: TComponent);
 begin
@@ -61,12 +61,21 @@ begin
 
   FilterRow.ApplyChanges := fracImmediately;
 
-  OptionsBehavior.NavigatorHints := True;
   OptionsBehavior.CellHints := True;
+  OptionsBehavior.ColumnHeaderHints := True;
   OptionsBehavior.CopyCaptionsToClipboard := False;
-  OptionsBehavior.IncSearch := False;
-  OptionsBehavior.EditAutoHeight := eahEditor;
 //OptionsBehavior.CopyRecordsToClipboard := False;
+  OptionsBehavior.ExpandMasterRowOnDblClick := True;
+  OptionsBehavior.EditAutoHeight := eahEditor;
+  OptionsBehavior.IncSearch := False;
+  OptionsBehavior.NavigatorHints := True;
+  OptionsBehavior.RecordScrollMode := rsmByPixel;
+
+  OptionsCustomize.ColumnFiltering := True;
+  OptionsCustomize.ColumnGrouping := True;
+  OptionsCustomize.DataRowSizing := True;
+  OptionsCustomize.GroupBySorting := True;
+  OptionsCustomize.GroupRowSizing := True;
 
   OptionsData.DeletingConfirmation := True;
   OptionsData.Appending := False;
