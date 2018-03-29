@@ -76,14 +76,12 @@ type
     procedure AddLayoutCell( const GridID : Integer; compLbl, compEdit: TControl;
         const iLeft, iTop, iWidth, iHeight: Integer ); deprecated;
 
-   procedure AddComponentGridFullAccess( gView: TOMScxGridDBTableView;
+    procedure AddComponentGridFullAccess( gView: TOMScxGridDBTableView;
         const FrameName : WideString = ''; const NamePostfix : WideString = '' ); deprecated;
     procedure AddComponentAccess( Component: TComponent;
         const FrameName : WideString = ''; const NamePostfix : WideString = '' ); deprecated;
     procedure AddComponentGroupAccess( ComponentLBL: TComponent; ComponentArray: array of TComponent;
         const FrameName : WideString = ''; const NamePostfix : WideString = '' ); deprecated;
-
-//    procedure ModifyFontsFor( ctrl: TWinControl; const FontSize: Integer );
 
   public
     property MDIChildType : TMDIChildType read FMDIChildType;
@@ -297,66 +295,6 @@ begin
   TdxSmartImage( frmMain.imgAnimationADOQ.Picture.Graphic).StopAnimation;
 end;
 
-{
-procedure TOMSFormBase.ModifyFontsFor( ctrl: TWinControl; const FontSize: Integer );
-
-  procedure ModifyFont( ctrl: TControl; const FontSize: Integer );
-  var
-    font: TFont;
-    style: TcxStyle;
-    rfonts : TdxRibbonFonts;
-    PropInfo : PPropInfo;
-  begin
-    if IsPublishedProp( ctrl, 'ParentFont' ) then
-    begin
-       PropInfo := GetPropInfo( ctrl, 'ParentFont', [] );
-       SetPropValue( ctrl, PropInfo, True );
-    end;
-    if IsPublishedProp( ctrl, 'ParentColor' ) then
-    begin
-       PropInfo := GetPropInfo( ctrl, 'ParentColor', [] );
-       SetPropValue( ctrl, PropInfo, False );
-    end;
-
-    if IsPublishedProp( ctrl, 'font' ) then
-    begin
-      font := TFont( GetObjectProp(ctrl, 'font', TFont));
-      font.Size := FontSize;
-      SetObjectProp( ctrl, 'font', font );
-    end;
-    if IsPublishedProp( ctrl, 'style' ) AND ( not ( ctrl is TdxRibbon ) )
-        AND ( not ( ctrl is TPageControl ) ) then
-    begin
-      style := TcxStyle( GetObjectProp( ctrl, 'style', TcxStyle ) );
-      if style <> Nil then
-      begin
-        style.Font.Size := FontSize;
-        SetObjectProp( ctrl, 'style', style );
-      end;
-    end;
-    if IsPublishedProp( ctrl, 'fonts' ) AND ( ctrl is TdxRibbon )then
-    begin
-      rfonts := TdxRibbonFonts( GetObjectProp( ctrl, 'fonts', TdxRibbonFonts ) );
-      rfonts.ApplicationButton.Size := FontSize;
-      rfonts.Group.Size := FontSize;
-      rfonts.GroupHeader.Size := FontSize;
-      rfonts.TabHeader.Size := FontSize;
-      SetObjectProp( ctrl, 'fonts', rfonts );
-    end;
-  end;
-
-var
-  i: Integer;
-begin
-  ShowHint := True;
-  ModifyFont( ctrl, FontSize );
-  for i := 0 to ctrl.controlcount - 1 do
-    if ctrl.controls[i] is Twincontrol then
-      ModifyFontsfor( TWincontrol( ctrl.controls[ i ] ), FontSize )
-    else
-      Modifyfont( ctrl.controls[ i ], FontSize );
-end;
-}
 //------------------------------------------------------------------------------
 
 procedure TOMSForm.FormClose(Sender: TObject; var Action: TCloseAction);
@@ -483,8 +421,6 @@ procedure TOMSForm.AddComponentGroupAccess( ComponentLBL: TComponent;
 begin
   AddAccessRule( ComponentLBL, ComponentArray, NamePostfix );
 end;
-
-//------------------------------------------------------------------------------
 
 procedure TOMSForm.InitializeRights;
 begin
