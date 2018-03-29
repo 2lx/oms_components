@@ -33,7 +33,7 @@ type
 
 implementation
 
-uses uOMSStyle, Windows, Graphics, cxGraphics, cxDBExtLookupComboBox,
+uses uOMSComponentStyle, Windows, Graphics, cxGraphics, cxDBExtLookupComboBox,
   cxDBLookupComboBox, cxSpinEdit, cxGridTableView, uDMComponents, cxNavigator, uDataExport, cxGrid,
   uDialogs, Controls, SysUtils, cxControls;
 

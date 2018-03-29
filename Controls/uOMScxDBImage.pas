@@ -34,7 +34,7 @@ type
 implementation
 
 uses uDialogs, Controls, ShellAPI, SysUtils, Windows, uFileSystem, DB, UnitDifFuncs,
-  uOMSStyle;
+  uOMSComponentStyle;
 
 constructor TOMScxDBImage.Create(AOwner: TComponent);
 begin

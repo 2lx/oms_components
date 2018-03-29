@@ -2,21 +2,10 @@ unit uOMSStyle;
 
 interface
 
-uses VCL.Graphics, System.SysUtils, cxStyles, cxGrid, cxGridCustomTableView;
-
-const
-  clOMSEditableHighlight  = TColor( $FFF0E1 );      // clOMSSpecialLightBlue;
-  clOMSAssignedDblClick   = TColor( $5c6515 );      // clOMSSpecialDarkBlueGreen
+uses VCL.Graphics, cxStyles, cxGrid, cxGridCustomTableView;
 
 var
-  cxStyleContentError : TcxStyle;
-  cxStyleContentDefault : TcxStyle;
-  cxStyleContentDefaultBold : TcxStyle;
-  cxStyleContentOdd : TcxStyle;
-  cxStyleContentOddBold : TcxStyle;
-  cxStyleContentCursor : TcxStyle;
-  cxStyleContentCursorBold : TcxStyle;
-  cxStyleContentEditable : TcxStyle;
+  cxStyleDefaultBold : TcxStyle;
 
   cxStyleRed : TcxStyle;
   cxStyleOrange : TcxStyle;
@@ -48,9 +37,6 @@ var
   cxStyleBlueGreenBold : TcxStyle;
   cxStylePinkBold : TcxStyle;
 
-  procedure InitializeStyles;
-  procedure FreeAndNilStyles;
-
 type OMSColorName = (
     colnDefault = 1,
     colnRed,
@@ -74,54 +60,12 @@ type OMSColorType = (
   function getColorNameForDBObjectType( const ObjTypeID : Integer ): OMSColorName;
   function getColorNameForDBArticleType( const ArtTypeID : Integer ): OMSColorName;
 
-  function getColorForColorName( const coln: OMSColorName; const colt: OMSColorType = coltNormal): TColor;
-  procedure setupStyleColorBold(var AStyle : TcxStyle; const coln: OMSColorName; const isBold : Boolean = False);
+  function getOMSColor( const coln: OMSColorName; const colt: OMSColorType = coltNormal): TColor;
+  function getOMSStyle(const coln: OMSColorName; const isBold : Boolean = False) : TcxStyle;
 
 implementation
 
-const
-  // Base: https://flatuicolors.com/palette/de
-  // Base: R: #fc5c65 O: #fd9644 Y: #fed330 G: #26de81 GB: #2bcbba
-  // Base: SB:#45aaf2 B: #4b7bec P: #a55eea W: #d1d8e0 Gr: #778ca3
-  // Base: Pi:#ff7bbd
-
-  // Darken: http://pinetools.com/darken-color
-  // 50%
-  clOMSSpecialDarkRed         = TColor( $0c03a8 );
-  clOMSSpecialDarkOrange      = TColor( $01479e );
-  clOMSSpecialDarkYellow      = TColor( $007796 );
-  clOMSSpecialDarkGreen       = TColor( $407011 );
-  clOMSSpecialDarkSkyBlue     = TColor( $91590a );
-  clOMSSpecialDarkBlue        = TColor( $8c340e );
-  clOMSSpecialDarkPurple      = TColor( $911252 );
-  clOMSSpecialDarkBlueGreen   = TColor( $5c6515 );
-  clOMSSpecialDarkPink        = TColor( $5e00bd );
-
-
-  // Lighten: http://pinetools.com/lighten-color
-  // 20%
-  clOMSSpecialRed         = TColor( $837cfc );
-  clOMSSpecialOrange      = TColor( $69abfd );
-  clOMSSpecialYellow      = TColor( $59dbfe );
-  clOMSSpecialGreen       = TColor( $9ae451 );
-  clOMSSpecialSkyBlue     = TColor( $f4bb6a );
-  clOMSSpecialBlue        = TColor( $ef956f );
-  clOMSSpecialPurple      = TColor( $ea5ea5 );
-  clOMSSpecialBlueGreen   = TColor( $cbda50 );
-  clOMSSpecialPink        = TColor( $ca95ff );
-
-  // 80%
-  clOMSSpecialLightRed         = TColor( $e0defe );
-  clOMSSpecialLightOrange      = TColor( $d9eafe );
-  clOMSSpecialLightYellow      = TColor( $d5f6fe );
-  clOMSSpecialLightGreen       = TColor( $e5f8d3 );
-  clOMSSpecialLightSkyBlue     = TColor( $fceed9 );
-  clOMSSpecialLightBlue        = TColor( $fbe4db );
-  clOMSSpecialLightPurple      = TColor( $fadeed );
-  clOMSSpecialLightBlueGreen   = TColor( $f2f5d3 );
-  clOMSSpecialLightPink        = TColor( $f1e4ff );
-
-	clOMSSpecialLightGray        = TColor( $DFDFDF );
+uses uOMSColors, System.SysUtils;
 
 procedure InitializeStyles;
   procedure InitOneStyle( var style: TcxStyle; bgcol : TColor; fs : TFontStyles = []; tcol : TColor = clBlack );
@@ -140,15 +84,7 @@ procedure InitializeStyles;
   end;
 
 begin
-  cxStyleContentDefault := TcxStyle.Create( Nil );
-  InitFontStyle( cxStyleContentDefaultBold, [ fsBold ]);
-
-  InitOneStyle( cxStyleContentError,       clOMSSpecialRed );
-  InitOneStyle( cxStyleContentOdd,         clOMSSpecialLightGray );
-  InitOneStyle( cxStyleContentOddBold,     clOMSSpecialLightGray, [ fsBold ] );
-  InitOneStyle( cxStyleContentCursor,      clOMSSpecialPink );
-  InitOneStyle( cxStyleContentCursorBold,  clOMSSpecialPink, [ fsBold ] );
-  InitOneStyle( cxStyleContentEditable,    clOMSSpecialLightBlue );
+  InitFontStyle( cxStyleDefaultBold, [ fsBold ]);
 
   InitOneStyle( cxStyleRed,                clOMSSpecialRed );
   InitOneStyle( cxStyleOrange,             clOMSSpecialOrange );
@@ -183,14 +119,7 @@ end;
 
 procedure FreeAndNilStyles;
 begin
-  FreeAndNil(cxStyleContentError);
-  FreeAndNil(cxStyleContentDefault);
-  FreeAndNil(cxStyleContentDefaultBold);
-  FreeAndNil(cxStyleContentOdd);
-  FreeAndNil(cxStyleContentOddBold);
-  FreeAndNil(cxStyleContentCursor);
-  FreeAndNil(cxStyleContentCursorBold);
-  FreeAndNil(cxStyleContentEditable);
+  FreeAndNil(cxStyleDefaultBold);
 
   FreeAndNil(cxStyleRed);
   FreeAndNil(cxStyleOrange);
@@ -213,8 +142,6 @@ begin
   FreeAndNil(cxStyleGreenBold);
   FreeAndNil(cxStyleSkyBlueBold);
   FreeAndNil(cxStyleBlueBold);
-
-  FreeAndNil(cxStyleContentDefaultBold);
 end;
 
 function getColorNameForDBObjectType( const ObjTypeID : Integer ): OMSColorName;
@@ -239,7 +166,7 @@ begin
   end;
 end;
 
-function getColorForColorName( const coln: OMSColorName; const colt: OMSColorType): TColor;
+function getOMSColor( const coln: OMSColorName; const colt: OMSColorType): TColor;
 begin
   if colt = coltNormal then
     case coln of
@@ -272,32 +199,32 @@ begin
   else Result := clWhite;
 end;
 
-procedure setupStyleColorBold(var AStyle : TcxStyle; const coln: OMSColorName; const isBold : Boolean = False);
+function getOMSStyle(const coln: OMSColorName; const isBold : Boolean = False) : TcxStyle;
 begin
   if isBold
     then case coln of
-      colnDefault:  AStyle := cxStyleContentDefaultBold;
-      colnRed:      AStyle := cxStyleRedBold;
-      colnOrange:   AStyle := cxStyleOrangeBold;
-      colnYellow:   AStyle := cxStyleYellowBold;
-      colnGreen:    AStyle := cxStyleGreenBold;
-      colnSkyBlue:  AStyle := cxStyleSkyBlueBold;
-      colnBlue:     AStyle := cxStyleBlueBold;
-      colnPurple:   AStyle := cxStylePurpleBold;
-      colnBlueGreen:AStyle := cxStyleBlueGreenBold;
-      colnPink:     AStyle := cxStylePinkBold;
+      colnDefault:  Result := cxStyleDefaultBold;
+      colnRed:      Result := cxStyleRedBold;
+      colnOrange:   Result := cxStyleOrangeBold;
+      colnYellow:   Result := cxStyleYellowBold;
+      colnGreen:    Result := cxStyleGreenBold;
+      colnSkyBlue:  Result := cxStyleSkyBlueBold;
+      colnBlue:     Result := cxStyleBlueBold;
+      colnPurple:   Result := cxStylePurpleBold;
+      colnBlueGreen:Result := cxStyleBlueGreenBold;
+      colnPink:     Result := cxStylePinkBold;
     end
     else case coln of
-//      colnDefault:  AStyle := cxStyleContentDefault;
-      colnRed:      AStyle := cxStyleRed;
-      colnOrange:   AStyle := cxStyleOrange;
-      colnYellow:   AStyle := cxStyleYellow;
-      colnGreen:    AStyle := cxStyleGreen;
-      colnSkyBlue:  AStyle := cxStyleSkyBlue;
-      colnBlue:     AStyle := cxStyleBlue;
-      colnPurple:   AStyle := cxStylePurple;
-      colnBlueGreen:AStyle := cxStyleBlueGreen;
-      colnPink:     AStyle := cxStylePink;
+//      colnDefault:  Result := cxStyleContentDefault;
+      colnRed:      Result := cxStyleRed;
+      colnOrange:   Result := cxStyleOrange;
+      colnYellow:   Result := cxStyleYellow;
+      colnGreen:    Result := cxStyleGreen;
+      colnSkyBlue:  Result := cxStyleSkyBlue;
+      colnBlue:     Result := cxStyleBlue;
+      colnPurple:   Result := cxStylePurple;
+      colnBlueGreen:Result := cxStyleBlueGreen;
+      colnPink:     Result := cxStylePink;
     end;
 end;
 

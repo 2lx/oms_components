@@ -24,7 +24,7 @@ type
 
 implementation
 
-uses uOMSStyle, Graphics, cxDropDownEdit;
+uses uOMSComponentStyle, Graphics, cxDropDownEdit;
 
 constructor TOMScxTextEdit.Create(AOwner: TComponent);
 begin

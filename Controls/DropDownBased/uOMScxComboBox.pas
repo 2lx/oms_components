@@ -27,7 +27,7 @@ type
 
 implementation
 
-uses uOMSStyle, Graphics;
+uses uOMSComponentStyle, Graphics;
 
 constructor TOMScxComboBox.Create(AOwner: TComponent);
 begin

@@ -27,7 +27,7 @@ type
 
 implementation
 
-uses uOMSStyle, Graphics, cxDropDownEdit;
+uses uOMSComponentStyle, Graphics, cxDropDownEdit;
 
 constructor TOMScxExtLookupComboBox.Create(AOwner: TComponent);
 begin

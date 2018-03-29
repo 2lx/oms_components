@@ -24,7 +24,7 @@ type
 
 implementation
 
-uses uOMSStyle, Graphics, cxDropDownEdit;
+uses uOMSComponentStyle, Graphics, cxDropDownEdit;
 
 constructor TOMScxCheckBox.Create(AOwner: TComponent);
 begin

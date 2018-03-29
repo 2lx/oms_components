@@ -33,7 +33,7 @@ procedure setupStyleGridAfter( var Sender: TcxCustomGridTableView; var ARecord: 
 
 implementation
 
-uses uOMSStyle, cxGridDBTableView, cxButtonEdit, cxDBExtLookupComboBox, cxDBLookupComboBox,
+uses uOMSComponentStyle, cxGridDBTableView, cxButtonEdit, cxDBExtLookupComboBox, cxDBLookupComboBox,
     cxSpinEdit, cxGridTableView;
 
 class procedure TOMScxGridViewCommon.GridViewInitEditHandler( Sender: TcxCustomGridTableView; AItem: TcxCustomGridTableItem;

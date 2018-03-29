@@ -18,7 +18,7 @@ type
 
 implementation
 
-uses uOMSStyle, Graphics, Controls;
+uses uOMSComponentStyle, Graphics, Controls;
 
 constructor TOMScxLabel.Create(AOwner: TComponent);
 begin
