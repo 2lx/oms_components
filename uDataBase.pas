@@ -12,6 +12,15 @@ type
     dbManagement
   );
 
+// TODO: сделать генератор обновления который посылает BEGIN TRY ... вместо вызова процедуры
+// передаем имя таблицы, ключ поле, ключ, обн. поле, значение
+// возвращает признак успеха + обрабатывает ошибки
+//function
+
+function DBUpdateTableOwner( AOwner: TComponent; const tableName, keyFieldName : String; const keyFieldValue: Variant;
+    const updatedFieldName : String; updatedFieldValue : Variant;
+    const dbCatalog : TDBCatalog = dbOrders; const dbScheme: String = 'dbo' ) : Boolean;
+
 function DBProcedureNil( procName: String; const params: array of Variant;
     const dbCatalog : TDBCatalog = dbOrders; const dbScheme: String = 'dbo' ) : Boolean;
 
@@ -225,6 +234,70 @@ begin
     if ( not adoq.Active ) OR ( adoq.Eof )
       then Result := Null
       else Result := adoq.FieldByName( SName ).Value;
+  finally
+    adoq.Free;
+  end;
+end;
+
+function DBUpdateTableOwner( AOwner: TComponent; const tableName, keyFieldName : String; const keyFieldValue: Variant;
+    const updatedFieldName : String; updatedFieldValue : Variant;
+    const dbCatalog : TDBCatalog = dbOrders; const dbScheme: String = 'dbo' ) : Boolean;
+var
+  strResult: String;
+  adoq : TOMSADOQuery;
+  strSQL : String;
+begin
+  Result := False;
+
+  try
+    adoq := TOMSADOQuery.Create( AOwner );
+    adoq.Connection := DataForm.adoconnOrdersForSch;
+    adoq.LockType := ltReadOnly;
+
+    strSQL := 'BEGIN TRY ' +
+              '  UPDATE [' + getCatalog( dbCatalog ) + '].' + dbScheme + '.[' + tableName + '] ' +
+              '  SET [' + updatedFieldName + '] = :uvalue ' +
+              '  WHERE [' + keyFieldName + '] = :rguid ; ' +
+              '  SELECT N''Успешно'' AS Result; ' +
+              'END TRY ' +
+              'BEGIN CATCH ' +
+              '  SELECT N''Ошибка'' AS Result, dbo.CATCH_ErrorReport(0) AS ErrorReport; ' +
+              'END CATCH ';
+
+    with adoq.Parameters.AddParameter do
+    begin
+      Name := 'uvalue';
+      Value := updatedFieldValue;
+    end;
+    with adoq.Parameters.AddParameter do
+    begin
+      Name := 'rguid';
+      Value := keyFieldValue;
+    end;
+
+    adoq.SQL.Text := strSQL;
+
+    adoq.SafeResync;
+    if ( not adoq.Active ) OR ( adoq.Eof ) OR ( adoq.FindField('Result') = Nil ) then
+    begin
+      adoq.Free;
+      Exit;
+    end;
+
+    strResult := adoq.FieldByName('Result').AsWideString;
+    Result := strResult = 'Успешно';
+
+    if not Result then
+    begin
+      if adoq.FindField('ErrorReport') <> Nil then
+      begin
+        strResult := adoq.FieldByName('ErrorReport').AsWideString;
+        logQueryError( 'temp', adoq.SQL.Text, 'UpdateError', strResult );
+      end;
+
+      ShowError( strResult );
+    end;
+
   finally
     adoq.Free;
   end;
