@@ -36,9 +36,9 @@ var
   CompOneTGUID : Variant;
   parentCtrl : TControl;
 begin
-  parentCtrl := getParentControl(cmpn);
+  parentCtrl := TFinder.getParentControl(cmpn);
 
-  sOwner := getParentFrame( parentCtrl );
+  sOwner := TFinder.getParent< TFrame >( parentCtrl );
   if Assigned( sOwner )
     then frameName := sOwner.Name
     else frameName := '';
@@ -77,21 +77,21 @@ begin
   isDeletable := False;
 
   // генерация комментария
-  parentCtrl := getParentControl(cmpn);
+  parentCtrl := TFinder.getParentControl(cmpn);
   if Trim(commentBase) = ''
     then commentFull := ''
     else commentFull := Trim(commentBase) + ' ';
 
-  sOwner := getParentTabSheet( parentCtrl );
+  sOwner := TFinder.getParent< TTabSheet >( parentCtrl );
   if Assigned( sOwner )
     then commentFull := commentFull + 'вкладка "' + (sOwner AS TTabSheet).Caption + '"';
 
-  sOwner := getParentcxTabSheet( parentCtrl );
+  sOwner := TFinder.getParent< TcxTabSheet >( parentCtrl );
   if Assigned( sOwner )
     then commentFull := commentFull + 'вкладка "' + (sOwner AS TcxTabSheet).Caption + '"';
 
   // добавление правила
-  sOwner := getParentForm( parentCtrl );
+  sOwner := TFinder.getParent< TForm >( parentCtrl );
   if not Assigned( sOwner ) then begin
     ShowError( 'Ошибка добавления правила. Не найдена форма владелец компонента "' + cmpn.Name + '"' );
     Exit;
@@ -170,7 +170,7 @@ begin
       else if (cmpn is TcxGridTableView) then
         with cmpn as TcxGridTableView do
         begin
-          getParentControl(cmpn).Visible := isVisible;
+          TFinder.getParentControl(cmpn).Visible := isVisible;
 
           OptionsData.Editing := isEditable;
 //          OptionsData.Appending := False;

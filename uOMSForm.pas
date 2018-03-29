@@ -110,6 +110,9 @@ type
         const dbCatalog : TDBCatalog = dbOrders; const dbScheme: String = 'dbo'; isAsync : Boolean = False ) : Boolean;
     function DBFunction( funcName: String; const params: array of Variant; var RValue: Variant;
         const dbCatalog : TDBCatalog = dbOrders; const dbScheme: String = 'dbo' ) : Boolean;
+    function DBUpdateTable( const tableName, keyFieldName : String; const keyFieldValue: Variant;
+        const updatedFieldName : String; updatedFieldValue : Variant;
+        const dbCatalog : TDBCatalog = dbOrders; const dbScheme: String = 'dbo' ) : Boolean;
   end;
 
 implementation
@@ -273,6 +276,14 @@ function TOMSForm.DBFunction( funcName: String; const params: array of Variant; 
         const dbCatalog : TDBCatalog = dbOrders; const dbScheme: String = 'dbo' ) : Boolean;
 begin
   Result := DBFunctionOwner( Self, funcName, params, RValue, dbCatalog, dbScheme );
+end;
+
+function TOMSForm.DBUpdateTable( const tableName, keyFieldName : String; const keyFieldValue: Variant;
+        const updatedFieldName : String; updatedFieldValue : Variant;
+        const dbCatalog : TDBCatalog = dbOrders; const dbScheme: String = 'dbo' ) : Boolean;
+begin
+  Result := DBUpdateTableOwner( Self, tableName, keyFieldName, keyFieldValue, updatedFieldName,
+      updatedFieldValue, dbCatalog, dbScheme );
 end;
 
 procedure TOMSForm.OnADOQBeginMessage(var Msg: TMessage);

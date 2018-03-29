@@ -47,7 +47,7 @@ var
 begin
   inherited Create(AOwner);
 
-  frm := getOwnerForm(Owner);
+  frm := TFinder.getOwner< TForm >(Owner);
   FEnableMessage := (frm is TOMSForm);
 
   if FEnableMessage then begin
@@ -73,7 +73,7 @@ procedure TOMSADOQuery.Loaded;
 begin
   inherited;
 
-  CommandTimeOut := 90;              // for form-based ADOqueries
+  CommandTimeOut := 90;
   CursorType := ctStatic;
   CursorLocation := clUseClient;
 end;
