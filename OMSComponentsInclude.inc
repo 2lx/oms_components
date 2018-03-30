@@ -33,7 +33,8 @@
 	, uOMScxDBCurrencyEdit
 	, uOMSPageControl
 	, uOMScxPageControl
-	, uOMScxBarEditItem;
+	, uOMScxBarEditItem
+	, uOMSdxRibbon;
 		
 type
 	TADOQuery 					= class (TOMSADOQuery);
@@ -72,6 +73,7 @@ type
 	TcxPageControl				= class (TOMScxPageControl);	
 
 	TcxBarEditItem				= class (TOMScxBarEditItem);
+	TdxRibbon					= class (TOMSdxRibbon);
 {$ELSE}
   	;
 {$ENDIF}
