@@ -5,40 +5,58 @@ interface
 uses VCL.Graphics, cxStyles;
 
 var
-  cxStyleDefaultBold : TcxStyle;
+  styleDefault : TcxStyle;
+  styleRed : TcxStyle;
+  styleOrange : TcxStyle;
+  styleYellow : TcxStyle;
+  styleGreen : TcxStyle;
+  styleSkyBlue : TcxStyle;
+  styleBlue : TcxStyle;
+  stylePurple : TcxStyle;
+  styleBlueGreen : TcxStyle;
+  stylePink : TcxStyle;
+  styleWhite : TcxStyle;
 
-  cxStyleRed : TcxStyle;
-  cxStyleOrange : TcxStyle;
-  cxStyleYellow : TcxStyle;
-  cxStyleGreen : TcxStyle;
-  cxStyleSkyBlue : TcxStyle;
-  cxStyleBlue : TcxStyle;
-  cxStylePurple : TcxStyle;
-  cxStyleBlueGreen : TcxStyle;
-  cxStylePink : TcxStyle;
-  cxStyleWhite : TcxStyle;
+  styleLightGray : TcxStyle;
+  styleLightRed : TcxStyle;
+  styleLightOrange : TcxStyle;
+  styleLightYellow : TcxStyle;
+  styleLightGreen : TcxStyle;
+  styleLightSkyBlue : TcxStyle;
+  styleLightBlue : TcxStyle;
+  styleLightPurple : TcxStyle;
+  styleLightBlueGreen : TcxStyle;
+  styleLightPink : TcxStyle;
 
-  cxStyleLightRed : TcxStyle;
-  cxStyleLightOrange : TcxStyle;
-  cxStyleLightYellow : TcxStyle;
-  cxStyleLightGreen : TcxStyle;
-  cxStyleLightSkyBlue : TcxStyle;
-  cxStyleLightBlue : TcxStyle;
-  cxStyleLightPurple : TcxStyle;
-  cxStyleLightBlueGreen : TcxStyle;
-  cxStyleLightPink : TcxStyle;
+  styleFontRed : TcxStyle;
+  styleFontOrange : TcxStyle;
+  styleFontYellow : TcxStyle;
+  styleFontGreen : TcxStyle;
+  styleFontSkyBlue : TcxStyle;
+  styleFontBlue : TcxStyle;
+  styleFontPurple : TcxStyle;
+  styleFontBlueGreen : TcxStyle;
+  styleFontPink : TcxStyle;
 
-  cxStyleLightGray : TcxStyle;
+  styleOrangeFontRed : TcxStyle;
+  styleYellowFontRed : TcxStyle;
+  styleGreenFontRed : TcxStyle;
+  styleSkyBlueFontRed : TcxStyle;
+  styleBlueFontRed : TcxStyle;
+  stylePurpleFontRed : TcxStyle;
+  styleBlueGreenFontRed : TcxStyle;
+  stylePinkFontRed : TcxStyle;
 
-  cxStyleRedBold : TcxStyle;
-  cxStyleYellowBold : TcxStyle;
-  cxStyleOrangeBold : TcxStyle;
-  cxStyleGreenBold : TcxStyle;
-  cxStyleSkyBlueBold : TcxStyle;
-  cxStyleBlueBold : TcxStyle;
-  cxStylePurpleBold : TcxStyle;
-  cxStyleBlueGreenBold : TcxStyle;
-  cxStylePinkBold : TcxStyle;
+  styleDefaultBold : TcxStyle;
+  styleRedBold : TcxStyle;
+  styleYellowBold : TcxStyle;
+  styleOrangeBold : TcxStyle;
+  styleGreenBold : TcxStyle;
+  styleSkyBlueBold : TcxStyle;
+  styleBlueBold : TcxStyle;
+  stylePurpleBold : TcxStyle;
+  styleBlueGreenBold : TcxStyle;
+  stylePinkBold : TcxStyle;
 
 type OMSColorName = (
     colnDefault = 1,
@@ -64,13 +82,14 @@ type OMSColorType = (
   function getColorNameForDBArticleType( const ArtTypeID : Integer ): OMSColorName;
 
   function getOMSColor( const coln: OMSColorName; const colt: OMSColorType = coltNormal): TColor;
-  function getOMSStyle(const coln: OMSColorName; const isBold : Boolean = False) : TcxStyle;
+  function getOMSStyle(const coln: OMSColorName; const isBold : Boolean = False; const isError : Boolean = False ) : TcxStyle;
 
 implementation
 
 uses uOMSColors, System.SysUtils;
 
 procedure InitializeStyles;
+
   procedure InitOneStyle( var style: TcxStyle; bgcol : TColor; fs : TFontStyles = []; tcol : TColor = clBlack );
   begin
     style := TcxStyle.Create( Nil );
@@ -87,68 +106,110 @@ procedure InitializeStyles;
   end;
 
 begin
-  InitFontStyle( cxStyleDefaultBold, [ fsBold ]);
+  styleDefault := TcxStyle.Create( Nil );
+  InitFontStyle( styleDefaultBold, [ fsBold ]);
 
-  InitOneStyle( cxStyleRed,                clOMSSpecialRed );
-  InitOneStyle( cxStyleOrange,             clOMSSpecialOrange );
-  InitOneStyle( cxStyleYellow,             clOMSSpecialYellow );
-  InitOneStyle( cxStyleGreen,              clOMSSpecialGreen );
-  InitOneStyle( cxStyleSkyBlue,            clOMSSpecialSkyBlue );
-  InitOneStyle( cxStyleBlue,               clOMSSpecialBlue );
-  InitOneStyle( cxStylePurple,             clOMSSpecialPurple );
-  InitOneStyle( cxStyleBlueGreen,          clOMSSpecialBlueGreen );
-  InitOneStyle( cxStylePink,               clOMSSpecialPink );
-  InitOneStyle( cxStyleWhite,              clWhite );
+  InitOneStyle( styleRed,                clOMSRed );
+  InitOneStyle( styleOrange,             clOMSOrange );
+  InitOneStyle( styleYellow,             clOMSYellow );
+  InitOneStyle( styleGreen,              clOMSGreen );
+  InitOneStyle( styleSkyBlue,            clOMSSkyBlue );
+  InitOneStyle( styleBlue,               clOMSBlue );
+  InitOneStyle( stylePurple,             clOMSPurple );
+  InitOneStyle( styleBlueGreen,          clOMSBlueGreen );
+  InitOneStyle( stylePink,               clOMSPink );
+  InitOneStyle( styleWhite,              clWhite );
 
-  InitOneStyle( cxStyleLightRed,           clOMSSpecialLightRed );
-  InitOneStyle( cxStyleLightOrange,        clOMSSpecialLightOrange );
-  InitOneStyle( cxStyleLightYellow,        clOMSSpecialLightYellow );
-  InitOneStyle( cxStyleLightGreen,         clOMSSpecialLightGreen );
-  InitOneStyle( cxStyleLightSkyBlue,       clOMSSpecialLightSkyBlue );
-  InitOneStyle( cxStyleLightBlue,          clOMSSpecialLightBlue );
-  InitOneStyle( cxStyleLightPurple,        clOMSSpecialLightPurple );
-  InitOneStyle( cxStyleLightBlueGreen,     clOMSSpecialLightBlueGreen );
-  InitOneStyle( cxStyleLightPink,          clOMSSpecialLightPink );
-  InitOneStyle( cxStyleLightGray,          clOMSSpecialLightGray );
+  InitOneStyle( styleLightRed,           clOMSLightRed );
+  InitOneStyle( styleLightOrange,        clOMSLightOrange );
+  InitOneStyle( styleLightYellow,        clOMSLightYellow );
+  InitOneStyle( styleLightGreen,         clOMSLightGreen );
+  InitOneStyle( styleLightSkyBlue,       clOMSLightSkyBlue );
+  InitOneStyle( styleLightBlue,          clOMSLightBlue );
+  InitOneStyle( styleLightPurple,        clOMSLightPurple );
+  InitOneStyle( styleLightBlueGreen,     clOMSLightBlueGreen );
+  InitOneStyle( styleLightPink,          clOMSLightPink );
+  InitOneStyle( styleLightGray,          clOMSLightGray );
 
-  InitOneStyle( cxStyleRedBold,            clOMSSpecialRed, [ fsBold ] );
-  InitOneStyle( cxStyleYellowBold,         clOMSSpecialYellow, [ fsBold ] );
-  InitOneStyle( cxStyleOrangeBold,         clOMSSpecialOrange, [ fsBold ] );
-  InitOneStyle( cxStyleGreenBold,          clOMSSpecialGreen, [ fsBold ]  );
-  InitOneStyle( cxStyleSkyBlueBold,        clOMSSpecialSkyBlue, [ fsBold ]  );
-  InitOneStyle( cxStyleBlueBold,           clOMSSpecialBlue, [ fsBold ]  );
-  InitOneStyle( cxStylePurpleBold,         clOMSSpecialPurple, [ fsBold ]  );
-  InitOneStyle( cxStyleBlueGreenBold,      clOMSSpecialBlueGreen, [ fsBold ]  );
-  InitOneStyle( cxStylePinkBold,           clOMSSpecialPink, [ fsBold ]  );
+  InitFontStyle( styleFontRed,           [ fsBold ], clOMSFontRed );
+  InitFontStyle( styleFontOrange,        [ fsBold ], clOMSFontOrange );
+  InitFontStyle( styleFontYellow,        [ fsBold ], clOMSFontYellow );
+  InitFontStyle( styleFontGreen,         [ fsBold ], clOMSFontGreen );
+  InitFontStyle( styleFontSkyBlue,       [ fsBold ], clOMSFontSkyBlue );
+  InitFontStyle( styleFontPurple,        [ fsBold ], clOMSFontPurple );
+  InitFontStyle( styleFontBlueGreen,     [ fsBold ], clOMSFontBlueGreen );
+  InitFontStyle( styleFontPink,          [ fsBold ], clOMSFontPink );
+
+  InitOneStyle( styleOrangeFontRed,      clOMSOrange, [ fsBold ], clOMSFontRed );
+  InitOneStyle( styleYellowFontRed,      clOMSYellow, [ fsBold ], clOMSFontRed );
+  InitOneStyle( styleGreenFontRed,       clOMSGreen, [ fsBold ], clOMSFontRed );
+  InitOneStyle( styleSkyBlueFontRed,     clOMSSkyBlue, [ fsBold ], clOMSFontRed );
+  InitOneStyle( styleBlueFontRed,        clOMSBlue, [ fsBold ], clOMSFontRed );
+  InitOneStyle( stylePurpleFontRed,      clOMSPurple, [ fsBold ], clOMSFontRed );
+  InitOneStyle( styleBlueGreenFontRed,   clOMSBlueGreen, [ fsBold ], clOMSFontRed );
+  InitOneStyle( stylePinkFontRed,        clOMSPink, [ fsBold ], clOMSFontRed );
+
+  InitOneStyle( styleRedBold,            clOMSRed, [ fsBold ] );
+  InitOneStyle( styleOrangeBold,         clOMSOrange, [ fsBold ] );
+  InitOneStyle( styleYellowBold,         clOMSYellow, [ fsBold ] );
+  InitOneStyle( styleGreenBold,          clOMSGreen, [ fsBold ]  );
+  InitOneStyle( styleSkyBlueBold,        clOMSSkyBlue, [ fsBold ]  );
+  InitOneStyle( styleBlueBold,           clOMSBlue, [ fsBold ]  );
+  InitOneStyle( stylePurpleBold,         clOMSPurple, [ fsBold ]  );
+  InitOneStyle( styleBlueGreenBold,      clOMSBlueGreen, [ fsBold ]  );
+  InitOneStyle( stylePinkBold,           clOMSPink, [ fsBold ]  );
 end;
 
 procedure FreeAndNilStyles;
 begin
-  FreeAndNil(cxStyleDefaultBold);
+  FreeAndNil(styleDefault);
+  FreeAndNil(styleDefaultBold);
 
-  FreeAndNil(cxStyleRed);
-  FreeAndNil(cxStyleOrange);
-  FreeAndNil(cxStyleYellow);
-  FreeAndNil(cxStyleGreen);
-  FreeAndNil(cxStyleSkyBlue);
-  FreeAndNil(cxStyleBlue);
-  FreeAndNil(cxStylePurple);
-  FreeAndNil(cxStyleWhite);
+  FreeAndNil(styleRed);
+  FreeAndNil(styleOrange);
+  FreeAndNil(styleYellow);
+  FreeAndNil(styleGreen);
+  FreeAndNil(styleSkyBlue);
+  FreeAndNil(styleBlue);
+  FreeAndNil(stylePurple);
+  FreeAndNil(styleWhite);
 
-  FreeAndNil(cxStyleLightRed);
-  FreeAndNil(cxStyleLightOrange);
-  FreeAndNil(cxStyleLightYellow);
-  FreeAndNil(cxStyleLightGreen);
-  FreeAndNil(cxStyleLightSkyBlue);
-  FreeAndNil(cxStyleLightBlue);
-  FreeAndNil(cxStyleLightPurple);
-  FreeAndNil(cxStyleLightGray);
+  FreeAndNil(styleLightRed);
+  FreeAndNil(styleLightOrange);
+  FreeAndNil(styleLightYellow);
+  FreeAndNil(styleLightGreen);
+  FreeAndNil(styleLightSkyBlue);
+  FreeAndNil(styleLightBlue);
+  FreeAndNil(styleLightPurple);
+  FreeAndNil(styleLightPink);
+  FreeAndNil(styleLightGray);
 
-  FreeAndNil(cxStyleRedBold);
-  FreeAndNil(cxStyleYellowBold);
-  FreeAndNil(cxStyleGreenBold);
-  FreeAndNil(cxStyleSkyBlueBold);
-  FreeAndNil(cxStyleBlueBold);
+  FreeAndNil(styleFontRed);
+  FreeAndNil(styleFontOrange);
+  FreeAndNil(styleFontYellow);
+  FreeAndNil(styleFontGreen);
+  FreeAndNil(styleFontSkyBlue);
+  FreeAndNil(styleFontBlue);
+  FreeAndNil(styleFontPurple);
+  FreeAndNil(styleFontPink);
+
+  FreeAndNil(styleOrangeFontRed);
+  FreeAndNil(styleYellowFontRed);
+  FreeAndNil(styleGreenFontRed);
+  FreeAndNil(styleSkyBlueFontRed);
+  FreeAndNil(styleBlueFontRed);
+  FreeAndNil(stylePurpleFontRed);
+  FreeAndNil(styleBlueGreenFontRed);
+  FreeAndNil(stylePinkFontRed);
+
+  FreeAndNil(styleRedBold);
+  FreeAndNil(styleOrangeBold);
+  FreeAndNil(styleYellowBold);
+  FreeAndNil(styleGreenBold);
+  FreeAndNil(styleSkyBlueBold);
+  FreeAndNil(styleBlueBold);
+  FreeAndNil(stylePurpleBold);
+  FreeAndNil(styleBlueGreenBold);
 end;
 
 function getColorNameForDBObjectType( const ObjTypeID : Integer ): OMSColorName;
@@ -178,60 +239,73 @@ begin
   if colt = coltNormal then
     case coln of
       colnDefault       : Result := clWhite;
-      colnRed           : Result := clOMSSpecialRed;
-      colnOrange        : Result := clOMSSpecialOrange;
-      colnYellow        : Result := clOMSSpecialYellow;
-      colnGreen         : Result := clOMSSpecialGreen;
-      colnSkyBlue       : Result := clOMSSpecialSkyBlue;
-      colnBlue          : Result := clOMSSpecialBlue;
-      colnPurple        : Result := clOMSSpecialPurple;
-      colnBlueGreen     : Result := clOMSSpecialBlueGreen;
-      colnPink          : Result := clOMSSpecialPink;
+      colnRed           : Result := clOMSRed;
+      colnOrange        : Result := clOMSOrange;
+      colnYellow        : Result := clOMSYellow;
+      colnGreen         : Result := clOMSGreen;
+      colnSkyBlue       : Result := clOMSSkyBlue;
+      colnBlue          : Result := clOMSBlue;
+      colnPurple        : Result := clOMSPurple;
+      colnBlueGreen     : Result := clOMSBlueGreen;
+      colnPink          : Result := clOMSPink;
     else Result := clWhite;
     end
   else  if colt = coltLight then
     case coln of
       colnDefault       : Result := clWhite;
-      colnRed           : Result := clOMSSpecialLightRed;
-      colnOrange        : Result := clOMSSpecialLightOrange;
-      colnYellow        : Result := clOMSSpecialLightYellow;
-      colnGreen         : Result := clOMSSpecialLightGreen;
-      colnSkyBlue       : Result := clOMSSpecialLightSkyBlue;
-      colnBlue          : Result := clOMSSpecialLightBlue;
-      colnPurple        : Result := clOMSSpecialLightPurple;
-      colnBlueGreen     : Result := clOMSSpecialLightBlueGreen;
-      colnPink          : Result := clOMSSpecialLightPink;
+      colnRed           : Result := clOMSLightRed;
+      colnOrange        : Result := clOMSLightOrange;
+      colnYellow        : Result := clOMSLightYellow;
+      colnGreen         : Result := clOMSLightGreen;
+      colnSkyBlue       : Result := clOMSLightSkyBlue;
+      colnBlue          : Result := clOMSLightBlue;
+      colnPurple        : Result := clOMSLightPurple;
+      colnBlueGreen     : Result := clOMSLightBlueGreen;
+      colnPink          : Result := clOMSLightPink;
     else Result := clWhite;
     end
   else Result := clWhite;
 end;
 
-function getOMSStyle(const coln: OMSColorName; const isBold : Boolean = False) : TcxStyle;
+function getOMSStyle(const coln: OMSColorName; const isBold : Boolean = False; const isError : Boolean = False ) : TcxStyle;
 begin
-  if isBold
+  if isError
     then case coln of
-      colnDefault:  Result := cxStyleDefaultBold;
-      colnRed:      Result := cxStyleRedBold;
-      colnOrange:   Result := cxStyleOrangeBold;
-      colnYellow:   Result := cxStyleYellowBold;
-      colnGreen:    Result := cxStyleGreenBold;
-      colnSkyBlue:  Result := cxStyleSkyBlueBold;
-      colnBlue:     Result := cxStyleBlueBold;
-      colnPurple:   Result := cxStylePurpleBold;
-      colnBlueGreen:Result := cxStyleBlueGreenBold;
-      colnPink:     Result := cxStylePinkBold;
+      colnDefault:  Result := styleDefaultBold;
+      colnRed:      Result := styleRedBold;
+      colnOrange:   Result := styleOrangeBold;
+      colnYellow:   Result := styleYellowBold;
+      colnGreen:    Result := styleGreenBold;
+      colnSkyBlue:  Result := styleSkyBlueBold;
+      colnBlue:     Result := styleBlueBold;
+      colnPurple:   Result := stylePurpleBold;
+      colnBlueGreen:Result := styleBlueGreenBold;
+      colnPink:     Result := stylePinkBold;
+    end
+  else if isBold
+    then case coln of
+      colnDefault:  Result := styleDefaultBold;
+      colnRed:      Result := styleRedBold;
+      colnOrange:   Result := styleOrangeBold;
+      colnYellow:   Result := styleYellowBold;
+      colnGreen:    Result := styleGreenBold;
+      colnSkyBlue:  Result := styleSkyBlueBold;
+      colnBlue:     Result := styleBlueBold;
+      colnPurple:   Result := stylePurpleBold;
+      colnBlueGreen:Result := styleBlueGreenBold;
+      colnPink:     Result := stylePinkBold;
     end
     else case coln of
-//      colnDefault:  Result := cxStyleContentDefault;
-      colnRed:      Result := cxStyleRed;
-      colnOrange:   Result := cxStyleOrange;
-      colnYellow:   Result := cxStyleYellow;
-      colnGreen:    Result := cxStyleGreen;
-      colnSkyBlue:  Result := cxStyleSkyBlue;
-      colnBlue:     Result := cxStyleBlue;
-      colnPurple:   Result := cxStylePurple;
-      colnBlueGreen:Result := cxStyleBlueGreen;
-      colnPink:     Result := cxStylePink;
+      colnDefault:  Result := styleDefault;
+      colnRed:      Result := styleRed;
+      colnOrange:   Result := styleOrange;
+      colnYellow:   Result := styleYellow;
+      colnGreen:    Result := styleGreen;
+      colnSkyBlue:  Result := styleSkyBlue;
+      colnBlue:     Result := styleBlue;
+      colnPurple:   Result := stylePurple;
+      colnBlueGreen:Result := styleBlueGreen;
+      colnPink:     Result := stylePink;
     end;
 end;
 

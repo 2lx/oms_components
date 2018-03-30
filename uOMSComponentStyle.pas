@@ -42,12 +42,12 @@ begin
   cxStyleContentDefault := TcxStyle.Create( Nil );
   InitFontStyle( cxStyleContentDefaultBold, [ fsBold ]);
 
-  InitOneStyle( cxStyleContentError,       clOMSSpecialRed );
-  InitOneStyle( cxStyleContentOdd,         clOMSSpecialLightGray );
-  InitOneStyle( cxStyleContentOddBold,     clOMSSpecialLightGray, [ fsBold ] );
-  InitOneStyle( cxStyleContentCursor,      clOMSSpecialPink );
-  InitOneStyle( cxStyleContentCursorBold,  clOMSSpecialPink, [ fsBold ] );
-  InitOneStyle( cxStyleContentEditable,    clOMSSpecialLightBlue );
+  InitOneStyle( cxStyleContentError,       clOMSRed );
+  InitOneStyle( cxStyleContentOdd,         clOMSLightGray );
+  InitOneStyle( cxStyleContentOddBold,     clOMSLightGray, [ fsBold ] );
+  InitOneStyle( cxStyleContentCursor,      clOMSPink );
+  InitOneStyle( cxStyleContentCursorBold,  clOMSPink, [ fsBold ] );
+  InitOneStyle( cxStyleContentEditable,    clOMSEditableHighlight );
 end;
 
 procedure FreeAndNilStyles;
