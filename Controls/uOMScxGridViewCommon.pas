@@ -56,10 +56,10 @@ procedure setupStyleGridBefore( var Sender: TcxCustomGridTableView; var ARecord:
       var AItem: TcxCustomGridTableItem; var AStyle: TcxStyle; isHLCursor : Boolean );
 begin
  if ( isHLCursor ) AND ( Sender.DataController.FocusedRowIndex = ARecord.Index )
-   then AStyle := cxStyleContentCursor
-  { else if Odd( ARecord.Index )
+   then AStyle := cxStyleContentCursor;
+{   else if Odd( ARecord.Index )
       then AStyle := cxStyleContentDefault
-      else AStyle := cxStyleContentOdd;       }
+      else AStyle := cxStyleContentOdd; }
 end;
 
 procedure setupStyleGridAfter( var Sender: TcxCustomGridTableView; var ARecord: TcxCustomGridRecord;

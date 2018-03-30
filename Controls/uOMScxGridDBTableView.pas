@@ -10,17 +10,20 @@ type
     FCurrentSelectionType : TGridSelectionType;
     FUserNavigatorOnButtonHandler: TProcNavigatorOnButtonClick;
     FUserContentStyleHandler: TProcContentStyle;
+    FEnableHighlight : Boolean;
 
     procedure GetContentStyleHandler( Sender: TcxCustomGridTableView; ARecord: TcxCustomGridRecord;
       AItem: TcxCustomGridTableItem; var AStyle: TcxStyle );
     procedure NavigatorOnButtonClickHandler( Sender: TObject; AButtonIndex: Integer; var ADone: Boolean );
 
+    procedure setEnableHighlight(const AValue: Boolean);
   protected
     procedure Loaded; override;
 
   published
   public
     property CurrentSelectionType : TGridSelectionType read FCurrentSelectionType default gstNone;
+    property EnableHighlight : Boolean read FEnableHighlight write setEnableHighlight;
 
     constructor Create(AOwner: TComponent); override;
 
@@ -41,10 +44,8 @@ constructor TOMScxGridDBTableView.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
 
-  //virtual settings
-  Styles.ContentEven := cxStyleContentDefault;
-  Styles.ContentOdd := cxStyleContentOdd;
   Styles.FilterRowInfoText := cxStyleContentDefaultBold;
+  EnableHighlight := True;
 
   OnInitEdit := TOMScxGridViewCommon.GridViewInitEditHandler;
 end;
@@ -155,6 +156,8 @@ begin
           then cxGridToExcelWithImages( 'Экранная форма', (Site.Parent as TcxGrid), False );
       end;
       5 : begin // настройки таблицы
+        DMOMSComponents.pmiEnableHighlight.Checked := FEnableHighlight;
+
         DMOMSComponents.pmiSelectionType1Cell.Checked := FCurrentSelectionType = gstOneCellOneRow;
         DMOMSComponents.pmiSelectionTypeMultiCell.Checked := FCurrentSelectionType = gstMultiCellMultiRow;
 
@@ -178,15 +181,32 @@ end;
 procedure TOMScxGridDBTableView.GetContentStyleHandler( Sender: TcxCustomGridTableView;
       ARecord: TcxCustomGridRecord; AItem: TcxCustomGridTableItem; var AStyle: TcxStyle);
 begin
-  inherited;
   if checkInvalidStyle(ARecord, AItem) then Exit;
 
-  setupStyleGridBefore(Sender, ARecord, AItem, AStyle);
+  if FEnableHighlight
+    then setupStyleGridBefore(Sender, ARecord, AItem, AStyle);
 
   if Assigned(FUserContentStyleHandler)
     then FUserContentStyleHandler(Sender, ARecord, AItem, AStyle);
 
-  setupStyleGridAfter(Sender, ARecord, AItem, AStyle);
+  if FEnableHighlight
+    then setupStyleGridAfter(Sender, ARecord, AItem, AStyle);
+end;
+
+procedure TOMScxGridDBTableView.setEnableHighlight(const AValue: Boolean);
+begin
+  FEnableHighlight := AValue;
+
+  if AValue then
+  begin
+    Styles.ContentEven := cxStyleContentDefault;
+    Styles.ContentOdd := cxStyleContentOdd;
+  end
+  else
+  begin
+    Styles.ContentEven := Nil;
+    Styles.ContentOdd := Nil;
+  end;
 end;
 
 procedure TOMScxGridDBTableView.setSelectionType( const gst : TGridSelectionType );

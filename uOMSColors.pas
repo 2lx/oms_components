@@ -46,7 +46,7 @@ const
   clOMSSpecialLightBlueGreen  = TColor( $f2f5d3 );
   clOMSSpecialLightPink       = TColor( $f1e4ff );
 
-	clOMSSpecialLightGray       = TColor( $DFDFDF );
+  clOMSSpecialLightGray       = TColor( $DFDFDF );
 
 implementation
 

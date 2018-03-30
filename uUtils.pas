@@ -14,7 +14,7 @@ type
 
 implementation
 
-uses Forms, ComCtrls, cxPC, uDialogs, cxGridDBTableView, cxGrid, cxBarEditItem, dxBar, cxGridDBCardView,
+uses Forms, uDialogs, cxGridDBTableView, cxGrid, dxBar, cxGridDBCardView,
 
 {$I OMSComponentsInclude.inc}
 

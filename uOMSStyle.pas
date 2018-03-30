@@ -2,7 +2,7 @@ unit uOMSStyle;
 
 interface
 
-uses VCL.Graphics, cxStyles, cxGrid, cxGridCustomTableView;
+uses VCL.Graphics, cxStyles;
 
 var
   cxStyleDefaultBold : TcxStyle;
@@ -16,6 +16,7 @@ var
   cxStylePurple : TcxStyle;
   cxStyleBlueGreen : TcxStyle;
   cxStylePink : TcxStyle;
+  cxStyleWhite : TcxStyle;
 
   cxStyleLightRed : TcxStyle;
   cxStyleLightOrange : TcxStyle;
@@ -26,6 +27,8 @@ var
   cxStyleLightPurple : TcxStyle;
   cxStyleLightBlueGreen : TcxStyle;
   cxStyleLightPink : TcxStyle;
+
+  cxStyleLightGray : TcxStyle;
 
   cxStyleRedBold : TcxStyle;
   cxStyleYellowBold : TcxStyle;
@@ -95,6 +98,7 @@ begin
   InitOneStyle( cxStylePurple,             clOMSSpecialPurple );
   InitOneStyle( cxStyleBlueGreen,          clOMSSpecialBlueGreen );
   InitOneStyle( cxStylePink,               clOMSSpecialPink );
+  InitOneStyle( cxStyleWhite,              clWhite );
 
   InitOneStyle( cxStyleLightRed,           clOMSSpecialLightRed );
   InitOneStyle( cxStyleLightOrange,        clOMSSpecialLightOrange );
@@ -105,6 +109,7 @@ begin
   InitOneStyle( cxStyleLightPurple,        clOMSSpecialLightPurple );
   InitOneStyle( cxStyleLightBlueGreen,     clOMSSpecialLightBlueGreen );
   InitOneStyle( cxStyleLightPink,          clOMSSpecialLightPink );
+  InitOneStyle( cxStyleLightGray,          clOMSSpecialLightGray );
 
   InitOneStyle( cxStyleRedBold,            clOMSSpecialRed, [ fsBold ] );
   InitOneStyle( cxStyleYellowBold,         clOMSSpecialYellow, [ fsBold ] );
@@ -128,6 +133,7 @@ begin
   FreeAndNil(cxStyleSkyBlue);
   FreeAndNil(cxStyleBlue);
   FreeAndNil(cxStylePurple);
+  FreeAndNil(cxStyleWhite);
 
   FreeAndNil(cxStyleLightRed);
   FreeAndNil(cxStyleLightOrange);
@@ -136,6 +142,7 @@ begin
   FreeAndNil(cxStyleLightSkyBlue);
   FreeAndNil(cxStyleLightBlue);
   FreeAndNil(cxStyleLightPurple);
+  FreeAndNil(cxStyleLightGray);
 
   FreeAndNil(cxStyleRedBold);
   FreeAndNil(cxStyleYellowBold);

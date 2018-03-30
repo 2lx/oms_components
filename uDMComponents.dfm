@@ -269,6 +269,15 @@ object DMOMSComponents: TDMOMSComponents
   object PopupMenuGridViewSettings: TPopupMenu
     Left = 208
     Top = 56
+    object pmiEnableHighlight: TMenuItem
+      AutoCheck = True
+      Caption = #1055#1086#1076#1089#1074#1077#1090#1082#1072' '#1087#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102
+      Checked = True
+      OnClick = pmiEnableHighlightClick
+    end
+    object pmiSeparator2: TMenuItem
+      Caption = '-'
+    end
     object pmiSelectionType1Cell: TMenuItem
       AutoCheck = True
       Caption = #1056#1077#1078#1080#1084' '#1074#1099#1076#1077#1083#1077#1085#1080#1103': 1 '#1103#1095#1077#1081#1082#1072

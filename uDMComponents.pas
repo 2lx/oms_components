@@ -16,11 +16,14 @@ type
     pmiShowFilterRow: TMenuItem;
     pmiShowGroupBox: TMenuItem;
     pmiShowFindPanel: TMenuItem;
+    pmiSeparator2: TMenuItem;
+    pmiEnableHighlight: TMenuItem;
     procedure pmiSelectionType1CellClick(Sender: TObject);
     procedure pmiSelectionTypeMultiCellClick(Sender: TObject);
     procedure pmiShowFilterRowClick(Sender: TObject);
     procedure pmiShowGroupBoxClick(Sender: TObject);
     procedure pmiShowFindPanelClick(Sender: TObject);
+    procedure pmiEnableHighlightClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -38,7 +41,8 @@ implementation
 
 {$R *.dfm}
 
-uses cxGrid, uOMScxGridViewCommon, uOMScxGridDBTableView, uOMScxGridDBBandedTableView, Windows, cxGridCustomTableView;
+uses cxGrid, uOMScxGridViewCommon, uOMScxGridDBTableView, uOMScxGridDBBandedTableView, Windows, cxGridCustomTableView,
+  uOMSComponentStyle;
 
 function PopupMenuHeight(Popup: TPopupMenu): integer;
 var
@@ -62,6 +66,12 @@ begin
             then Inc(Result, y);
       end;
     end;
+end;
+
+procedure TDMOMSComponents.pmiEnableHighlightClick(Sender: TObject);
+begin
+  if (PopupMenuGridViewSettings.PopupComponent is TOMScxGridDBTableView)
+    then (PopupMenuGridViewSettings.PopupComponent as TOMScxGridDBTableView).EnableHighlight := (Sender as TMenuItem).Checked;
 end;
 
 procedure TDMOMSComponents.pmiSelectionType1CellClick(Sender: TObject);
