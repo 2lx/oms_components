@@ -180,8 +180,8 @@ begin
       else  if ( cmpn is TcxGridDBColumn ) then
         with cmpn as TcxGridDBColumn do
         begin
-          Visible := isVisible;
-          VisibleForCustomization := isVisible;
+//          Visible := isVisible;
+//          VisibleForCustomization := isVisible;
 
           Options.Editing := isEditable;
         end
