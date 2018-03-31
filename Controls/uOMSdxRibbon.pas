@@ -2,11 +2,13 @@ unit uOMSdxRibbon;
 
 interface
 
-uses Classes, dxRibbon;
+uses Classes, dxRibbon, Windows;
 
 type
   TOMSdxRibbon = class(TdxRibbon)
   private
+    procedure MouseWheelHandler(Sender: TObject; Shift: TShiftState;
+        WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
 
   protected
     procedure Loaded; override;
@@ -34,6 +36,14 @@ begin
   Style := rs2013;
   ColorSchemeName := 'DarkGray';
   ColorSchemeAccent := rcsaPurple;
+
+  OnMouseWheel := MouseWheelHandler;
+end;
+
+procedure TOMSdxRibbon.MouseWheelHandler(Sender: TObject; Shift: TShiftState;
+  WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
+begin
+  Handled := True;
 end;
 
 end.

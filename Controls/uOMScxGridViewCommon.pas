@@ -34,17 +34,33 @@ procedure setupStyleGridAfter( var Sender: TcxCustomGridTableView; var ARecord: 
 implementation
 
 uses uOMSComponentStyle, cxGridDBTableView, cxButtonEdit, cxDBExtLookupComboBox, cxDBLookupComboBox,
-    cxSpinEdit, cxGridTableView;
+    cxSpinEdit, cxGridTableView, cxLookupEdit, uDialogs, cxMaskEdit;
 
 class procedure TOMScxGridViewCommon.GridViewInitEditHandler( Sender: TcxCustomGridTableView; AItem: TcxCustomGridTableItem;
       AEdit: TcxCustomEdit );
 begin
-  if AEdit is TcxLookupComboBox
-    then TcxLookupComboBox(AEdit).Properties.UseMouseWheel := False
-  else if AEdit is TcxSpinEdit
-    then TcxSpinEdit(AEdit).Properties.UseMouseWheel := False
-  else if AEdit is TcxExtLookupComboBox
-    then TcxExtLookupComboBox(AEdit).Properties.UseMouseWheel := False;
+  if AEdit is TcxCustomMaskEdit then
+  with AEdit as TcxCustomMaskEdit do
+  begin
+    Properties.UseMouseWheel := False;
+//    Properties.ImmediatePost := True;
+  end;
+
+  if AEdit is TcxCustomLookupEdit then
+  with AEdit as TcxCustomLookupEdit do
+  begin
+    if Properties.DropDownRows < 20
+      then Properties.DropDownRows := 20;
+    if Properties.DropDownWidth < 600
+      then Properties.DropDownWidth := 600;
+  end;
+
+  if AEdit is TcxCustomLookupComboBox then
+  with AEdit as TcxCustomLookupComboBox do
+  begin
+    if Properties.ListColumns.Count = 1
+      then Properties.ListOptions.ShowHeader := False;
+  end;
 end;
 
 function checkInvalidStyle(var ARecord: TcxCustomGridRecord; var AItem: TcxCustomGridTableItem) : Boolean;

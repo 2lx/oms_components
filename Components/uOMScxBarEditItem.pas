@@ -18,7 +18,7 @@ type
 
 implementation
 
-uses uDialogs, cxDBLookupComboBox, cxDropDownEdit, uOMSStyle, cxEdit;
+uses uDialogs, cxDBLookupComboBox, cxDropDownEdit, uOMSStyle, cxEdit, cxLookupEdit;
 
 constructor TOMScxBarEditItem.Create(AOwner: TComponent);
 begin
@@ -30,31 +30,31 @@ procedure TOMScxBarEditItem.Loaded;
 begin
   inherited;
 
-  if (Properties is TcxLookupComboBoxProperties) then
-  with (Properties as TcxLookupComboBoxProperties) do
+  if Properties is TcxCustomEditProperties then
+  with Properties as TcxCustomEditProperties do
   begin
-    DropDownListStyle := lsEditFixedList;
-//    ImmediatePost := True;
-    ListOptions.CaseInsensitive := True;
+    UseMouseWheel := False;
+    ImmediatePost := True;
+  end;
 
-    if ListColumns.Count = 1
-      then ListOptions.ShowHeader := False;
-
+  if Properties is TcxCustomLookupEditProperties then
+  with Properties as TcxCustomLookupEditProperties do
+  begin
     if DropDownRows < 20
       then DropDownRows := 20;
     if DropDownWidth < 600
       then DropDownWidth := 600;
   end;
 
-  if (Properties is TcxCustomEditProperties) then
-  with (Properties as TcxCustomEditProperties) do
+  if Properties is TcxLookupComboBoxProperties then
+  with Properties as TcxLookupComboBoxProperties do
   begin
-    ImmediatePost := True;
-  end;
+    DropDownListStyle := lsEditFixedList;
+    ListOptions.CaseInsensitive := True;
 
-  //ShowInformation( Properties.ClassName );
-  // TcxLabelProperties, TcxLookupComboBoxProperties, TcxCheckBoxProperties
-  //  OnMouseWheel := MouseWheelHandler;
+    if ListColumns.Count = 1
+      then ListOptions.ShowHeader := False;
+  end;
 end;
 
 end.

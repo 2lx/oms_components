@@ -75,7 +75,7 @@ begin
   OptionsCustomize.ColumnFiltering := True;
   OptionsCustomize.ColumnGrouping := True;
   OptionsCustomize.DataRowSizing := True;
-  OptionsCustomize.GroupBySorting := True;
+//  OptionsCustomize.GroupBySorting := False;
   OptionsCustomize.GroupRowSizing := True;
 
   OptionsData.DeletingConfirmation := True;
@@ -108,15 +108,10 @@ begin
     begin
       Images := DMOMSComponents.ImageListNavigator;
 
-      // TODO: Tcollection ??
       Insert.ImageIndex := 0;
-//      Insert.Hint := '¬ставить новую запись';
       Delete.ImageIndex := 1;
-//      Delete.Hint := '”далить запись';
       Post.ImageIndex := 2;
-//      Post.Hint := '—охранить изменени€ записи';
       Cancel.ImageIndex := 3;
-//      Cancel.Hint := 'ќтменить изменени€ записи';
 
       CustomButtons.Clear;
 
@@ -152,8 +147,8 @@ begin
 
     case Navigator.Buttons[ AButtonIndex ].ImageIndex of
       4 : begin // выгрузка в Excel
-        if (Site <> nil) AND (Site.Parent is TcxGrid)
-          then cxGridToExcelWithImages( 'Ёкранна€ форма', (Site.Parent as TcxGrid), False );
+        if (Site <> nil) AND (Site.Container is TcxGrid)
+          then cxGridToExcelWithImages( 'Ёкранна€ форма', (Site.Container as TcxGrid), False );
       end;
       5 : begin // настройки таблицы
         DMOMSComponents.pmiEnableHighlight.Checked := FEnableHighlight;
