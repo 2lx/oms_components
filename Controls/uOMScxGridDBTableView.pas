@@ -133,6 +133,9 @@ begin
       OnButtonClick := NavigatorOnButtonClickHandler;
     end;
   end;
+
+// TODO:
+//  OnUpdateEdit - посмотреть описание в док-ции
 end;
 
 procedure TOMScxGridDBTableView.NavigatorOnButtonClickHandler( Sender: TObject; AButtonIndex: Integer; var ADone: Boolean );

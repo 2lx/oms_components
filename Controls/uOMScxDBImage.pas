@@ -125,11 +125,10 @@ procedure TOMScxDBImage.DblClickHandled(Sender: TObject);
 var
   tmpFName: WideString;
 begin
-  tmpFName := GetTempDirectory + StringReplace(TimeToStr(Now), ':', '_',
-    [rfReplaceAll, rfIgnoreCase]) + '.jpg';
+  tmpFName := GetTempDirectory + StringReplace(TimeToStr(Now), ':', '_', [rfReplaceAll, rfIgnoreCase]) + '.jpg';
 
   Self.Picture.SaveToFile(tmpFName);
-  ShellExecute(Handle, 'open', PWideChar(tmpFName), nil, nil, SW_SHOWNORMAL);
+  OpenFileDefApp( tmpFName );
 end;
 
 procedure TOMScxDBImage.PropertiesAssignPictureHandler(Sender: TObject; const APicture: TPicture);

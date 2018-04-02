@@ -32,6 +32,10 @@ procedure TOMSdxRibbon.Loaded;
 begin
   inherited;
 
+  ActiveTab := Tabs[0];
+  if Tabs.Count = 1
+    then ShowTabHeaders := False;
+
   PopupMenuItems := [ rpmiMinimizeRibbon ];
   Style := rs2013;
   ColorSchemeName := 'DarkGray';
