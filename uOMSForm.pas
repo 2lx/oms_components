@@ -15,7 +15,7 @@ const
   clOMSWhite          = TColor( $FFFFFF );
   clOMSLightBlue      = TColor( $FFF0E1 );
   clOMSLightPurple    = TColor( $F3B0F3 );
-  clOMSExcelGreenTitle = TColor( $99FFCC );
+  clOMSReportGreen = TColor( $99FFCC );
 
   clOMSLightRed       = TColor( $CFCFFF );
   clOMSBlue           = TColor( $FFB164 );

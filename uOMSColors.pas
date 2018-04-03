@@ -35,6 +35,17 @@ const
 
   // Lighten: http://pinetools.com/lighten-color
   // 20%
+  clOMSBrightRed             = TColor( $655cfc );
+  clOMSBrightOrange          = TColor( $4496fd );
+  clOMSBrightYellow          = TColor( $30d3fe );
+  clOMSBrightGreen           = TColor( $81de26 );
+  clOMSBrightSkyBlue         = TColor( $f2aa45 );
+  clOMSBrightBlue            = TColor( $ec7b4b );
+  clOMSBrightPurple          = TColor( $ea5ea5 );
+  clOMSBrightBlueGreen       = TColor( $bacb2b );
+  clOMSBrightPink            = TColor( $bd7bff );
+  clOMSBrightGray            = TColor( $a38c77 );
+
 {  clOMSRed             = TColor( $837cfc );
   clOMSOrange          = TColor( $69abfd );
   clOMSYellow          = TColor( $59dbfe );
@@ -67,6 +78,19 @@ const
   clOMSBlueGreen       = TColor( $d8e37c );
   clOMSPink            = TColor( $d7afff );
 }
+  // 60%
+  clOMSMidRed        = TColor( $c1bdfd );
+  clOMSMidOrange     = TColor( $b4d5fe );
+  clOMSMidYellow     = TColor( $acedfe );
+  clOMSMidGreen      = TColor( $ccf1a8 );
+  clOMSMidSkyBlue    = TColor( $f9ddb4 );
+  clOMSMidBlue       = TColor( $f7cab7 );
+  clOMSMidPurple     = TColor( $f6bedb );
+  clOMSMidBlueGreen  = TColor( $e5eca7 );
+  clOMSMidPink       = TColor( $e4caff );
+  clOMSMidGray       = TColor( $dad1c8 );
+
+
   // 80%
   clOMSLightRed        = TColor( $e0defe );
   clOMSLightOrange     = TColor( $d9eafe );
