@@ -82,14 +82,15 @@ begin
     then commentFull := ''
     else commentFull := Trim(commentBase) + ' ';
 
-  sOwner := TFinder.getParent< TTabSheet >( parentCtrl );
+  commentFull := commentFull + Trim(TFinder.getHierarchyPCNames( parentCtrl ));
+{  sOwner := TFinder.getParent< TTabSheet >( parentCtrl );
   if Assigned( sOwner )
     then commentFull := commentFull + 'вкладка "' + (sOwner AS TTabSheet).Caption + '"';
 
   sOwner := TFinder.getParent< TcxTabSheet >( parentCtrl );
   if Assigned( sOwner )
     then commentFull := commentFull + 'вкладка "' + (sOwner AS TcxTabSheet).Caption + '"';
-
+}
   // добавление правила
   sOwner := TFinder.getParent< TForm >( parentCtrl );
   if not Assigned( sOwner ) then begin

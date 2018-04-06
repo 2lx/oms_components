@@ -6,24 +6,25 @@ uses Classes, Controls;
 
 type
   TFinder = class
-    class function getParent< CmpnType : TComponent >( cmpn : TControl ) : TComponent;
+    class function getParent< CmpnType : TComponent >( ctrl : TControl ) : TComponent;
     class function getOwner< CmpnType : TComponent >( cmpn : TComponent ) : TComponent;
 
     class function getParentControl(cmpn : TComponent): TControl;
+    class function getHierarchyPCNames( ctrl : TControl ) : String;
   end;
 
 implementation
 
-uses Forms, uDialogs, cxGridDBTableView, cxGrid, dxBar, cxGridDBCardView,
+uses Forms, uDialogs, SysUtils, cxGridDBTableView, cxGrid, dxBar, cxGridDBCardView, cxPC, ComCtrls,
 
 {$I OMSComponentsInclude.inc}
 
-class function TFinder.getParent< CmpnType >( cmpn : TControl ) : TComponent;
+class function TFinder.getParent< CmpnType >( ctrl : TControl ) : TComponent;
 begin
-  if (cmpn is CmpnType)
-    then Result := cmpn
-    else if (cmpn is TControl) AND (cmpn.Parent <> Nil )
-      then Result := getParent< CmpnType >( cmpn.Parent )
+  if (ctrl is CmpnType)
+    then Result := ctrl
+    else if (ctrl is TControl) AND (ctrl.Parent <> Nil )
+      then Result := getParent< CmpnType >( ctrl.Parent )
       else Result := Nil;
 end;
 
@@ -53,6 +54,25 @@ begin
   else if (cmpn is TdxBarLargeButton)
     then Result := ((cmpn as TdxBarLargeButton).Owner as TControl) // базовая форма
   else ShowError('Ошибка. Не определен родительский TControl для класса компонентов "' + cmpn.ClassName + '"');
+end;
+
+class function TFinder.getHierarchyPCNames( ctrl : TControl ) : String;
+
+  function getNames( ctrl : TControl ) : String;
+  begin
+    if (ctrl is TcxTabSheet )
+      then Result := getNames((ctrl as TcxTabSheet).PageControl ) + ' -> "' + (ctrl as TcxTabSheet).Caption + '"'
+    else if (ctrl is TTabSheet )
+      then Result := getNames((ctrl as TTabSheet).PageControl ) + ' -> "' + (ctrl as TTabSheet).Caption + '"'
+    else if (ctrl is TControl) AND (ctrl.Parent <> Nil )
+      then Result := getNames( ctrl.Parent )
+    else Result := '';
+  end;
+
+begin
+  Result := Trim( getNames( ctrl ));
+  if Result <> ''
+    then Result := 'вкладка ' + Copy(Result, 4, Length(Result));
 end;
 
 end.

@@ -113,6 +113,9 @@ begin
       Post.ImageIndex := 2;
       Cancel.ImageIndex := 3;
 
+      Filter.ImageIndex := 7;
+      Filter.Visible := True;
+
       CustomButtons.Clear;
 
       if IsMaster then
