@@ -2,41 +2,51 @@ unit uLocalization;
 
 interface
 
-procedure InitializeLocale;
-
 implementation
 
-uses dxCore,
-    cxGridStrs, cxGridPopupMenuConsts,
-    dxBarStrs,
-    cxEditConsts{OK}, cxExtEditConsts, cxLibraryStrs,
-    cxFilterConsts{OK}, cxFilterControlStrs{OK}, cxDataConsts,
-    cxSchedulerStrs{OK};
+uses dxCore, cxGridStrs, cxGridPopupMenuConsts, dxBarStrs, cxFilterControlStrs, cxFilterConsts,
+    cxDataConsts, cxEditConsts, cxExtEditConsts, cxLibraryStrs, cxSchedulerStrs;
 
-procedure InitializeLocale;
+procedure InitializeUnit_cxGridStrs;
 begin
-  // Quantum Grid
-  cxSetResourceString(@scxGridColumnsQuickCustomizationHint, 'Щелкните здесь, чтобы показать\скрыть\перетащить столбцы');
-  cxSetResourceString(@scxGridCustomizationFormBandsPageCaption, 'Банды' );
-  cxSetResourceString(@scxGridCustomizationFormCaption, 'Настройка' );
-  cxSetResourceString(@scxGridCustomizationFormRowsPageCaption, 'Строки' );
+  cxSetResourceString(@scxGridRecursiveLevels, 'Вы не можете создать рекурсивные уровни' );
+
   cxSetResourceString(@scxGridDeletingFocusedConfirmationText, 'Удалить запись?' );
   cxSetResourceString(@scxGridDeletingSelectedConfirmationText, 'Удалить все выделенные записи?' );
+
+  cxSetResourceString(@scxGridNoDataInfoText, 'НЕТ ДАННЫХ ДЛЯ ОТОБРАЖЕНИЯ' );
+
+  cxSetResourceString(@scxGridFilterRowInfoText, 'СТРОКА ДЛЯ УКАЗАНИЯ ФИЛЬТРОВ' );
+  cxSetResourceString(@scxGridNewItemRowInfoText, 'СТРОКА ДЛЯ ДОБАВЛЕНИЯ ЗАПИСИ' );
+
+  cxSetResourceString(@scxGridFindPanelClearButtonCaption , 'Очистить' );
+  cxSetResourceString(@scxGridFindPanelFindButtonCaption , 'Найти' );
+  cxSetResourceString(@scxGridFindPanelInfoText , 'Введите текст, который надо найти...' );
+
+  cxSetResourceString(@scxGridFilterIsEmpty, '<Фильтр пуст>' );
+
+  cxSetResourceString(@scxGridCustomizationFormCaption, 'Настройка' );
+  cxSetResourceString(@scxGridCustomizationFormColumnsPageCaption, 'Колонки' );
+  cxSetResourceString(@scxGridGroupByBoxCaption, 'Перетащите заголовок столбца на это поле...');
   cxSetResourceString(@scxGridFilterApplyButtonCaption, 'Применить фильтр' );
   cxSetResourceString(@scxGridFilterCustomizeButtonCaption, 'Настроить...' );
-  cxSetResourceString(@scxGridFilterIsEmpty, '<Фильтр пуст>' );
-  cxSetResourceString(@scxGridFilterRowInfoText, 'СТРОКА ДЛЯ УКАЗАНИЯ ФИЛЬТРОВ' );
-  cxSetResourceString(@scxGridGroupByBoxCaption, 'Перетащите заголовок столбца на это поле...');
-  cxSetResourceString(@scxGridLayoutViewRecordCaptionDefaultMask, 'Запись: [RecordIndex]/[RecordCount]' );
-  cxSetResourceString(@scxGridLockedStateImageText, 'Пожалуйста, ждите...' );
-  cxSetResourceString(@scxGridNewItemRowInfoText, 'СТРОКА ДЛЯ ДОБАВЛЕНИЯ ЗАПИСИ' );
-  cxSetResourceString(@scxGridNoDataInfoText, 'НЕТ ДАННЫХ ДЛЯ ОТОБРАЖЕНИЯ' );
-  cxSetResourceString(@scxGridRecursiveLevels, 'Вы не можете создать рекурсивные уровни' );
+  cxSetResourceString(@scxGridColumnsQuickCustomizationHint, 'Щелкните здесь, чтобы показать\скрыть\перетащить столбцы');
+
+  cxSetResourceString(@scxGridCustomizationFormBandsPageCaption, 'Банды' );
+  cxSetResourceString(@scxGridBandsQuickCustomizationHint, 'Щелкните здесь, чтобы показать\скрыть\перетащить столбцы' );
+
+  cxSetResourceString(@scxGridCustomizationFormRowsPageCaption, 'Строки' );
+
+  cxSetResourceString(@scxGridConverterIntermediaryMissing, 'Отсутсвует промежуточный компонент!'#13#10'Пожалуйста, добавьте %s компонент на форму.' );
+  cxSetResourceString(@scxGridConverterNotExistGrid, 'cxGrid не существует' );
+  cxSetResourceString(@scxGridConverterNotExistComponent, 'Компонент не существует' );
   cxSetResourceString(@scxImportErrorCaption, 'Ошибка импорта' );
 
-  cxSetResourceString(@scxGridInplaceEditFormButtonCancel, 'Отмена' );
-  cxSetResourceString(@scxGridInplaceEditFormButtonUpdate, 'Обновить' );
-  cxSetResourceString(@scxGridInplaceEditFormSaveChangesQuery, 'Данные были изменены. Вы хотите сохранить изменения?' );
+  cxSetResourceString(@scxNotExistGridView, 'Grid view не существует' );
+
+  cxSetResourceString(@cxSEditRepositoryExtLookupComboBoxItem, 'ExtLookupComboBox|Представляет ультра-навороченный ниспадающий список c использованием QuantumGrid' );
+
+  // date ranges
 
   cxSetResourceString(@scxGridYesterday , 'Вчера' );
   cxSetResourceString(@scxGridToday , 'Сегодня' );
@@ -64,7 +74,408 @@ begin
   cxSetResourceString(@scxGridMonthFormat , 'mmmm yyyy' );
   cxSetResourceString(@scxGridYearFormat , 'yyyy' );
 
-  // ExpressBars
+  // ChartView
+
+  cxSetResourceString(@scxGridChartCategoriesDisplayText, 'Данные' );
+
+  cxSetResourceString(@scxGridChartValueHintFormat , '%s для %s это %s' );  // series display text, category, value
+  cxSetResourceString(@scxGridChartPercentValueTickMarkLabelFormat , '0%' );
+
+  cxSetResourceString(@scxGridChartToolBoxDataLevels , 'Уровни данных:' );
+  cxSetResourceString(@scxGridChartToolBoxDataLevelSelectValue , 'выберите значение' );
+  cxSetResourceString(@scxGridChartToolBoxCustomizeButtonCaption , 'Настройка чарта' );
+
+  cxSetResourceString(@scxGridChartNoneDiagramDisplayText , 'Нет диаграммы' );
+  cxSetResourceString(@scxGridChartColumnDiagramDisplayText , 'Column-диаграмма' );
+  cxSetResourceString(@scxGridChartBarDiagramDisplayText , 'Бар-диаграмма' );
+  cxSetResourceString(@scxGridChartLineDiagramDisplayText , 'Line-диаграмма' );
+  cxSetResourceString(@scxGridChartAreaDiagramDisplayText , 'Area-диаграмма' );
+  cxSetResourceString(@scxGridChartPieDiagramDisplayText , 'Pie-диаграмма' );
+  cxSetResourceString(@scxGridChartStackedBarDiagramDisplayText , 'Stacked Bars-диаграмма' );
+  cxSetResourceString(@scxGridChartStackedColumnDiagramDisplayText , 'Stacked Columns-диаграмма' );
+  cxSetResourceString(@scxGridChartStackedAreaDiagramDisplayText , 'Stacked Area-диаграмма' );
+
+  cxSetResourceString(@scxGridChartCustomizationFormSeriesPageCaption , 'Серия' );
+  cxSetResourceString(@scxGridChartCustomizationFormSortBySeries , 'Сортировать:' );
+  cxSetResourceString(@scxGridChartCustomizationFormNoSortedSeries , '<нет серий>' );
+  cxSetResourceString(@scxGridChartCustomizationFormDataGroupsPageCaption , 'Группа данных' );
+  cxSetResourceString(@scxGridChartCustomizationFormOptionsPageCaption , 'Опции' );
+
+  cxSetResourceString(@scxGridChartLegend , 'Легенда' );
+  cxSetResourceString(@scxGridChartLegendKeyBorder , 'Key Border' );
+  cxSetResourceString(@scxGridChartPosition , 'Позиция' );
+  cxSetResourceString(@scxGridChartPositionDefault , 'По умолчанию' );
+  cxSetResourceString(@scxGridChartPositionNone , 'Нет' );
+  cxSetResourceString(@scxGridChartPositionLeft , 'Слева' );
+  cxSetResourceString(@scxGridChartPositionTop , 'Сверху' );
+  cxSetResourceString(@scxGridChartPositionRight , 'Справа' );
+  cxSetResourceString(@scxGridChartPositionBottom , 'Внизу' );
+  cxSetResourceString(@scxGridChartAlignment , 'Расположение' );
+  cxSetResourceString(@scxGridChartAlignmentDefault , 'По умолчанию' );
+  cxSetResourceString(@scxGridChartAlignmentStart , 'Начало' );
+  cxSetResourceString(@scxGridChartAlignmentCenter , 'Центр' );
+  cxSetResourceString(@scxGridChartAlignmentEnd , 'Конец' );
+  cxSetResourceString(@scxGridChartOrientation , 'Ориентация' );
+  cxSetResourceString(@scxGridChartOrientationDefault , 'По умолчанию' );
+  cxSetResourceString(@scxGridChartOrientationHorizontal , 'Горизонтальный' );
+  cxSetResourceString(@scxGridChartOrientationVertical , 'Вертикальный' );
+  cxSetResourceString(@scxGridChartBorder , 'Край' );
+  cxSetResourceString(@scxGridChartTitle , 'Заголовок' );
+  cxSetResourceString(@scxGridChartToolBox , 'ToolBox' );
+  cxSetResourceString(@scxGridChartDiagramSelector , 'Выбор диаграммы' );
+  cxSetResourceString(@scxGridChartOther , 'Другой' );
+  cxSetResourceString(@scxGridChartValueHints , 'Подсказки значений' );
+
+  cxSetResourceString( @scxGridLayoutViewCustomizeFormOk, 'OK' );
+  cxSetResourceString( @scxGridLayoutViewCustomizeFormCancel, 'Отмена' );
+  cxSetResourceString( @scxGridLayoutViewCustomizeFormApply, 'Применить' );
+  cxSetResourceString( @scxGridLayoutViewCustomizeWarningDialogCaption, 'Внимание' );
+  cxSetResourceString( @scxGridLayoutViewCustomizeWarningDialogMessage, 'Layout изменено. Вы хотите сохранить изменения?' );
+  cxSetResourceString( @scxGridLayoutViewCustomizeLayoutButtonCaption, 'Редактор Layout' );
+  cxSetResourceString( @scxGridLayoutViewCustomizeFormTemplateCard, 'Карта шаблона' );
+  cxSetResourceString( @scxGridLayoutViewCustomizeFormViewLayout, 'Показать Layout' );
+  cxSetResourceString(@scxGridLayoutViewRecordCaptionDefaultMask, 'Запись: [RecordIndex]/[RecordCount]' );
+
+  cxSetResourceString(@scxGridLockedStateImageText, 'Пожалуйста, ждите...' );
+
+  cxSetResourceString(@scxGridInplaceEditFormButtonCancel, 'Отмена' );
+  cxSetResourceString(@scxGridInplaceEditFormButtonClose, 'Close' );
+  cxSetResourceString(@scxGridInplaceEditFormButtonUpdate, 'Обновить' );
+  cxSetResourceString(@scxGridInplaceEditFormSaveChangesQuery, 'Данные были изменены. Вы хотите сохранить изменения?' );
+end;
+
+procedure InitializeUnit_cxGridPopupMenuConsts;
+begin
+  cxSetResourceString(@cxSGridNone , 'Нет' );
+
+  // Header popup menu item captions
+
+  cxSetResourceString(@cxSGridSortColumnAsc , 'Восходящая сортировка' );
+  cxSetResourceString(@cxSGridSortColumnDesc , 'Нисходящая сортировка' );
+  cxSetResourceString(@cxSGridClearSorting , 'Очистить сортировку' );
+  cxSetResourceString(@cxSGridGroupByThisField , 'Группировать по этому полю' );
+  cxSetResourceString(@cxSGridRemoveThisGroupItem , 'Удалить из группировки' );
+  cxSetResourceString(@cxSGridGroupByBox , 'Поле группировки' );
+  cxSetResourceString(@cxSGridAlignmentSubMenu , 'Расположение' );
+  cxSetResourceString(@cxSGridAlignLeft , 'Расположить слева' );
+  cxSetResourceString(@cxSGridAlignRight , 'Расположить справа' );
+  cxSetResourceString(@cxSGridAlignCenter , 'Расположить по центру' );
+  cxSetResourceString(@cxSGridRemoveColumn , 'Удалить этот столбец' );
+  cxSetResourceString(@cxSGridFieldChooser , 'Выбрать поле' );
+  cxSetResourceString(@cxSGridBestFit , 'Лучшее расположение' );
+  cxSetResourceString(@cxSGridBestFitAllColumns , 'Лучшее расположение (все столбцы)' );
+  cxSetResourceString(@cxSGridShowFooter , 'колонтитул' );
+  cxSetResourceString(@cxSGridShowGroupFooter , 'Группировка колонтитулов' );
+  cxSetResourceString(@cxSGridShowFindPanel , 'Найти панель' );
+  cxSetResourceString(@cxSGridFullExpand , 'Полностью развернуть' );
+  cxSetResourceString(@cxSGridFullCollapse , 'Полностью свернуть' );
+  cxSetResourceString(@cxSGridClearGrouping , 'Очистить группировку' );
+  cxSetResourceString(@cxSGridHideGroupByBox , 'Скрыть поле группировки' );
+
+  // Footer popup menu item captions
+
+  cxSetResourceString(@cxSGridNoneMenuItem , 'Нет' );
+  cxSetResourceString(@cxSGridSumMenuItem , 'Сумма' );
+  cxSetResourceString(@cxSGridMinMenuItem , 'Мин' );
+  cxSetResourceString(@cxSGridMaxMenuItem , 'Макс' );
+  cxSetResourceString(@cxSGridCountMenuItem , 'Кол-во' );
+  cxSetResourceString(@cxSGridAvgMenuItem , 'Среднее' );
+
+  // Group row popup menu item captions
+
+  cxSetResourceString(@cxSGridSortByGroupValues, 'Соритировать по значению группировки' );
+  cxSetResourceString(@cxSGridSortBySummaryCaption, 'Сортировать по сумме группировки:' );
+  cxSetResourceString(@cxSGridSortBySummary, '%s для %s' );
+end;
+
+procedure InitializeUnit_dxBarStrs;
+begin
+{  dxSBAR_LOOKUPDIALOGCAPTION = 'Select value';
+  dxSBAR_LOOKUPDIALOGOK = 'OK';
+  dxSBAR_LOOKUPDIALOGCANCEL = 'Cancel';
+
+  dxSBAR_DIALOGOK = 'OK';
+  dxSBAR_DIALOGCANCEL = 'Cancel';
+  dxSBAR_COLOR_STR_0 = 'Black';
+  dxSBAR_COLOR_STR_1 = 'Maroon';
+  dxSBAR_COLOR_STR_2 = 'Green';
+  dxSBAR_COLOR_STR_3 = 'Olive';
+  dxSBAR_COLOR_STR_4 = 'Navy';
+  dxSBAR_COLOR_STR_5 = 'Purple';
+  dxSBAR_COLOR_STR_6 = 'Teal';
+  dxSBAR_COLOR_STR_7 = 'Gray';
+  dxSBAR_COLOR_STR_8 = 'Silver';
+  dxSBAR_COLOR_STR_9 = 'Red';
+  dxSBAR_COLOR_STR_10 = 'Lime';
+  dxSBAR_COLOR_STR_11 = 'Yellow';
+  dxSBAR_COLOR_STR_12 = 'Blue';
+  dxSBAR_COLOR_STR_13 = 'Fuchsia';
+  dxSBAR_COLOR_STR_14 = 'Aqua';
+  dxSBAR_COLOR_STR_15 = 'White';
+  dxSBAR_COLORAUTOTEXT = '(automatic)';
+  dxSBAR_COLORCUSTOMTEXT = '(custom)';
+  dxSBAR_DATETODAY = 'Today';
+  dxSBAR_DATECLEAR = 'Clear';
+  dxSBAR_DATEDIALOGCAPTION = 'Select the date';
+  dxSBAR_TREEVIEWDIALOGCAPTION = 'Select item';
+  dxSBAR_IMAGEDIALOGCAPTION = 'Select item';
+  dxSBAR_IMAGEINDEX = 'Image Index';
+  dxSBAR_IMAGETEXT = 'Text';
+  dxSBAR_PLACEFORCONTROL = 'The place for the ';
+  dxSBAR_CANTASSIGNCONTROL = 'You cannot assign the same control to more than one TdxBarControlContainerItem';
+  dxSBAR_CXEDITVALUEDIALOGCAPTION = 'Enter value';
+
+  dxSBAR_WANTTORESETTOOLBAR = 'Are you sure you want to reset the changes made to the ''%s'' toolbar?';
+  dxSBAR_WANTTORESETUSAGEDATA = 'This will delete the record of the commands you''ve used in this application and restore the default set of visible commands to the menus and toolbars. It will not undo any explicit customizations.   Are you sure you want to proceed?';
+  dxSBAR_BARMANAGERMORETHANONE  = 'A control should contain only a single TdxBarManager';
+  dxSBAR_BARMANAGERBADOWNER = 'TdxBarManager should have TWinControl as its Owner';
+  dxSBAR_NOBARMANAGERS = 'There are no TdxBarManagers available';
+  dxSBAR_WANTTODELETETOOLBAR = 'Are you sure you want to delete the ''%s'' toolbar?';
+  dxSBAR_WANTTODELETETOOLBARS = 'Are you sure you want to delete selected toolbars?';
+  dxSBAR_WANTTODELETECATEGORY = 'Are you sure you want to delete the ''%s'' category?';
+  dxSBAR_WANTTOCLEARCOMMANDS = 'Are you sure you want to delete all commands in the ''%s'' category?';
+  dxSBAR_RECURSIVEMENUS = 'You cannot create recursive menus';
+  dxSBAR_COMMANDNAMECANNOTBEBLANK = 'A command name cannot be blank. Please enter a name.';
+  dxSBAR_TOOLBAREXISTS = 'A toolbar named ''%s'' already exists. Type another name.';
+  dxSBAR_RECURSIVEGROUPS = 'You cannot create recursive groups';
+  dxSBAR_WANTTODELETECOMPLEXITEM = 'One of the selected objects is an item which has several links. Are you sure you want to delete these links?';
+  dxSBAR_CANTPLACEQUICKACCESSGROUPBUTTON = 'You can place TdxRibbonQuickAccessGroupButton only on TdxRibbonQuickAccessToolbar';
+  dxSBAR_QUICKACCESSGROUPBUTTONTOOLBARNOTDOCKEDINRIBBON = 'Quick Access Group Button''s Toolbar is not docked in the Ribbon';
+  dxSBAR_QUICKACCESSALREADYHASGROUPBUTTON = 'The Quick Access Toolbar already contains GroupButton with the same toolbar';
+  dxSBAR_CANTPLACESEPARATOR = 'A separator item cannot be placed on the specified toolbar';
+  dxSBAR_CANTPLACERIBBONGALLERY = 'You can place TdxRibbonGalleryItem into a submenu or Ribbon control';
+  dxSBAR_CANTPLACESKINCHOOSERGALLERY = 'You can place TdxSkinChooserGalleryItem into a submenu or Ribbon control';
+
+  dxSBAR_CANTMERGEBARMANAGER = 'You cannot merge with the specified bar manager';
+  dxSBAR_CANTMERGETOOLBAR = 'You cannot merge with the specified toolbar';
+  dxSBAR_CANTMERGEWITHMERGEDTOOLBAR = 'You cannot merge a toolbar with a toolbar that is already merged';
+  dxSBAR_CANTUNMERGETOOLBAR = 'You cannot unmerge the specified toolbar';
+  dxSBAR_ONEOFTOOLBARSALREADYMERGED = 'One of the toolbars of the specified bar manager is already merged';
+  dxSBAR_ONEOFTOOLBARSHASMERGEDTOOLBARS = 'One of the toolbars of the specified bar manager has merged toolbars';
+  dxSBAR_TOOLBARHASMERGEDTOOLBARS = 'The ''%s'' toolbar has merged toolbars';
+  dxSBAR_TOOLBARSALREADYMERGED = 'The ''%s'' toolbar is already merged with the ''%s'' toolbar';
+  dxSBAR_TOOLBARSARENOTMERGED = 'The ''%s'' toolbar is not merged with the ''%s'' toolbar';
+
+  dxSBAR_RIBBONCANTMERGE = 'You cannot merge with the specified Ribbon';
+  dxSBAR_RIBBONCANTMERGETAB = 'You cannot merge with the specified Ribbon tab';
+  dxSBAR_RIBBONCANTMERGEWITHOUTBARMANAGER = 'You cannot merge Ribbons with no bar managers specified';
+  dxSBAR_RIBBONCANTUNMERGE = 'You cannot unmerge the specified Ribbon';
+  dxSBAR_RIBBONCANTUNMERGETAB = 'You cannot unmerge the specified Ribbon tab';
+  dxSBAR_RIBBONONEOFTABGROUPSALREADYMERGED = 'One of the Ribbon tab groups of the specified Ribbon tab is already merged';
+  dxSBAR_RIBBONSARENOTMERGED = 'The ''%s'' Ribbon is not merged with the ''%s'' Ribbon';
+  dxSBAR_RIBBONTABSARENOTMERGED = 'The ''%s'' Ribbon tab is not merged with the ''%s'' Ribbon tab';
+
+  dxSBAR_RIBBON_MINIMIZERIBBON = 'Collapse the Ribbon';
+  dxSBAR_RIBBON_PINRIBBON = 'Pin the Ribbon';
+  dxSBAR_RIBBON_RESTORERIBBON = 'Expand the Ribbon';
+  dxSBAR_RIBBONFORM_CLOSE = 'Close';
+  dxSBAR_RIBBONFORM_DISPLAYOPTIONS = 'Ribbon Display Options';
+  dxSBAR_RIBBONFORM_HELP = 'Help';
+  dxSBAR_RIBBONFORM_MAXIMIZE = 'Maximize';
+  dxSBAR_RIBBONFORM_MINIMIZE = 'Minimize';
+  dxSBAR_RIBBONFORM_RESTOREDOWN = 'Restore Down';
+  dxSBAR_RIBBONFORM_RESTOREUP = 'Restore Up';
+  dxSBAR_RIBBONDISPLAYOPTIONS_AUTOHIDERIBBON_CAPTION = 'Auto-hide Ribbon';
+  dxSBAR_RIBBONDISPLAYOPTIONS_AUTOHIDERIBBON_DESCRIPTION = 'Hide the Ribbon. Click at the top of the application to show it.';
+  dxSBAR_RIBBONDISPLAYOPTIONS_SHOWTABS_CAPTION = 'Show Tabs';
+  dxSBAR_RIBBONDISPLAYOPTIONS_SHOWTABS_DESCRIPTION = 'Show Ribbon tabs only. Click a tab to show the commands.';
+  dxSBAR_RIBBONDISPLAYOPTIONS_SHOWTABSANDCOMMANDS_CAPTION = 'Show Tabs and Commands';
+  dxSBAR_RIBBONDISPLAYOPTIONS_SHOWTABSANDCOMMANDS_DESCRIPTION = 'Show Ribbon tabs and commands all the time.';
+
+  dxSBAR_DEFAULTCATEGORYNAME = 'Default';
+  // begin DesignTime section
+  dxSBAR_NEWBUTTONCAPTION = 'New Button';
+  dxSBAR_NEWITEMCAPTION = 'New Item';
+  dxSBAR_NEWRIBBONGALLERYITEMCAPTION = 'New Gallery';
+  dxSBAR_NEWSEPARATORCAPTION = 'New Separator';
+  dxSBAR_NEWSUBITEMCAPTION = 'New SubItem';
+
+  dxSBAR_CP_ADDSUBITEM = 'Add &SubItem';
+  dxSBAR_CP_ADDBUTTON = 'Add &Button';
+  dxSBAR_CP_ADDLARGEBUTTON = 'Add L&argeButton';
+  dxSBAR_CP_ADDSEPARATOR = 'Add &Separator';
+  dxSBAR_CP_ADDDXITEM = 'Add &Item';
+  dxSBAR_CP_ADDCXITEM = 'Add &cxEditItem';
+  dxSBAR_CP_ADDGROUPBUTTON = 'Add Gro&upButton';
+  dxSBAR_CP_DELETEITEM = 'Delete Item';
+  dxSBAR_CP_DELETELINK = 'Delete Link';
+  // end DesignTime section
+
+  dxSBAR_CP_RESET = '&Reset';
+  dxSBAR_CP_DELETE = '&Delete';
+  dxSBAR_CP_NAME = '&Name:';
+  dxSBAR_CP_CAPTION = '&Caption:'; // is the same as dxSBAR_CP_NAME (at design time)
+  dxSBAR_CP_BUTTONPAINTSTYLEMENU = 'Button Paint &Style';
+  dxSBAR_CP_DEFAULTSTYLE = 'Defa&ult style';
+  dxSBAR_CP_TEXTONLYALWAYS = '&Text Only (Always)';
+  dxSBAR_CP_TEXTONLYINMENUS = 'Text &Only (in Menus)';
+  dxSBAR_CP_IMAGEANDTEXT = 'Image &and Text';
+  dxSBAR_CP_BEGINAGROUP = 'Begin a &Group';
+  dxSBAR_CP_VISIBLE = '&Visible';
+  dxSBAR_CP_MOSTRECENTLYUSED = '&Most recently used';
+  // begin DesignTime section
+  dxSBAR_CP_DISTRIBUTED = 'Dis&tributed';
+  dxSBAR_CP_POSITIONMENU = '&Position';
+  dxSBAR_CP_VIEWLEVELSMENU = 'View&Levels';
+  dxSBAR_CP_ALLVIEWLEVELS = 'All';
+  dxSBAR_CP_SINGLEVIEWLEVELITEMSUFFIX = ' ONLY';
+  dxSBAR_CP_BUTTONGROUPMENU = 'ButtonG&roup';
+  dxSBAR_CP_BUTTONGROUP = 'Group';
+  dxSBAR_CP_BUTTONUNGROUP = 'Ungroup';
+  // end DesignTime section
+
+  dxSBAR_ADDEX = 'Add...';
+  dxSBAR_RENAMEEX = 'Rename...';
+  dxSBAR_DELETE = 'Delete';
+  dxSBAR_CLEAR = 'Clear';
+  dxSBAR_VISIBLE = 'Visible';
+  dxSBAR_OK = 'OK';
+  dxSBAR_CANCEL = 'Cancel';
+  dxSBAR_SUBMENUEDITOR = 'SubMenu Editor...';
+  dxSBAR_SUBMENUEDITORCAPTION = 'ExpressBars SubMenu Editor';
+  dxSBAR_INSERTEX = 'Insert...';
+
+  dxSBAR_MOVEUP = 'Move Up';
+  dxSBAR_MOVEDOWN = 'Move Down';
+  dxSBAR_POPUPMENUEDITOR = 'PopupMenu Editor...';
+  dxSBAR_TABSHEET1 = ' Toolbars ';
+  dxSBAR_TABSHEET2 = ' Commands ';
+  dxSBAR_TABSHEET3 = ' Options ';
+  dxSBAR_TOOLBARS = 'Toolb&ars:';
+  dxSBAR_TNEW = '&New...';
+  dxSBAR_TRENAME = 'R&ename...';
+  dxSBAR_TDELETE = '&Delete';
+  dxSBAR_TRESET = '&Reset...';
+  dxSBAR_CLOSE = 'Close';
+  dxSBAR_CAPTION = 'Customize';
+  dxSBAR_CATEGORIES = 'Cate&gories:';
+  dxSBAR_COMMANDS = 'Comman&ds:';
+  dxSBAR_DESCRIPTION = 'Description  ';
+
+  dxSBAR_MDIMINIMIZE = 'Minimize Window';
+  dxSBAR_MDIRESTORE = 'Restore Window';
+  dxSBAR_MDICLOSE = 'Close Window';
+  dxSBAR_CUSTOMIZE = '&Customize...';
+  dxSBAR_ADDREMOVEBUTTONS = '&Add or Remove Buttons';
+  dxSBAR_MOREBUTTONS = 'More Buttons';
+  dxSBAR_RESETTOOLBAR = '&Reset Toolbar';
+  dxSBAR_EXPAND = 'Expand (Ctrl-Down)';
+  dxSBAR_DRAGTOMAKEMENUFLOAT = 'Drag to make this menu float';
+  dxSBAR_MORECOMMANDS = '&More Commands...';
+  dxSBAR_SHOWBELOWRIBBON = '&Show Quick Access Toolbar Below the Ribbon';
+  dxSBAR_SHOWABOVERIBBON = '&Show Quick Access Toolbar Above the Ribbon';
+  dxSBAR_MINIMIZERIBBON = 'Mi&nimize the Ribbon';
+  dxSBAR_CUSTOMIZERIBBON = 'Customize the &Ribbon...';
+  dxSBAR_CUSTOMIZERIBBONQAT = '&Customize Quick Access Toolbar...';
+  dxSBAR_ADDTOQAT = '&Add to Quick Access Toolbar';
+  dxSBAR_ADDTOQATITEMNAME = '&Add %s to Quick Access Toolbar';
+  dxSBAR_REMOVEFROMQAT = '&Remove from Quick Access Toolbar';
+  dxSBAR_CUSTOMIZEQAT = 'Customize Quick Access Toolbar';
+  dxSBAR_ADDGALLERYNAME = 'Gallery';
+  dxSBAR_SHOWALLGALLERYGROUPS = 'Show all groups';
+  dxSBAR_HIDEALLGALLERYGROUPS = 'Hide all groups';
+  dxSBAR_CLEARGALLERYFILTER = 'Clear filter';
+  dxSBAR_GALLERYEMPTYFILTERCAPTION = '<empty>';
+  dxSBAR_PIN = 'Pin this item to the list';
+  dxSBAR_UNPIN = 'Unpin this item from the list';
+
+  dxSBAR_TOOLBARNEWNAME  = 'Custom ';
+  dxSBAR_CATEGORYADD  = 'Add Category';
+  dxSBAR_CATEGORYINSERT  = 'Insert Category';
+  dxSBAR_CATEGORYRENAME  = 'Rename Category';
+  dxSBAR_TOOLBARADD  = 'Add Toolbar';
+  dxSBAR_TOOLBARRENAME  = 'Rename Toolbar';
+  dxSBAR_CATEGORYNAME  = '&Category name:';
+  dxSBAR_TOOLBARNAME  = '&Toolbar name:';
+  dxSBAR_CUSTOMIZINGFORM = 'Customization Form...';
+
+  dxSBAR_MODIFY = '... modify';
+  dxSBAR_PERSMENUSANDTOOLBARS = 'Personalized Menus and Toolbars  ';
+  dxSBAR_MENUSSHOWRECENTITEMS = 'Me&nus show recently used commands first';
+  dxSBAR_SHOWFULLMENUSAFTERDELAY = 'Show f&ull menus after a short delay';
+  dxSBAR_RESETUSAGEDATA = '&Reset my usage data';
+
+  dxSBAR_OTHEROPTIONS = 'Other  ';
+  dxSBAR_LARGEICONS = '&Large icons';
+  dxSBAR_HINTOPT1 = 'Show Tool&Tips on toolbars';
+  dxSBAR_HINTOPT2 = 'Show s&hortcut keys in ToolTips';
+  dxSBAR_MENUANIMATIONS = '&Menu animations:';
+  dxSBAR_MENUANIM1 = '(None)';
+  dxSBAR_MENUANIM2 = 'Random';
+  dxSBAR_MENUANIM3 = 'Unfold';
+  dxSBAR_MENUANIM4 = 'Slide';
+  dxSBAR_MENUANIM5 = 'Fade';
+
+  dxSBAR_CANTFINDBARMANAGERFORSTATUSBAR = 'A bar manager cannot be found for the status bar';
+
+  dxSBAR_BUTTONDEFAULTACTIONDESCRIPTION = 'Press';
+
+  SBlob = '(Blob)';
+
+  dxSBAR_APPMENUOUTSIDERIBBON = 'The Application Menu cannot be displayed outside the Ribbon';
+  dxSBAR_EXTRAPANEHEADER = 'Recent Documents';
+  dxSBAR_GDIPLUSNEEDED = '%s requires the Microsoft GDI+ library to be installed';
+  dxSBAR_RIBBONMORETHANONE  = 'There should be only one %s instance on the form';
+  dxSBAR_RIBBONBADOWNER = '%s should have TCustomForm as its Owner';
+  dxSBAR_RIBBONBADPARENT = '%s should have TCustomForm as its Parent';
+  dxSBAR_RIBBONADDTAB = 'Add Tab';
+  dxSBAR_RIBBONDELETETAB = 'Delete Tab';
+  dxSBAR_RIBBONADDEMPTYGROUP = 'Add Empty Group';
+  dxSBAR_RIBBONADDGROUPWITHTOOLBAR = 'Add Group With Toolbar';
+  dxSBAR_RIBBONDELETEGROUP = 'Delete Group';
+
+  dxSBAR_ACCESSIBILITY_RIBBONNAME = 'Ribbon';
+  dxSBAR_ACCESSIBILITY_RIBBONTABCOLLECTIONNAME = 'Ribbon Tabs';
+
+  sdxRibbonCustomizationFormAddErrorMsg = 'Commands need to be added to custom groups. ' +
+    'To create a group, pick a tab in the list, then click New Group.';
+  sdxRibbonCustomizationFormAllCommands = 'All Commands';
+  sdxRibbonCustomizationFormAllTabs = 'All Tabs';
+  sdxRibbonCustomizationFormBeginGroup = '<Separator>';
+  sdxRibbonCustomizationFormCommandsNotInTheRibbon = 'Commands Not in the Ribbon';
+  sdxRibbonCustomizationFormCustomElementSuffix = ' (Custom)';
+  sdxRibbonCustomizationFormCustomGroups = 'Custom Groups';
+  sdxRibbonCustomizationFormCustomTabsAndGroups = 'Custom Tabs and Groups';
+  sdxRibbonCustomizationFormDelimiterContextTab = ' | ';
+  sdxRibbonCustomizationFormDisplayName = 'Display name';
+  sdxRibbonCustomizationFormMainTabs = 'Main Tabs';
+  sdxRibbonCustomizationFormNewContext = 'New Context';
+  sdxRibbonCustomizationFormNewGroup = 'New Group';
+  sdxRibbonCustomizationFormNewTab = 'New Tab';
+  sdxRibbonCustomizationFormRename = 'Rename';
+  sdxRibbonCustomizationFormTabSuffix = ' Tab';
+  sdxRibbonCustomizationFormToolTabs = 'Tool Tabs';
+  //Captions
+  sdxRibbonCustomizationFormCaptionAdd = '&Add';
+  sdxRibbonCustomizationFormCaptionAddNewContext = 'Add New &Context';
+  sdxRibbonCustomizationFormCaptionAddNewGroup = 'Add New &Group';
+  sdxRibbonCustomizationFormCaptionAddNewTab = 'Add New &Tab';
+  sdxRibbonCustomizationFormCaptionCancel = '&Cancel';
+  sdxRibbonCustomizationFormCaptionCommandsSource = 'C&hoose commands from:';
+  sdxRibbonCustomizationFormCaptionMoveDown = 'Move &Down';
+  sdxRibbonCustomizationFormCaptionMoveUp = 'Move &Up';
+  sdxRibbonCustomizationFormCaptionNewElement = '&Add';
+  sdxRibbonCustomizationFormCaptionOK = '&OK';
+  sdxRibbonCustomizationFormCaptionQuickAccessToolbar = 'Customize &Quick Access Toolbar:';
+  sdxRibbonCustomizationFormCaptionQuickAccessToolbarShowBelowRibbon = 'Show Quick Access Toolbar below the Ribbon';
+  sdxRibbonCustomizationFormCaptionQuickAccessToolbarTitle = 'Quick Access Toolbar Customization';
+  sdxRibbonCustomizationFormCaptionRemove = '&Remove';
+  sdxRibbonCustomizationFormCaptionRename = 'Rena&me...';
+  sdxRibbonCustomizationFormCaptionReset = 'R&eset';
+  sdxRibbonCustomizationFormCaptionResetAllCustomizations = 'Reset a&ll customizations';
+  sdxRibbonCustomizationFormCaptionResetOnlySelectedTab = 'Reset only &selected tab';
+  sdxRibbonCustomizationFormCaptionResetSelectedTab = 'Reset Ta&b';
+  sdxRibbonCustomizationFormCaptionRibbonTitle = 'Ribbon Customization';
+  sdxRibbonCustomizationFormCaptionRibbonSource = 'Customize the Ri&bbon:';
+  sdxRibbonCustomizationFormCaptionShowTab = '&Show Tab';
+
+  // sdxRibbonColorGallery
+  sdxRibbonColorGalleryAutoColor = 'Auto';
+  sdxRibbonColorGalleryMoreColors = '&More Colors...';
+  sdxRibbonColorGalleryGroupCustomColors = 'Custom Colors';
+  sdxRibbonColorGalleryGroupStandardColors = 'Standard Colors';
+  sdxRibbonColorGalleryGroupThemeColors = 'Theme Colors';  }
+
   cxSetResourceString(@dxSBAR_SHOWBELOWRIBBON, 'Показывать тулбар быстрого доступа ниже бара' );
   cxSetResourceString(@dxSBAR_SHOWABOVERIBBON, 'Показывать тулбар быстрого доступа выше бара' );
   cxSetResourceString(@dxSBAR_MINIMIZERIBBON, 'Свернуть бар' );
@@ -77,10 +488,10 @@ begin
   cxSetResourceString(@dxSBAR_CAPTION, 'Настроить' );
   cxSetResourceString(@dxSBAR_CLOSE, 'Закрыть' );
   cxSetResourceString(@dxSBAR_WANTTODELETETOOLBAR, 'Вы уверены, что хотите удалить %s тулбар?' );
-  // ...
+end;
 
-  //------------------------------------------------------------------------------------------------
-  // cxFilterControlStrs
+procedure InitializeUnit_cxFilterControlStrs;
+begin
   cxSetResourceString(@cxSFilterBoolOperatorAnd , 'И' );
   cxSetResourceString(@cxSFilterBoolOperatorOr , 'ИЛИ' );
   cxSetResourceString(@cxSFilterBoolOperatorNotAnd , 'И НЕ' );
@@ -109,24 +520,24 @@ begin
   cxSetResourceString(@cxSFilterDialogOperationOr , 'ИЛИ' );
   cxSetResourceString(@cxSFilterDialogRows , 'Показать записи, в которых:' );
 
-{  // FilterControlDialog
-  cxSFilterControlDialogCaption = 'Filter builder';
-  cxSFilterControlDialogNewFile = 'untitled.flt';
-  cxSFilterControlDialogOpenDialogCaption = 'Open an existing filter';
-  cxSFilterControlDialogSaveDialogCaption = 'Save the active filter to file';
-  cxSFilterControlDialogActionSaveCaption = '&Save As...';
-  cxSFilterControlDialogActionSaveHint = 'Save As|Saves the active filter with a new name';
-  cxSFilterControlDialogActionOpenCaption = '&Open...';
-  cxSFilterControlDialogActionOpenHint = 'Open|Opens an existing filter';
-  cxSFilterControlDialogActionApplyCaption = '&Apply';
-  cxSFilterControlDialogActionOkCaption = 'OK';
-  cxSFilterControlDialogActionCancelCaption = 'Cancel';
-  cxSFilterControlDialogFileExt = 'flt';
-  cxSFilterControlDialogFileFilter = 'Filters (*.flt)|*.flt';
-  }
+  // FilterControlDialog
+  cxSetResourceString(@cxSFilterControlDialogCaption , 'Генератор фильтра' );
+  cxSetResourceString(@cxSFilterControlDialogNewFile , 'безымянный.flt' );
+  cxSetResourceString(@cxSFilterControlDialogOpenDialogCaption , 'Открыть существующий фильтр' );
+  cxSetResourceString(@cxSFilterControlDialogSaveDialogCaption , 'Сохранить активный фильтр в файл' );
+  cxSetResourceString(@cxSFilterControlDialogActionSaveCaption , '&Сохранить как...' );
+  cxSetResourceString(@cxSFilterControlDialogActionSaveHint , 'Сохранить как|Сохранить активный фильтр с новым именем' );
+  cxSetResourceString(@cxSFilterControlDialogActionOpenCaption , '&Открыть...' );
+  cxSetResourceString(@cxSFilterControlDialogActionOpenHint , 'Открыть|Открыть существующий фильтр' );
+  cxSetResourceString(@cxSFilterControlDialogActionApplyCaption , '&Применить' );
+  cxSetResourceString(@cxSFilterControlDialogActionOkCaption , 'OK' );
+  cxSetResourceString(@cxSFilterControlDialogActionCancelCaption , 'Отмена' );
+  cxSetResourceString(@cxSFilterControlDialogFileExt , 'flt' );
+  cxSetResourceString(@cxSFilterControlDialogFileFilter , 'Фильтры (*.flt)|*.flt' );
+end;
 
-  //------------------------------------------------------------------------------------------------
-  // cxFilterConsts
+procedure InitializeUnit_cxFilterConsts;
+begin
   cxSetResourceString(@cxSFilterOperatorEqual , 'точно соответствует' );
   cxSetResourceString(@cxSFilterOperatorNotEqual , 'не соответствует' );
   cxSetResourceString(@cxSFilterOperatorLess , 'меньше чем' );
@@ -185,9 +596,27 @@ begin
   cxSetResourceString(@cxSFilterBoxCustomCaption , '(Настройка...)' );
   cxSetResourceString(@cxSFilterBoxBlanksCaption , '(Пустые)' );
   cxSetResourceString(@cxSFilterBoxNonBlanksCaption , '(Не пустые)' );
+end;
 
-  //------------------------------------------------------------------------------------------------
-  // Editors
+procedure InitializeUnit_cxDataConsts;
+begin
+  cxSetResourceString(@cxSDataReadError , 'Ошибка потока чтения' );
+  cxSetResourceString(@cxSDataWriteError , 'Ошибка потока записи' );
+  cxSetResourceString(@cxSDataItemExistError , 'Пункт уже существует' );
+  cxSetResourceString(@cxSDataRecordIndexError , 'RecordIndex out of range' );
+  cxSetResourceString(@cxSDataItemIndexError , 'ItemIndex out of range' );
+  cxSetResourceString(@cxSDataProviderModeError , 'Эта операция не поддерживается в provider mode' );
+  cxSetResourceString(@cxSDataInvalidStreamFormat , 'Неверный формат потока' );
+  cxSetResourceString(@cxSDataRowIndexError , 'RowIndex out of range' );
+  cxSetResourceString(@cxSDataCustomDataSourceInvalidCompare , 'GetInfoForCompare not implemented' );
+  // DB
+  cxSetResourceString(@cxSDBDetailFilterControllerNotFound , 'DetailFilterController не найден' );
+  cxSetResourceString(@cxSDBNotInGridMode , 'DataController не в GridMode' );
+  cxSetResourceString(@cxSDBKeyFieldNotFound , 'Ключевое поле не найдено' );
+end;
+
+procedure InitializeUnit_cxEditConsts;
+begin
   cxSetResourceString(@cxSEditButtonCancel, 'Отмена' );
   cxSetResourceString(@cxSEditButtonOK , 'OK' );
   cxSetResourceString(@cxSEditDateConvertError , 'Невозможно сконвертировать в формат даты' );
@@ -383,9 +812,10 @@ begin
   // Sparkline
   sdxSparklineNoData = '<No data>';
             }
+end;
 
-  //------------------------------------------------------------------------------------------------
-  // cxSchedulerStrs
+procedure InitializeUnit_cxSchedulerStrs;
+begin
   cxSetResourceString(@scxUntitledEvent , 'Безымянное событие' );
 
   cxSetResourceString(@scxVertical   , 'Вертикальный' );
@@ -788,6 +1218,104 @@ begin
   scxOutlookFormatMismatch                = 'Holiday format mismatch';
   scxHolidayDisplayFormat                 = '%s (%s)';
   scxAddedHolidayDisplayFormat            = '%s - %s (%s)';  }
+end;
+
+procedure InitializeUnit_cxExtEditConsts;
+begin
+{  scxSEditRepositoryColorComboBoxItem = 'ColorComboBox |Represents a editor with color functionality';
+  scxSEditRepositoryColorEditItem = 'ColorEdit|Represents an edit control with a dropdown color gallery';
+  scxSEditRepositoryFontNameComboBoxItem = 'FontNameComboBox |Represents a editor with font functionality';
+  scxSEditRepositoryLabelItem = 'Label|Represents a Label';
+  scxSEditRepositoryProgressBarItem = 'ProgressBar|Represents a ProgressBar';
+  scxSEditRepositoryTrackBarItem = 'TrackBar|Represents a TrackBar';
+  scxSEditRepositorySpinButtonItem = 'SpinButton|Represents a SpinButton';
+  scxSEditRepositoryCheckComboBox = 'CheckComboBox|Represents a CheckComboBox';
+  scxSEditRepositoryShellComboBoxItem = 'ShellComboBox|Represents a combo box with a dropdown shell tree view';
+  scxSEditRepositoryCheckGroupItem = 'CheckGroup|Represents a group of check boxes';
+  scxSEditRepositoryRatingControlItem = 'RatingControl|Represents a rating control';
+  scxUDAssociated = ' is already associated with ';
+  scxHotZoneStyleMediaPlayer9 = 'MediaPlayer9';
+  scxHotZoneStyleMediaPlayer8 = 'MediaPlayer8';
+  scxHotZoneStyleXPTaskBar = 'XPTaskBar';
+  scxHotZoneStyleSimple = 'Simple';
+  scxLoadingFonts = 'Loading ...';
+
+  cxSEditCheckGroupCaptionStateDelimiter = ': ';
+  cxSEditCheckGroupFilterColumnSeparator = '; ';
+  cxSEditCheckGroupChecked = 'Checked';
+  cxSEditCheckGroupGrayed = 'Grayed';
+  cxSEditCheckGroupUnchecked = 'Unchecked';
+
+  cxSCheckComboBoxStatesItemsPropertyDlgCaption = 'cxCheckComboBox - CheckStates editor';
+  cxSCheckGroupStatesItemsPropertyDlgCaption = 'cxCheckGroup - CheckStates editor';
+  cxSCheckComboBoxEmptySelectionText = 'None selected';
+  cxSCheckControlIncorrectItemCount = 'The number of items cannot be greater than 64, if the EditValueFormat is cvfInteger';
+
+  cxSColorComboBoxDefaultDescription = 'Color not selected';
+
+  cxSEditRichEditLibraryError = 'Cannot load a RichEdit library';
+  cxSEditRichEditLineInsertionError = 'RichEdit line insertion error';
+  cxSEditRichEditLoadFail = 'Failed to Load Stream';
+  cxSEditRichEditSaveFail = 'Failed to Save Stream';
+  cxSEditRichEditSelectionSaveFail = 'Failed to selection Save Stream';
+  cxSEditRichEditOleInterfaceFail = 'RichEdit: failed to get IRichEditOle interface';
+  cxSEditRichEditCallBackFail = 'RichEdit: failed to set callback';
+  cxSEditRichEditLinkFail = 'RichEdit: cannot link to an invalid source';
+  scxSEditRepositoryRichEditItem = 'RichEdit|RichEdit control';
+
+  cxSEditRichEditUndoCaption                 = '&Undo';
+  cxSEditRichEditRedoCaption                 = '&Redo';
+  cxSEditRichEditCutCaption                  = 'Cu&t';
+  cxSEditRichEditCopyCaption                 = '&Copy';
+  cxSEditRichEditPasteCaption                = '&Paste';
+  cxSEditRichEditDeleteCaption               = '&Delete';
+  cxSEditRichEditSelectAllCaption            = 'Select &All';    }
+end;
+
+procedure InitializeUnit_cxLibraryStrs;
+begin
+  cxSetResourceString(@scxBuiltInLookAndFeelStyles , 'Built-In вид && Стили' );
+  cxSetResourceString(@scxCantCreateRegistryKey , 'Не могу создать ключ реестра \%s' );
+  cxSetResourceString(@scxCantOpenRegistryKey   , 'Не могу открыть ключ реестра: \%s' );
+  cxSetResourceString(@scxConverterCantCreateStyleRepository , 'Не могу создать репозиторий стилей' );
+  cxSetResourceString(@scxErrorStoreObject , 'Ошибка %s объекта' );
+  cxSetResourceString(@scxLockedStateText , 'Пожалуйста ждите...' );
+
+  // date smart input consts
+  cxSetResourceString(@cxSDateToday                       , 'сегодня' );
+  cxSetResourceString(@cxSDateYesterday                   , 'вчера' );
+  cxSetResourceString(@cxSDateTomorrow                    , 'завтра' );
+  cxSetResourceString(@cxSDateSunday                      , 'Воскресенье' );
+  cxSetResourceString(@cxSDateMonday                      , 'Понедельник' );
+  cxSetResourceString(@cxSDateTuesday                     , 'Вторник' );
+  cxSetResourceString(@cxSDateWednesday                   , 'Среда' );
+  cxSetResourceString(@cxSDateThursday                    , 'Четверг' );
+  cxSetResourceString(@cxSDateFriday                      , 'Пятница' );
+  cxSetResourceString(@cxSDateSaturday                    , 'Суббота' );
+  cxSetResourceString(@cxSDateFirst                       , 'первый' );
+  cxSetResourceString(@cxSDateSecond                      , 'второй' );
+  cxSetResourceString(@cxSDateThird                       , 'третий' );
+  cxSetResourceString(@cxSDateFourth                      , 'четвертый' );
+  cxSetResourceString(@cxSDateFifth                       , 'пятый' );
+  cxSetResourceString(@cxSDateSixth                       , 'шестой' );
+  cxSetResourceString(@cxSDateSeventh                     , 'седьмой' );
+  cxSetResourceString(@cxSDateBOM                         , 'bom' );
+  cxSetResourceString(@cxSDateEOM                         , 'eom' );
+  cxSetResourceString(@cxSDateNow                         , 'сейчас' );
+end;
+
+procedure InitializeLocale;
+begin
+  InitializeUnit_cxGridStrs;
+  InitializeUnit_cxGridPopupMenuConsts;
+  InitializeUnit_dxBarStrs;
+  InitializeUnit_cxFilterControlStrs;
+  InitializeUnit_cxFilterConsts;
+  InitializeUnit_cxDataConsts;
+  InitializeUnit_cxEditConsts;
+  InitializeUnit_cxSchedulerStrs;
+  InitializeUnit_cxExtEditConsts;
+  InitializeUnit_cxLibraryStrs;
 end;
 
 initialization
