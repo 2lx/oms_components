@@ -34,7 +34,7 @@ procedure setupStyleGridAfter( var Sender: TcxCustomGridTableView; var ARecord: 
 implementation
 
 uses uOMSComponentStyle, cxGridDBTableView, cxButtonEdit, cxDBExtLookupComboBox, cxDBLookupComboBox,
-    cxSpinEdit, cxGridTableView, cxLookupEdit, uDialogs, cxMaskEdit;
+    cxSpinEdit, cxGridTableView, cxLookupEdit, uDialogs, cxMaskEdit, cxCalendar;
 
 class procedure TOMScxGridViewCommon.GridViewInitEditHandler( Sender: TcxCustomGridTableView; AItem: TcxCustomGridTableItem;
       AEdit: TcxCustomEdit );
@@ -60,6 +60,13 @@ begin
   begin
     if Properties.ListColumns.Count = 1
       then Properties.ListOptions.ShowHeader := False;
+  end;
+
+  if AEdit is TcxCustomDateEdit then
+  with AEdit as TcxCustomDateEdit do
+  begin
+    Properties.DisplayFormat := 'dd.mm.yy';
+    Properties.EditFormat := 'dd.mm.yy';
   end;
 end;
 

@@ -2,7 +2,7 @@ unit uOMScxGridDBTableView;
 
 interface
 
-uses Classes, cxGridDBTableView, cxGridCustomTableView, cxEdit, cxStyles, cxFilter, uOMScxGridViewCommon;
+uses Classes, cxGridDBTableView, cxGridCustomTableView, cxEdit, cxStyles, cxFilter, uOMScxGridViewCommon, XMLDoc;
 
 type
   TOMScxGridDBTableView = class(TcxGridDBTableView)
@@ -29,6 +29,7 @@ type
 
     procedure setSelectionType( const gst : TGridSelectionType );
     procedure processSelectedRecords( func: TPFuncGUIDBoolean; const colGuidIndex: Integer );
+    function getXMLValues( const colGuidIndex: Integer ) : String;
 
     procedure setFilter( AValue: Variant; const opKind: TcxFilterOperatorKind;
         const indexes: array of Integer; const rootOpKind: tcxFilterBoolOperatorKind = fboOR );
@@ -38,13 +39,13 @@ implementation
 
 uses uOMSComponentStyle, Windows, Graphics, cxGraphics, cxDBExtLookupComboBox,
   cxDBLookupComboBox, cxSpinEdit, cxGridTableView, uDMComponents, cxNavigator, uDataExport, cxGrid,
-  uDialogs, Controls, SysUtils, cxControls;
+  uDialogs, Controls, SysUtils, cxControls, cxCalendar;
 
 constructor TOMScxGridDBTableView.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
 
-  Styles.FilterRowInfoText := cxStyleContentDefaultBold;
+//  Styles.FilterRowInfoText := styleContentDefaultBold;
   EnableHighlight := True;
 
   OnInitEdit := TOMScxGridViewCommon.GridViewInitEditHandler;
@@ -53,8 +54,19 @@ end;
 procedure TOMScxGridDBTableView.Loaded;
 var
   nbtn : TcxNavigatorCustomButton;
+  i : Integer;
 begin
   inherited;
+
+  for i := 0 to ColumnCount - 1 do
+  begin
+    if (Columns[ i ].Properties is TcxCustomDateEditProperties) then
+    with Columns[ i ].Properties as TcxCustomDateEditProperties do
+    begin
+      DisplayFormat := 'dd.mm.yy';
+      EditFormat := 'dd.mm.yy';
+    end;
+  end;
 
   //final settings
   DataController.Filter.PercentWildcard := '*';
@@ -248,6 +260,39 @@ begin
 
   finally
     DataController.DataSet.EnableControls;
+  end;
+end;
+
+function TOMScxGridDBTableView.getXMLValues( const colGuidIndex: Integer ) : String;
+var
+  xml: TXMLDocument;
+  i : Integer;
+begin
+  Result := '';
+
+  if Controller.SelectedRecordCount <= 0 then begin
+    ShowWarning( 'Ни одной записи не выделено.' );
+    Exit;
+  end;
+
+  try
+    xml := TXMLDocument.Create( Self );
+    xml.Active := True;
+
+    DataController.DataSet.DisableControls;
+
+    with xml.AddChild( 'Core' ) do
+    begin
+      for i := 0 to Controller.SelectedRecordCount - 1 do
+        with AddChild( 'Node' ) do
+          Attributes[ 'Value' ] := Controller.SelectedRecords[ i ].Values[ colGuidIndex ];
+
+      Result := XML;
+    end;
+
+  finally
+    DataController.DataSet.EnableControls;
+    xml.Free;
   end;
 end;
 

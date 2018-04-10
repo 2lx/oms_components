@@ -18,7 +18,7 @@ type
 
 implementation
 
-uses uDialogs, cxDBLookupComboBox, cxDropDownEdit, uOMSStyle, cxEdit, cxLookupEdit;
+uses uDialogs, cxDBLookupComboBox, cxDropDownEdit, uOMSStyle, cxEdit, cxLookupEdit, cxCalendar;
 
 constructor TOMScxBarEditItem.Create(AOwner: TComponent);
 begin
@@ -54,6 +54,13 @@ begin
 
     if ListColumns.Count = 1
       then ListOptions.ShowHeader := False;
+  end;
+
+  if Properties is TcxCustomDateEditProperties then
+  with Properties as TcxCustomDateEditProperties do
+  begin
+    DisplayFormat := 'dd.mm.yy';
+    EditFormat := 'dd.mm.yy';
   end;
 end;
 
