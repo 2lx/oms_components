@@ -58,13 +58,17 @@ var
 begin
   inherited;
 
+  // TODO: незначительно замедляет выполнение
   for i := 0 to ColumnCount - 1 do
   begin
     if (Columns[ i ].Properties is TcxCustomDateEditProperties) then
     with Columns[ i ].Properties as TcxCustomDateEditProperties do
     begin
-      DisplayFormat := 'dd.mm.yy';
-      EditFormat := 'dd.mm.yy';
+      if DisplayFormat = 'dd.mm.yyyy' then
+      begin
+        DisplayFormat := 'dd.mm.yy';
+        EditFormat := 'dd.mm.yy';
+      end;
     end;
   end;
 
