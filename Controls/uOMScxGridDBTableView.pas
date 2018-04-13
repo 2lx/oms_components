@@ -64,11 +64,13 @@ begin
     if (Columns[ i ].Properties is TcxCustomDateEditProperties) then
     with Columns[ i ].Properties as TcxCustomDateEditProperties do
     begin
-      if DisplayFormat = 'dd.mm.yyyy' then
+      if (DisplayFormat = 'dd.mm.yyyy') OR (DisplayFormat = '') then
       begin
         DisplayFormat := 'dd.mm.yy';
         EditFormat := 'dd.mm.yy';
       end;
+
+      Alignment.Horz := taCenter;
     end;
   end;
 
