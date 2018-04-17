@@ -71,7 +71,11 @@ end;
 procedure TDMOMSComponents.pmiEnableHighlightClick(Sender: TObject);
 begin
   if (PopupMenuGridViewSettings.PopupComponent is TOMScxGridDBTableView)
-    then (PopupMenuGridViewSettings.PopupComponent as TOMScxGridDBTableView).EnableHighlight := (Sender as TMenuItem).Checked;
+    then with (PopupMenuGridViewSettings.PopupComponent as TOMScxGridDBTableView) do
+  begin
+    EnableHighlightEvenCursor := (Sender as TMenuItem).Checked;
+    EnableHighlightEditable := (Sender as TMenuItem).Checked;
+  end;
 end;
 
 procedure TDMOMSComponents.pmiSelectionType1CellClick(Sender: TObject);

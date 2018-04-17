@@ -10,20 +10,23 @@ type
     FCurrentSelectionType : TGridSelectionType;
     FUserNavigatorOnButtonHandler: TProcNavigatorOnButtonClick;
     FUserContentStyleHandler: TProcContentStyle;
-    FEnableHighlight : Boolean;
+    FEnableHighlightEvenCursor : Boolean;
+    FEnableHighlightEditable : Boolean;
 
     procedure GetContentStyleHandler( Sender: TcxCustomGridTableView; ARecord: TcxCustomGridRecord;
       AItem: TcxCustomGridTableItem; var AStyle: TcxStyle );
     procedure NavigatorOnButtonClickHandler( Sender: TObject; AButtonIndex: Integer; var ADone: Boolean );
 
-    procedure setEnableHighlight(const AValue: Boolean);
+    procedure setEnableHighlightEven(const AValue: Boolean);
   protected
     procedure Loaded; override;
 
   published
   public
+
     property CurrentSelectionType : TGridSelectionType read FCurrentSelectionType default gstNone;
-    property EnableHighlight : Boolean read FEnableHighlight write setEnableHighlight;
+    property EnableHighlightEvenCursor : Boolean read FEnableHighlightEvenCursor write setEnableHighlightEven;
+    property EnableHighlightEditable : Boolean read FEnableHighlightEditable write FEnableHighlightEditable;
 
     constructor Create(AOwner: TComponent); override;
 
@@ -46,7 +49,8 @@ begin
   inherited Create(AOwner);
 
 //  Styles.FilterRowInfoText := styleContentDefaultBold;
-  EnableHighlight := True;
+  EnableHighlightEvenCursor := True;
+  EnableHighlightEditable := True;
 
   OnInitEdit := TOMScxGridViewCommon.GridViewInitEditHandler;
 end;
@@ -175,7 +179,7 @@ begin
           then cxGridToExcelWithImages( 'Экранная форма', (Site.Container as TcxGrid), False );
       end;
       5 : begin // настройки таблицы
-        DMOMSComponents.pmiEnableHighlight.Checked := FEnableHighlight;
+        DMOMSComponents.pmiEnableHighlight.Checked := FEnableHighlightEvenCursor;
 
         DMOMSComponents.pmiSelectionType1Cell.Checked := FCurrentSelectionType = gstOneCellOneRow;
         DMOMSComponents.pmiSelectionTypeMultiCell.Checked := FCurrentSelectionType = gstMultiCellMultiRow;
@@ -202,19 +206,19 @@ procedure TOMScxGridDBTableView.GetContentStyleHandler( Sender: TcxCustomGridTab
 begin
   if checkInvalidStyle(ARecord, AItem) then Exit;
 
-  if FEnableHighlight
+  if FEnableHighlightEvenCursor
     then setupStyleGridBefore(Sender, ARecord, AItem, AStyle);
 
   if Assigned(FUserContentStyleHandler)
     then FUserContentStyleHandler(Sender, ARecord, AItem, AStyle);
 
-  if FEnableHighlight
+  if FEnableHighlightEditable
     then setupStyleGridAfter(Sender, ARecord, AItem, AStyle);
 end;
 
-procedure TOMScxGridDBTableView.setEnableHighlight(const AValue: Boolean);
+procedure TOMScxGridDBTableView.setEnableHighlightEven(const AValue: Boolean);
 begin
-  FEnableHighlight := AValue;
+  FEnableHighlightEvenCursor := AValue;
 
   if AValue then
   begin
