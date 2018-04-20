@@ -34,6 +34,7 @@ const
 
 type
   TMDIChildType = ( mdictUnique, mdictMultiple );
+  TPFuncExcelReturn = reference to function : Variant;
 
   TOMSForm = class abstract( TForm )
   private
@@ -63,6 +64,8 @@ type
 
     function CheckAcceptData: WideString;
     function CheckData: WideString;
+
+    procedure ExportData( procExcel: TPFuncExcelReturn );
 
     procedure Resize; override;
 
@@ -204,6 +207,33 @@ begin
   PostMessage(Self.Handle, WM_MDIFORM_AFTER_SHOW, 0, 0);
   if (Owner is TWinControl)
     then PostMessage((Owner as TWinControl).Handle, WM_MDIFORM_AFTER_SHOW, 0, 0);
+end;
+
+procedure TOMSForm.ExportData( procExcel: TPFuncExcelReturn );
+var
+  ExcelApp : Variant;
+  success : Boolean;
+begin
+  frmMain.LockProgram;
+  success := False;
+
+  try
+    if Assigned( procExcel )
+      then ExcelApp := procExcel;
+
+    success := True;
+  finally
+    if not success
+      then ShowError( 'Во время генерации отчета произошли ошибки!' );
+
+    if not VarIsNull( ExcelApp ) then
+    begin
+      ExcelApp.Application.EnableEvents := True;
+      ExcelApp.Visible := True;
+    end;
+
+    frmMain.UnlockProgram;
+  end;
 end;
 
 procedure TOMSForm.OnFormAfterShow(var Msg: TMessage);
