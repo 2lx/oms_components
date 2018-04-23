@@ -2,8 +2,7 @@ unit uExcelHandle;
 
 interface
 
-uses System.Win.ComObj, uStrToFloatLocal, SysUtils, Variants, Types, ActiveX,
-  Windows, Data.DB, System.Classes, JPEG, Data.Win.ADODB, UnitFileRoutines, Graphics;
+uses System.Win.ComObj, Variants, Types, Data.DB, System.Classes, Data.Win.ADODB, Graphics;
 
 const
   clOMSReportGray     = TColor( $CCCCCC );
@@ -89,12 +88,13 @@ function ExcelInsertImageFromFile( FExcel : Variant; fileName : WideString; imgW
 function ExcelInsertImageFromBlob( FExcel : Variant; blobField: TBlobField; showError : Boolean = True ): Boolean;
 function ExcelInsertImageFromBlobToCell( FExcel : Variant; X1, Y1: Integer; blobField: TBlobField; showError : Boolean = True ): Boolean;
 
-function ExcelInsertImageFromBitmap( FExcel : Variant; bmp: TBitmap; showError : Boolean = True ): Boolean;
-function ExcelInsertImageFromBitmapToCell( FExcel : Variant; X1, Y1: Integer; bmp: TBitmap; showError : Boolean = True ): Boolean;
+function ExcelInsertImageFromBitmap( FExcel : Variant; bmp: Graphics.TBitmap; showError : Boolean = True ): Boolean;
+function ExcelInsertImageFromBitmapToCell( FExcel : Variant; X1, Y1: Integer; bmp: Graphics.TBitmap; showError : Boolean = True ): Boolean;
 
 function ExcelValidFormatString( const strOld : String ): String;
 function ExcelGetColumnSymbol( const Y : Integer ): String;
 function ExcelGetFormulaSumString( const X1, Y1, X2, Y2 : Integer ): String;
+function ExcelGetFormulaMaxString( const X1, Y1, X2, Y2 : Integer ): String;
 
 procedure WSSetupPrintPageSettings( WorkSheet : Variant; const PagesWide: Integer = 1;
     PagesTall: Integer = 11; tOrientation: Integer = 2 );
@@ -159,7 +159,7 @@ procedure WSSetupCellTextBoldPosition( WorkSheet : Variant; const Cell1R, Cell1C
 
 implementation
 
-uses uUserSettings, Forms, uOMSForm;
+uses Windows, Forms, uStrToFloatLocal, UnitFileRoutines, SysUtils, JPEG, ActiveX;
 
 procedure ExcelCloseAll( var ExcelApp : Variant );
 begin
@@ -243,6 +243,14 @@ end;
 function ExcelGetFormulaSumString( const X1, Y1, X2, Y2 : Integer ): String;
 begin
   Result := '=SUM(' + ExcelGetColumnSymbol( Y1 ) +  IntToStr( X1 ) + ':'
+      + ExcelGetColumnSymbol( Y2 ) +  IntToStr( X2 ) + ')';
+
+  Application.ProcessMessages;
+end;
+
+function ExcelGetFormulaMaxString( const X1, Y1, X2, Y2 : Integer ): String;
+begin
+  Result := '=MAX(' + ExcelGetColumnSymbol( Y1 ) +  IntToStr( X1 ) + ':'
       + ExcelGetColumnSymbol( Y2 ) +  IntToStr( X2 ) + ')';
 
   Application.ProcessMessages;
@@ -761,7 +769,7 @@ begin
   Result := ExcelInsertImageFromBlob( FExcel, blobField, showError );
 end;
 
-function ExcelInsertImageFromBitmap( FExcel : Variant; bmp: TBitmap; showError : Boolean = True ): Boolean;
+function ExcelInsertImageFromBitmap( FExcel : Variant; bmp: Graphics.TBitmap; showError : Boolean = True ): Boolean;
 var
   strTempFileName: String;
   imgWidth, imgHeight : Integer;
@@ -785,7 +793,7 @@ begin
     then DeleteFile( PWideChar( strTempFileName ) );
 end;
 
-function ExcelInsertImageFromBitmapToCell( FExcel : Variant; X1, Y1: Integer; bmp: TBitmap; showError : Boolean = True ): Boolean;
+function ExcelInsertImageFromBitmapToCell( FExcel : Variant; X1, Y1: Integer; bmp: Graphics.TBitmap; showError : Boolean = True ): Boolean;
 begin
   FExcel.ActiveSheet.Cells[ X1, Y1 ].Select;
 

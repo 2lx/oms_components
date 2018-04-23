@@ -2,7 +2,7 @@ unit uSumInWords;
 
 interface
 
-function SumInWordsLanguage( const Sum: Real; valutaID: Integer; TransType : Integer ): WideString;
+function SumInWordsLanguage( const Sum: Real; const valutaID: Integer; const TransType : Integer ): WideString;
 
 implementation
 
@@ -260,7 +260,7 @@ begin
 end;
 
 function SumInWordsLanguage( const Sum: Real;
-    valutaID: Integer; TransType : Integer ) : WideString;
+    const valutaID: Integer; const TransType : Integer ) : WideString;
 var
   strValNames, strCentNames: WideString;
   langId : Integer;
