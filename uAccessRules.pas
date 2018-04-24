@@ -16,7 +16,7 @@ procedure ApplyAccessRules(var frm: TOMSForm);
 implementation
 
 uses uDataBase, System.TypInfo, Controls, uUtils, uDialogs, cxGrid, cxGridDBTableView, cxPC,
-  ComCtrls, SysUtils, DataModule, dxBar, cxButtons, cxBarEditItem, cxGridTableView;
+  ComCtrls, SysUtils, DataModule, dxBar, cxButtons, cxBarEditItem, cxGridTableView, cxGridDBCardView;
 
 procedure AddGridAccessRules( gridView: TOMScxGridDBTableView );
 var
@@ -170,6 +170,16 @@ begin
         end
       else if (cmpn is TcxGridTableView) then
         with cmpn as TcxGridTableView do
+        begin
+          TFinder.getParentControl(cmpn).Visible := isVisible;
+
+          OptionsData.Editing := isEditable;
+//          OptionsData.Appending := False;
+          OptionsData.Inserting := isEditable;
+          OptionsData.Deleting := isEditable;
+        end
+      else if (cmpn is TcxGridDBCardView) then
+        with cmpn as TcxGridDBCardView do
         begin
           TFinder.getParentControl(cmpn).Visible := isVisible;
 
