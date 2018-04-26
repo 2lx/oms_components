@@ -33,6 +33,7 @@
 	, uOMScxDBCurrencyEdit
 	, uOMSPageControl
 	, uOMScxPageControl
+	, uOMSScrollBox
 	, uOMScxBarEditItem
 	, uOMSdxRibbon;
 		
@@ -71,6 +72,7 @@ type
 
 	TPageControl				= class (TOMSPageControl);
 	TcxPageControl				= class (TOMScxPageControl);	
+	TScrollBox					= class (TOMSScrollBox);
 
 	TcxBarEditItem				= class (TOMScxBarEditItem);
 	TdxRibbon					= class (TOMSdxRibbon);
