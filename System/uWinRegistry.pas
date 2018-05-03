@@ -16,9 +16,9 @@ var
   rdt : TRegDataType;
 begin
   Result := DefValue;
+  Registry:= TRegistry.Create;
 
   try
-    Registry:= TRegistry.Create;
     Registry.RootKey := HKEY_CURRENT_USER;
     Registry.LazyWrite := False;
 
@@ -45,8 +45,9 @@ var
   baseType : Integer;
 begin
   Result := False;
+  Registry:= TRegistry.Create;
+
   try
-    Registry:= TRegistry.Create;
     Registry.RootKey := HKEY_CURRENT_USER;
     Registry.LazyWrite := False;
 
@@ -74,8 +75,9 @@ procedure WinRegistryDelete( const RKey, FieldName: String );
 var
   Registry : TRegistry;
 begin
+  Registry:= TRegistry.Create;
+
   try
-    Registry:= TRegistry.Create;
     Registry.RootKey := HKEY_CURRENT_USER;
     Registry.LazyWrite := False;
 

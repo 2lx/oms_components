@@ -29,7 +29,7 @@ type
     destructor Free; virtual;
 
     procedure AddCell( ctrlLabel, ctrlEdit: TControl; const cLeft, cTop, cWidth, cHeight: Integer );
-    procedure AddRow( const ctrls: TArray2OfControl );
+    procedure AddRow( const ctrls: TArray2OfControl; const cHeight : Integer = 1 );
   end;
 
   TFormLayouts = class
@@ -78,7 +78,7 @@ begin
   LayoutCells.Add(sc);
 end;
 
-procedure TLayoutGrid.AddRow( const ctrls: TArray2OfControl );
+procedure TLayoutGrid.AddRow( const ctrls: TArray2OfControl; const cHeight : Integer = 1 );
 var
   ctrlPair : TArray1OfControl;
   curCol : Integer;
@@ -90,15 +90,17 @@ begin
     case High(ctrlPair) + 1 of
       0 : Inc(curCol);
       1 : begin
-        AddCell( ctrlPair[0], Nil, curCol, FRowsCount, 1, 1 );
+        AddCell( ctrlPair[0], Nil, curCol, FRowsCount, 1, cHeight );
         Inc(curCol);
       end;
       2 : begin
-        AddCell( ctrlPair[0], ctrlPair[1], curCol, FRowsCount, 2, 1 );
+        AddCell( ctrlPair[0], ctrlPair[1], curCol, FRowsCount, 2, cHeight );
         curCol := curCol + 2;
       end;
     end;
   end;
+
+  FRowsCount := FRowsCount + cHeight - 1;
 end;
 
 //--------------------------------------------------------------------------------------------------

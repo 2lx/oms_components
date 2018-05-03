@@ -41,7 +41,9 @@ begin
 
   Properties.ImmediatePost := True;
 
-  Properties.DisplayFormat := 'dd.mm.yy';
+  if (Properties.DisplayFormat = '') OR (Properties.DisplayFormat = 'dd.mm.yyyy')
+    then Properties.DisplayFormat := 'dd.mm.yy';
+
   Properties.EditFormat := 'dd.mm.yy';
   Properties.SaveTime := False;
   Properties.ShowTime := False;
