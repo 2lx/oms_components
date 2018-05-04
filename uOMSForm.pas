@@ -395,17 +395,17 @@ begin
   if CheckAllQueries then
   begin
     if ShowQuestionYesNo( 'Данные были изменены, СОХРАНИТЬ?' ) then
-      begin
-        if ( GetInterface( IOMSFormBaseInterfaceEditor, interfEditor ) )
-          then interfEditor.PostData
-          else PostAllQueries;
-      end
-      else
-      begin
-        if ( GetInterface( IOMSFormBaseInterfaceEditor, interfEditor ) )
-          then interfEditor.CancelData
-          else CancelAllQueries;
-      end;
+    begin
+      if ( GetInterface( IOMSFormBaseInterfaceEditor, interfEditor ) )
+        then interfEditor.PostData
+        else PostAllQueries;
+    end
+    else
+    begin
+      if ( GetInterface( IOMSFormBaseInterfaceEditor, interfEditor ) )
+        then interfEditor.CancelData
+        else CancelAllQueries;
+    end;
   end;
 end;
 
