@@ -44,9 +44,13 @@ begin
   if (Properties.DisplayFormat = '') OR (Properties.DisplayFormat = 'dd.mm.yyyy')
     then Properties.DisplayFormat := 'dd.mm.yy';
 
+  if Properties.DisplayFormat = 'dd.mm.yy'
+    then begin
+      Properties.SaveTime := False;
+      Properties.ShowTime := False;
+    end;
+
   Properties.EditFormat := 'dd.mm.yy';
-  Properties.SaveTime := False;
-  Properties.ShowTime := False;
 
   if Assigned( Properties.OnPropertiesChanged )
     then FUserProcPropertiesHandler := Properties.OnPropertiesChanged;

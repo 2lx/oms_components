@@ -25,6 +25,8 @@ type
 
     FRowsCount : Integer;
   public
+    property RowCount : Integer read FRowsCount;
+
     constructor Create;
     destructor Free; virtual;
 
@@ -96,6 +98,10 @@ begin
       2 : begin
         AddCell( ctrlPair[0], ctrlPair[1], curCol, FRowsCount, 2, cHeight );
         curCol := curCol + 2;
+      end;
+      else begin
+        AddCell( ctrlPair[0], ctrlPair[1], curCol, FRowsCount, High(ctrlPair) + 1, cHeight );
+        curCol := curCol + High(ctrlPair) + 1;
       end;
     end;
   end;
