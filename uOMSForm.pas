@@ -221,16 +221,16 @@ begin
     if Assigned( procExcel )
       then ExcelApp := procExcel;
 
-    success := True;
-  finally
-    if not success
-      then ShowError( 'Во время генерации отчета произошли ошибки!' );
-
     if not VarIsNull( ExcelApp ) then
     begin
       ExcelApp.Application.EnableEvents := True;
       ExcelApp.Visible := True;
     end;
+
+    success := True;
+  finally
+    if not success
+      then ShowError( 'Во время генерации отчета произошли ошибки!' );
 
     frmMain.UnlockProgram;
   end;
