@@ -6,7 +6,7 @@ uses Classes, Forms, uOMSForm,
 
  {$I OMSComponentsInclude.inc}
 
-procedure AddGridAccessRules( gridView: TOMScxGridDBTableView );
+procedure AddGridAccessRules( gridView: TOMScxGridDBTableView; const commentBase : WideString = '' );
 
 procedure AddAccessRule( cmpn: TComponent; const arrCmpns : array of TComponent;
     const commentBase : WideString = '' );
@@ -18,7 +18,7 @@ implementation
 uses uDataBase, System.TypInfo, Controls, uUtils, uDialogs, cxGrid, cxGridDBTableView, cxPC,
   ComCtrls, SysUtils, DataModule, dxBar, cxButtons, cxBarEditItem, cxGridTableView, cxGridDBCardView;
 
-procedure AddGridAccessRules( gridView: TOMScxGridDBTableView );
+procedure AddGridAccessRules( gridView: TOMScxGridDBTableView; const commentBase : WideString = '' );
 var
   i : Integer;
 begin
@@ -26,7 +26,7 @@ begin
 
   for i := 0 to gridView.ColumnCount - 1 do
     if ( gridView.Columns[ i ].Width <> 0 ) AND ( gridView.Columns[ i ].Options.Editing )
-      then AddAccessRule( gridView.Columns[ i ], [] );
+      then AddAccessRule( gridView.Columns[ i ], [], commentBase );
 end;
 
 function AddOneAccessRule( cmpn : TComponent; const CompGUID : Variant ): Boolean;

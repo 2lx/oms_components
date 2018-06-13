@@ -70,21 +70,15 @@ type
     procedure Resize; override;
 
     procedure AddRule( cmpn: TComponent; const arrCmpns : array of TComponent;
-        const commentBase : WideString = '' );
-    procedure AddGridRules( gridView: TOMScxGridDBTableView );
+        const commentBase : WideString = '' ); overload;
+    procedure AddRule( cmpn: TComponent; const commentBase : WideString = '' ); overload;
+    procedure AddGridRules( gridView: TOMScxGridDBTableView; const commentBase : WideString = '' );
 
     // deprecated:
     function AddLayout( const Count, ColumnCount, LabelWidth: Integer;
         compPanel: TControl; const iGridHeight: Integer; const BeetweenW : Integer = 10 ) : Integer; deprecated;
     procedure AddLayoutCell( const GridID : Integer; compLbl, compEdit: TControl;
         const iLeft, iTop, iWidth, iHeight: Integer ); deprecated;
-
-    procedure AddComponentGridFullAccess( gView: TOMScxGridDBTableView;
-        const FrameName : WideString = ''; const NamePostfix : WideString = '' ); deprecated;
-    procedure AddComponentAccess( Component: TComponent;
-        const FrameName : WideString = ''; const NamePostfix : WideString = '' ); deprecated;
-    procedure AddComponentGroupAccess( ComponentLBL: TComponent; ComponentArray: array of TComponent;
-        const FrameName : WideString = ''; const NamePostfix : WideString = '' ); deprecated;
 
   public
     property MDIChildType : TMDIChildType read FMDIChildType;
@@ -438,29 +432,14 @@ begin
   AddAccessRule( cmpn, arrCmpns, commentBase );
 end;
 
-procedure TOMSForm.AddGridRules(gridView: TOMScxGridDBTableView);
+procedure TOMSForm.AddRule(cmpn: TComponent; const commentBase: WideString);
 begin
-  AddGridAccessRules( gridView );
+  AddAccessRule( cmpn, [], commentBase );
 end;
 
-// deprecated:
-procedure TOMSForm.AddComponentGridFullAccess( gView: TOMScxGridDBTableView;
-    const FrameName : WideString = ''; const NamePostfix : WideString = '' );
+procedure TOMSForm.AddGridRules( gridView: TOMScxGridDBTableView; const commentBase : WideString = '' );
 begin
-  AddGridAccessRules( gView );
-end;
-
-procedure TOMSForm.AddComponentAccess( Component: TComponent; const FrameName : WideString = '';
-  const NamePostfix : WideString = '' );
-begin
-  AddAccessRule( Component, [ ], NamePostfix );
-end;
-
-procedure TOMSForm.AddComponentGroupAccess( ComponentLBL: TComponent;
-    ComponentArray: array of TComponent; const FrameName : WideString = '';
-    const NamePostfix : WideString = '' );
-begin
-  AddAccessRule( ComponentLBL, ComponentArray, NamePostfix );
+  AddGridAccessRules( gridView, commentBase );
 end;
 
 procedure TOMSForm.InitializeRights;
