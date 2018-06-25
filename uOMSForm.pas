@@ -15,7 +15,7 @@ const
   clOMSWhite          = TColor( $FFFFFF );
   clOMSLightBlue      = TColor( $FFF0E1 );
   clOMSLightPurple    = TColor( $F3B0F3 );
-  clOMSReportGreen = TColor( $99FFCC );
+  clOMSReportGreen    = TColor( $99FFCC );
 
   clOMSLightRed       = TColor( $CFCFFF );
   clOMSBlue           = TColor( $FFB164 );
@@ -26,11 +26,11 @@ const
   clOMSTableGreen     = TColor( $7DE04E );
   clOMSDarkGray       = TColor( $505050 );
   clOMSLightGreen     = TColor( $62E689 );
-  clOMSYellow         = TColor( $00F0FF );
-  clOMSBlack          = TColor( $000000 );
-  clOMSLightPink      = TColor( $C998FF );
-  clOMSCoral          = TColor( $0E0EC8 );
-  clOMSFontBlue       = TColor( $D06600 );
+//  clOMSYellow         = TColor( $00F0FF );
+//  clOMSBlack          = TColor( $000000 );
+//  clOMSLightPink      = TColor( $C998FF );
+//  clOMSCoral          = TColor( $0E0EC8 );
+//  clOMSFontBlue       = TColor( $D06600 );
 
 type
   TMDIChildType = ( mdictUnique, mdictMultiple );
