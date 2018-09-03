@@ -66,6 +66,8 @@ type
     function CheckData: WideString;
 
     procedure ExportData( procExcel: TPFuncExcelReturn );
+    procedure LaunchReportGenerator( const folder, filename: WideString; const Parameters: array of String );
+    procedure LaunchInfoFile( const folder, filename: WideString);
 
     procedure Resize; override;
 
@@ -201,6 +203,29 @@ begin
   PostMessage(Self.Handle, WM_MDIFORM_AFTER_SHOW, 0, 0);
   if (Owner is TWinControl)
     then PostMessage((Owner as TWinControl).Handle, WM_MDIFORM_AFTER_SHOW, 0, 0);
+end;
+
+procedure TOMSForm.LaunchReportGenerator( const folder, filename: WideString; const Parameters: array of String );
+var
+  launchName, scriptName : WideString;
+  JoinedPars: WideString;
+  i : Integer;
+begin
+  JoinedPars := '';
+  for i := low(Parameters) to high(Parameters) do
+    JoinedPars := JoinedPars + Parameters[i] + ' ';
+
+  launchName := ExtractFileDir(Application.ExeName) + '\Reports\report.bat';
+  ShellExecute(Application.Handle, 'open', PWideChar(launchName),
+      PWideChar(folder + '\' + filename + ' ' + JoinedPars), nil, SW_SHOWNORMAL);
+end;
+
+procedure TOMSForm.LaunchInfoFile( const folder, filename: WideString);
+var
+  infoFileName : WideString;
+begin
+  infoFileName := ExtractFileDir(Application.ExeName) + '\Docs\' + folder + '\' + filename;
+  OpenFile( infoFileName );
 end;
 
 procedure TOMSForm.ExportData( procExcel: TPFuncExcelReturn );

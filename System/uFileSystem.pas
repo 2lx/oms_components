@@ -23,9 +23,6 @@ begin
     then SetFileAttributes( PChar(FileName), FILE_ATTRIBUTE_READONLY );
 
   ShellExecute(Application.Handle, 'open', PWideChar(fileName), nil, nil, SW_SHOWNORMAL);
-
-{  if ReadOnly
-    then SetFileAttributes( PChar(FileName), FILE_ATTRIBUTE_NORMAL );}
 end;
 
 end.
