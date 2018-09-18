@@ -18,6 +18,8 @@ type
     procedure NavigatorOnButtonClickHandler( Sender: TObject; AButtonIndex: Integer; var ADone: Boolean );
 
     procedure setEnableHighlightEven(const AValue: Boolean);
+    procedure setDefaultKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+
   protected
     procedure Loaded; override;
 
@@ -159,8 +161,16 @@ begin
     end;
   end;
 
+  OnKeyDown := setDefaultKeyDown;
+
 // TODO:
 //  OnUpdateEdit - посмотреть описание в док-ции
+end;
+
+procedure TOMScxGridDBTableView.setDefaultKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+begin
+  if (Key = VK_INSERT) or ((Key = VK_DELETE) and ((Shift = []) or (Shift = [ssCtrl])))
+    then Key := 0;
 end;
 
 procedure TOMScxGridDBTableView.NavigatorOnButtonClickHandler( Sender: TObject; AButtonIndex: Integer; var ADone: Boolean );
